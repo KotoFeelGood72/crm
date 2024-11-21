@@ -126,7 +126,7 @@ import { useRoute, useRouter } from "vue-router";
 import InputArea from "@/components/ui/inputs/InputArea.vue";
 import defaultBtn from "@/components/ui/buttons/default-btn.vue";
 import Loader from "@/components/ui/loading/Loader.vue";
-import api from "@/api/api";
+import { api } from "@/api/api";
 import custom from "@/api/custom";
 import { useModalStore } from "@/store/useModalStore";
 import { useClientStore } from "@/store/useClientStore";

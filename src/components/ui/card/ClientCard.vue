@@ -557,10 +557,7 @@ async function sendKP() {
       };
 
       // Отправляем КП
-      await axios.post(
-        "https://manager.dynamic-devs-collective.ru/wp-json/custom/v1/send-email",
-        data
-      );
+      await axios.post("https://crm.gleede.ru//wp-jsoncustom/v1/send-email", data);
 
       // Обновляем статус КП на "Отправлено"
       props.card.acf.status_kp = "Отправлено";

@@ -44,7 +44,7 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target: "https://manager.dynamic-devs-collective.ru/",
+        target: "https://crm.gleede.ru/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
