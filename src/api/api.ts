@@ -60,7 +60,7 @@ const getToken = () => {
   const userData = localStorage.getItem("user");
   if (userData) {
     const parsedUser = JSON.parse(userData);
-    return parsedUser?.auth.jwt_token || null;
+    return parsedUser?.auth.token || null;
   }
   return null;
 };

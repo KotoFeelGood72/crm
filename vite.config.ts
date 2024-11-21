@@ -36,6 +36,12 @@ export default defineConfig({
     },
   },
   server: {
+    port: 5123,
+    host: true,
+    strictPort: true,
+    watch: {
+      usePolling: true,
+    },
     proxy: {
       "/api": {
         target: "https://manager.dynamic-devs-collective.ru/",

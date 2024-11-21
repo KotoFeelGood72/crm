@@ -133,7 +133,7 @@ export const useClientStore = defineStore("clientStore", {
     async updateClient(updatedClient: any) {
       try {
         // Отправляем запрос на сервер с обновленными полями
-        await custom.post(`/update-client/${updatedClient.id}`, {
+        await api.post(`/wp-json/wp/v2/update-client/${updatedClient.id}`, {
           name: updatedClient.acf.name,
           city: updatedClient.acf.city,
           phones: updatedClient.acf.phones,
@@ -174,7 +174,7 @@ export const useClientStore = defineStore("clientStore", {
     },
     async deleteClient(clientId: number) {
       try {
-        await custom.delete(`/delete-client/${clientId}`);
+        await api.delete(`/wp-json/wp/v2/delete-client/${clientId}`);
         this.clients = this.clients.filter((client) => client.id !== clientId);
       } catch (error) {
         console.error(`Failed to delete client ${clientId}:`, error);
@@ -271,7 +271,7 @@ export const useClientStore = defineStore("clientStore", {
           ...this.clients[clientIndex],
           acf: { ...this.clients[clientIndex].acf, status: newStatus },
         };
-        await custom.post(`/update-client/${clientId}`, {
+        await api.post(`/wp-json/custom/v1/update-client/${clientId}`, {
           status: newStatus,
         });
 

@@ -22,7 +22,7 @@ export const useUsersStore = defineStore("user", {
     async login(user: any) {
       // const router = useRouter();
       try {
-        const response = await api.post("/wp-json/api/v1/token", user, {});
+        const response = await api.post("/wp-json/jwt-auth/v1/token", user, {});
         this.auth = response.data;
 
         // await router.push('/clients?page=1&view=list&count=10');
@@ -32,12 +32,30 @@ export const useUsersStore = defineStore("user", {
     },
     async refreshToken() {
       try {
-        const response = await api.get("/wp-json/api/v1/token-validate");
-        console.log(response.data);
+        const response = await api.post("/wp-json/jwt-auth/v1/token/validate");
       } catch (error) {
         console.log("Refresh token error:", error);
       }
     },
+    // async login(user: any) {
+    //   // const router = useRouter();
+    //   try {
+    //     const response = await api.post("/wp-json/api/v1/token", user, {});
+    //     this.auth = response.data;
+
+    //     // await router.push('/clients?page=1&view=list&count=10');
+    //   } catch (error) {
+    //     console.log("Login error:", error);
+    //   }
+    // },
+    // async refreshToken() {
+    //   try {
+    //     const response = await api.get("/wp-json/api/v1/token-validate");
+    //     console.log(response.data);
+    //   } catch (error) {
+    //     console.log("Refresh token error:", error);
+    //   }
+    // },
     async setUser(data: any) {
       this.users = data;
       localStorage.setItem("user", JSON.stringify(data));

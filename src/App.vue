@@ -1,7 +1,7 @@
 <template>
   <component :is="layoutComponent" :class="{ fixed: isAnyModalActive }">
     <router-view />
-    <Modal :positionX="[isCart, isQr] ? 'right' : 'center'" />
+    <!-- <Modal :positionX="[isCart, isQr] ? 'right' : 'center'" /> -->
   </component>
 </template>
 
@@ -47,8 +47,8 @@ watch(isAnyModalActive, (newValue) => {
 
 onMounted(async () => {
   await fetchUserInfo();
-  if (route.path != "/login") {
-  }
+  // if (route.path != "/login") {
+  // }
 });
 </script>
 
