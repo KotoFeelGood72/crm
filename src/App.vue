@@ -1,7 +1,7 @@
 <template>
   <component :is="layoutComponent" :class="{ fixed: isAnyModalActive }">
     <router-view />
-    <!-- <Modal :positionX="[isCart, isQr] ? 'right' : 'center'" /> -->
+    <Modal :positionX="modalPositionX" />
   </component>
 </template>
 
@@ -22,6 +22,8 @@ const isAnyModalActive = computed(() => {
 });
 const isCart = computed(() => modals.value.client);
 const isQr = computed(() => modals.value.qr);
+
+const modalPositionX = computed(() => (isCart.value || isQr.value ? "right" : "center"));
 
 const route = useRoute();
 
