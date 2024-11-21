@@ -580,11 +580,11 @@ async function sendKP() {
   }
 }
 
-async function sendWA() {
-  try {
-    const response = await axios.post("/api/custom/v1/send-sms");
-  } catch (error) {}
-}
+// async function sendWA() {
+//   try {
+//     const response = await axios.post("/api/custom/v1/send-sms");
+//   } catch (error) {}
+// }
 </script>
 
 <style scoped lang="scss">
