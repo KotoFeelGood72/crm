@@ -32,7 +32,7 @@ export const useUsersStore = defineStore("user", {
     },
     async refreshToken() {
       try {
-        const response = await api.post("/wp-json/jwt-auth/v1/token/validate");
+        await api.post("/wp-json/jwt-auth/v1/token/validate");
       } catch (error) {
         console.log("Refresh token error:", error);
       }

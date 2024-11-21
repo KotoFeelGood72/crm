@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import { api } from "@/api/api";
-import custom from "@/api/custom";
+// import custom from "@/api/custom";
 
 export const useClientStore = defineStore("clientStore", {
   state: () => ({
