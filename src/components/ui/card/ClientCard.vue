@@ -540,44 +540,44 @@ async function updateCallback(newCallback: Date) {
   }
 }
 
-async function sendKP() {
-  if (props.card.acf.status_kp !== "Отправлено") {
-    try {
-      if (!users.value || !users.value.userInfo) {
-        throw new Error("User information is not available");
-      }
+// async function sendKP() {
+//   if (props.card.acf.status_kp !== "Отправлено") {
+//     try {
+//       if (!users.value || !users.value.userInfo) {
+//         throw new Error("User information is not available");
+//       }
 
-      isLoad.value = true;
-      const data = {
-        to: localEmail.value,
-        subject: "Презентация от компании Счастье",
-        name: users.value.userInfo.name,
-        phone: users.value.userInfo.acf.user_phone,
-      };
+//       isLoad.value = true;
+//       const data = {
+//         to: localEmail.value,
+//         subject: "Презентация от компании Счастье",
+//         name: users.value.userInfo.name,
+//         phone: users.value.userInfo.acf.user_phone,
+//       };
 
-      // Отправляем КП
-      await axios.post("https://crm.gleede.ru//wp-jsoncustom/v1/send-email", data);
+//       // Отправляем КП
+//       await axios.post("https://crm.gleede.ru//wp-jsoncustom/v1/send-email", data);
 
-      // Обновляем статус КП на "Отправлено"
-      props.card.acf.status_kp = "Отправлено";
-      await clientStore.updateClient({
-        id: props.card.id,
-        acf: {
-          ...props.card.acf,
-          status_kp: "Отправлено",
-        },
-      });
+//       // Обновляем статус КП на "Отправлено"
+//       props.card.acf.status_kp = "Отправлено";
+//       await clientStore.updateClient({
+//         id: props.card.id,
+//         acf: {
+//           ...props.card.acf,
+//           status_kp: "Отправлено",
+//         },
+//       });
 
-      // Устанавливаем статус клиента в "В обработке"
-      selectedStatus.value = "В обработке";
-      updateStatus("В обработке");
-    } catch (error) {
-      console.error("Ошибка при отправке КП:", error);
-    } finally {
-      isLoad.value = false;
-    }
-  }
-}
+//       // Устанавливаем статус клиента в "В обработке"
+//       selectedStatus.value = "В обработке";
+//       updateStatus("В обработке");
+//     } catch (error) {
+//       console.error("Ошибка при отправке КП:", error);
+//     } finally {
+//       isLoad.value = false;
+//     }
+//   }
+// }
 
 // async function sendWA() {
 //   try {
