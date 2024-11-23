@@ -284,7 +284,7 @@ import { ru } from "date-fns/locale";
 import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
 import { useUsersStoreRefs } from "@/store/useUserStore";
 import { api } from "@/api/api";
-import axios from "axios";
+// import axios from "axios";
 
 const props = withDefaults(
   defineProps<{
@@ -307,7 +307,7 @@ const newComment = ref("");
 const emit = defineEmits(["deleteCard", "updateCard"]);
 const isLoading = ref(false);
 const isDeleted = ref(false);
-const isLoad = ref(false);
+// const isLoad = ref(false);
 const isSavingEmail = ref(false);
 const showSendKPButton = ref(false);
 const localEmail = ref(props.card.acf.email);
