@@ -347,15 +347,15 @@ const formattedPhone = computed(() => {
   }
 });
 
-function handleEmailInput(event: Event) {
-  localEmail.value = (event.target as HTMLInputElement).value;
+// function handleEmailInput(event: Event) {
+//   localEmail.value = (event.target as HTMLInputElement).value;
 
-  // Если email изменился, сбрасываем статус отправки КП
-  if (localEmail.value !== props.card.acf.email) {
-    props.card.acf.status_kp = "Не отправлено";
-    showSendKPButton.value = false;
-  }
-}
+//   // Если email изменился, сбрасываем статус отправки КП
+//   if (localEmail.value !== props.card.acf.email) {
+//     props.card.acf.status_kp = "Не отправлено";
+//     showSendKPButton.value = false;
+//   }
+// }
 
 function isValidUrl(string: string): boolean {
   try {
