@@ -6,9 +6,9 @@
           <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
             Сведение об организации
           </li>
-          <li @click.stop="activeTab = 'info'" :class="{ active: activeTab === 'info' }">
+          <!-- <li @click.stop="activeTab = 'info'" :class="{ active: activeTab === 'info' }">
             Сведение о контактном лице
-          </li>
+          </li> -->
           <li
             @click.stop="activeTab = 'history'"
             :class="{ active: activeTab === 'history' }"
@@ -37,11 +37,11 @@
               <p>Отрасль:</p>
               <span>{{ card.acf.name }}</span>
             </li>
-            <li>
+            <!-- <li>
               <Icons icon="solar:map-arrow-square-broken" :size="18" />
               <p>Адрес организации:</p>
               <span>{{ card.acf.address }}</span>
-            </li>
+            </li> -->
             <li>
               <Icons icon="solar:phone-rounded-broken" :size="18" />
               <p>Телефон контактный:</p>
@@ -60,7 +60,7 @@
                 firstWebsite
               }}</a>
             </li>
-            <li>
+            <!-- <li>
               <Icons icon="solar:document-add-broken" :size="18" />
               <p>E-mail:</p>
               <div class="card_email__w">
@@ -89,15 +89,15 @@
                   </div>
                 </div>
               </div>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
               <Icons icon="solar:user-id-broken" size="18" />
               <p>ФИО, должность руководителя:</p>
               <span>{{ card.acf.fio }}</span>
-            </li>
+            </li> -->
           </ul>
         </li>
-        <li class="card_tab__content" v-if="activeTab === 'info'">
+        <!-- <li class="card_tab__content" v-if="activeTab === 'info'">
           <ul class="contacts_people">
             <li>
               <ul class="info__list">
@@ -159,7 +159,7 @@
             <Icons icon="solar:traffic-economy-broken" />
             <p>Добавить</p>
           </div>
-        </li>
+        </li> -->
         <li class="card_tab__content" v-if="activeTab === 'history'">
           <ul class="info__list history_list">
             <li class="history_item">
@@ -186,11 +186,6 @@
             </li>
             <li class="history_item comment">
               <div class="history_item__review">
-                <!-- <div class="history_item__top">
-                  <Icons icon="solar:chat-round-broken" />
-                  Лог взаимодействия:
-                </div> -->
-
                 <div
                   class="empty_comment"
                   v-if="Object.keys(groupedComments).length === 0"
@@ -254,9 +249,13 @@
           </div>
 
           <div class="card_link__btn">
+            <IcBtn icon="solar:chat-line-broken" />
+            Комментарий
+          </div>
+          <!-- <div class="card_link__btn">
             <IcBtn icon="solar:trash-bin-minimalistic-2-broken" />
             Удалить
-          </div>
+          </div> -->
         </div>
         <div class="card_bottom__right">
           <div class="card__view">

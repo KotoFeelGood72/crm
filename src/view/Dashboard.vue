@@ -87,6 +87,7 @@ const stat1 = ref<any>([
   gap: 20px;
 }
 .dashboard_small__col {
-  max-width: 30%;
+  // max-width: 30%;
+  flex: 1;
 }
 </style>

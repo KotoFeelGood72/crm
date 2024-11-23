@@ -133,7 +133,7 @@ export const useClientStore = defineStore("clientStore", {
     async updateClient(updatedClient: any) {
       try {
         // Отправляем запрос на сервер с обновленными полями
-        await api.post(`/wp-json/wp/v2/update-client/${updatedClient.id}`, {
+        await api.post(`/wp-json/custom/v1/update-client/${updatedClient.id}`, {
           name: updatedClient.acf.name,
           city: updatedClient.acf.city,
           phones: updatedClient.acf.phones,
