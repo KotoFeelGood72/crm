@@ -15,6 +15,11 @@ export const AdminNav = [
         icon: 'notes-minimalistic-bold'
     },
     {
+        name: 'Сделки',
+        url: '/deals',
+        icon: 'notes-minimalistic-bold'
+    },
+    {
         name: 'Статистика',
         url: '/statistic',
         icon: 'align-bottom-bold'

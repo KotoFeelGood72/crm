@@ -41,6 +41,16 @@ const routes = [
     },
   },
   {
+    path: "/deals",
+    name: "Deals",
+    component: () => import("../view/deals/index.vue"),
+    meta: {
+      layout: "Admin",
+      // requiresAuth: true,
+      title: "Сделки",
+    },
+  },
+  {
     path: "/staff",
     name: "Staff",
     component: () => import("../view/staff/index.vue"),
