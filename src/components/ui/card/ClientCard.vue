@@ -3,10 +3,7 @@
     <div v-if="!isDeleted" class="card">
       <div class="card_top">
         <ul class="card_tab__link">
-          <li
-            @click.stop="activeTab = 'org'"
-            :class="{ active: activeTab === 'org' }"
-          >
+          <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
             Сведение об организации
           </li>
           <!-- <li @click.stop="activeTab = 'info'" :class="{ active: activeTab === 'info' }">
@@ -38,7 +35,7 @@
             <li>
               <Icons icon="solar:city-broken" :size="18" />
               <p>Отрасль:</p>
-              <span>{{ card.acf.name }}</span>
+              <span>{{ card.category_name[0].name }}</span>
             </li>
             <!-- <li>
               <Icons icon="solar:map-arrow-square-broken" :size="18" />
@@ -59,12 +56,9 @@
             <li>
               <Icons icon="solar:code-circle-broken" :size="18" />
               <p>Сайт:</p>
-              <a
-                :href="firstWebsite"
-                target="_blank"
-                @click.stop="handleWebsiteClick"
-                >{{ firstWebsite }}</a
-              >
+              <a :href="firstWebsite" target="_blank" @click.stop="handleWebsiteClick">{{
+                firstWebsite
+              }}</a>
             </li>
             <!-- <li>
               <Icons icon="solar:document-add-broken" :size="18" />
@@ -240,10 +234,7 @@
                   @keydown.enter="onEnter"
                 ></textarea>
                 <div class="send_comment" @click.stop="addComment">
-                  <Icons
-                    icon="solar:chat-round-unread-bold"
-                    :size="20"
-                  />Отправить
+                  <Icons icon="solar:chat-round-unread-bold" :size="20" />Отправить
                 </div>
               </div>
             </li>
@@ -347,9 +338,7 @@ const firstWebsite = computed(() => {
 
 const formattedPhone = computed(() => {
   if (!props.card.acf.phones) return null;
-  const phones = props.card.acf.phones
-    .split(" ")
-    .map((phone: any) => phone.trim());
+  const phones = props.card.acf.phones.split(" ").map((phone: any) => phone.trim());
   const firstPhone = phones[0];
   if (firstPhone.startsWith("8")) {
     return formatPhoneNumber(firstPhone.replace("8", "+7"));
@@ -464,9 +453,7 @@ async function addComment() {
       });
 
       // После успешной отправки комментария, заново получаем обновленную карточку клиента
-      const updatedCard = await api.get(
-        `/wp-json/wp/v2/client_new/${props.card.id}`
-      );
+      const updatedCard = await api.get(`/wp-json/wp/v2/client_new/${props.card.id}`);
 
       // Обновляем карточку клиента в хранилище
       clientStore.updateClientInStore(updatedCard.data);
