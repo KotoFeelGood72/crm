@@ -54,10 +54,7 @@
     </div>
 
     <div class="deals_main">
-      <Loader
-        v-if="dealStore.isLoading"
-        style="background-color: transparent"
-      />
+      <Loader v-if="dealStore.isLoading" style="background-color: transparent" />
       <div v-else>
         <div class="deal_list__w" v-if="dealStore.deals.length > 0">
           <div class="deals__list">
@@ -85,21 +82,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
-import ClientCard from "@/components/ui/card/ClientCard.vue"; // при наличии можно заменить на DealCard.vue
 import pagination from "@/components/ui/buttons/pagination.vue";
 import Loader from "@/components/ui/loading/Loader.vue";
 import Selects from "@/components/ui/dropdown/Selects.vue";
-import Switcher from "@/components/ui/inputs/Switcher.vue";
-import IcBtn from "@/components/ui/buttons/IcBtn.vue";
 import { ru } from "date-fns/locale";
 import deal from "@/components/ui/card/deal.vue";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
-const isPhoneSearch = ref(false);
 const dealStore = useDealStore();
 
 const {
@@ -110,19 +103,12 @@ const {
   perPage,
   selectedDate,
   totalPages,
-  statuses,
   page,
 } = useDealStoreRefs();
-
-const dynamicSearchModel = ref("");
 
 onMounted(() => {
   dealStore.getDeals();
 });
-
-function clearFilters() {
-  dealStore.clearFilters();
-}
 
 const goToPage = (newPage: number) => {
   if (newPage >= 1 && newPage <= totalPages.value) {
