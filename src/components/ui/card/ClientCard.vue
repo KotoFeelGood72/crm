@@ -35,7 +35,7 @@
             <li>
               <Icons icon="solar:city-broken" :size="18" />
               <p>Отрасль:</p>
-              <span>{{ card.category_name[0].name }}</span>
+              <span>{{ card.category_name?.[0]?.name || "Не указано" }}</span>
             </li>
             <!-- <li>
               <Icons icon="solar:map-arrow-square-broken" :size="18" />
@@ -272,7 +272,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import Selects from "../dropdown/Selects.vue";
 import IcBtn from "../buttons/IcBtn.vue";
 import { useModalStore } from "@/store/useModalStore";
@@ -307,10 +307,6 @@ const newComment = ref("");
 const emit = defineEmits(["deleteCard", "updateCard"]);
 const isLoading = ref(false);
 const isDeleted = ref(false);
-// const isLoad = ref(false);
-const isSavingEmail = ref(false);
-const showSendKPButton = ref(false);
-const localEmail = ref(props.card.acf.email);
 
 const isStatusSendKP = computed(() => {
   return props.card.acf.status_kp === "Отправлено";
@@ -347,16 +343,6 @@ const formattedPhone = computed(() => {
   }
 });
 
-// function handleEmailInput(event: Event) {
-//   localEmail.value = (event.target as HTMLInputElement).value;
-
-//   // Если email изменился, сбрасываем статус отправки КП
-//   if (localEmail.value !== props.card.acf.email) {
-//     props.card.acf.status_kp = "Не отправлено";
-//     showSendKPButton.value = false;
-//   }
-// }
-
 function isValidUrl(string: string): boolean {
   try {
     new URL(string);
@@ -387,18 +373,6 @@ function clearCallback() {
   callback.value = null;
 }
 
-// function openClient(id: number) {
-//   openModal("client");
-//   const query = { ...router.currentRoute.value.query, client: id };
-//   router.push({ query });
-// }
-
-watch(localEmail, async (newEmail, oldEmail) => {
-  if (newEmail && newEmail !== oldEmail) {
-    await saveEmail();
-  }
-});
-
 function onEnter(event: KeyboardEvent) {
   // Проверяем, нажата ли клавиша Shift
   if (event.shiftKey) {
@@ -409,35 +383,6 @@ function onEnter(event: KeyboardEvent) {
     addComment();
     // Предотвращаем стандартное поведение Enter
     event.preventDefault();
-  }
-}
-
-async function saveEmail() {
-  if (!localEmail.value) return;
-
-  isSavingEmail.value = true;
-
-  try {
-    // Обновляем данные клиента через метод updateClient
-    const updatedClient = {
-      id: props.card.id,
-      email: localEmail.value,
-      acf: {
-        ...props.card.acf, // Сохраняем все текущие поля acf
-        status_kp: "Не отправлено", // Сбрасываем статус отправки КП при сохранении нового email
-      },
-    };
-    await clientStore.updateClient(updatedClient);
-
-    // Обновляем props.card.acf.email после успешного сохранения
-    props.card.acf.email = localEmail.value;
-
-    emit("updateCard", updatedClient); // Обновляем данные в родительском компоненте
-    showSendKPButton.value = true; // Показываем кнопку отправки КП после успешного сохранения
-  } catch (error) {
-    console.error("Ошибка при сохранении почты:", error);
-  } finally {
-    isSavingEmail.value = false;
   }
 }
 
@@ -539,51 +484,6 @@ async function updateCallback(newCallback: Date) {
     isLoading.value = false;
   }
 }
-
-// async function sendKP() {
-//   if (props.card.acf.status_kp !== "Отправлено") {
-//     try {
-//       if (!users.value || !users.value.userInfo) {
-//         throw new Error("User information is not available");
-//       }
-
-//       isLoad.value = true;
-//       const data = {
-//         to: localEmail.value,
-//         subject: "Презентация от компании Счастье",
-//         name: users.value.userInfo.name,
-//         phone: users.value.userInfo.acf.user_phone,
-//       };
-
-//       // Отправляем КП
-//       await axios.post("https://crm.gleede.ru//wp-jsoncustom/v1/send-email", data);
-
-//       // Обновляем статус КП на "Отправлено"
-//       props.card.acf.status_kp = "Отправлено";
-//       await clientStore.updateClient({
-//         id: props.card.id,
-//         acf: {
-//           ...props.card.acf,
-//           status_kp: "Отправлено",
-//         },
-//       });
-
-//       // Устанавливаем статус клиента в "В обработке"
-//       selectedStatus.value = "В обработке";
-//       updateStatus("В обработке");
-//     } catch (error) {
-//       console.error("Ошибка при отправке КП:", error);
-//     } finally {
-//       isLoad.value = false;
-//     }
-//   }
-// }
-
-// async function sendWA() {
-//   try {
-//     const response = await axios.post("/api/custom/v1/send-sms");
-//   } catch (error) {}
-// }
 </script>
 
 <style scoped lang="scss">
