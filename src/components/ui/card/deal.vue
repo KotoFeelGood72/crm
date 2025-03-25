@@ -9,9 +9,6 @@
           >
             Сведение об организации
           </li>
-          <!-- <li @click.stop="activeTab = 'info'" :class="{ active: activeTab === 'info' }">
-            Сведение о контактном лице
-          </li> -->
           <li
             @click.stop="activeTab = 'history'"
             :class="{ active: activeTab === 'history' }"
@@ -41,10 +38,10 @@
               <span>{{ card.acf.name }}</span>
             </li>
             <!-- <li>
-              <Icons icon="solar:map-arrow-square-broken" :size="18" />
-              <p>Адрес организации:</p>
-              <span>{{ card.acf.address }}</span>
-            </li> -->
+                <Icons icon="solar:map-arrow-square-broken" :size="18" />
+                <p>Адрес организации:</p>
+                <span>{{ card.acf.address }}</span>
+              </li> -->
             <li>
               <Icons icon="solar:phone-rounded-broken" :size="18" />
               <p>Телефон контактный:</p>
@@ -67,105 +64,105 @@
               >
             </li>
             <!-- <li>
-              <Icons icon="solar:document-add-broken" :size="18" />
-              <p>E-mail:</p>
-              <div class="card_email__w">
-                <div class="card_email">
-                  <input
-                    type="email"
-                    v-model="localEmail"
-                    @input="handleEmailInput"
-                    @click.stop
-                    @keydown.enter="sendKP"
-                    placeholder="Внести E-Mail"
-                  />
-
-                  <div
-                    class="send__kp"
-                    v-if="showSendKPButton || props.card.acf.email"
-                    @click.stop="sendKP"
-                    :class="{ disabled: isStatusSendKP }"
-                  >
-                    {{ isStatusSendKP ? "Отправлено" : "Отправить" }}
-
-                    <Icons icon="solar:login-2-broken" v-if="!isLoad" size="16" />
-                    <div class="send_load" v-if="isLoad">
-                      <Icons icon="line-md:loading-loop" size="16" />
+                <Icons icon="solar:document-add-broken" :size="18" />
+                <p>E-mail:</p>
+                <div class="card_email__w">
+                  <div class="card_email">
+                    <input
+                      type="email"
+                      v-model="localEmail"
+                      @input="handleEmailInput"
+                      @click.stop
+                      @keydown.enter="sendKP"
+                      placeholder="Внести E-Mail"
+                    />
+  
+                    <div
+                      class="send__kp"
+                      v-if="showSendKPButton || props.card.acf.email"
+                      @click.stop="sendKP"
+                      :class="{ disabled: isStatusSendKP }"
+                    >
+                      {{ isStatusSendKP ? "Отправлено" : "Отправить" }}
+  
+                      <Icons icon="solar:login-2-broken" v-if="!isLoad" size="16" />
+                      <div class="send_load" v-if="isLoad">
+                        <Icons icon="line-md:loading-loop" size="16" />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </li> -->
+              </li> -->
             <!-- <li>
-              <Icons icon="solar:user-id-broken" size="18" />
-              <p>ФИО, должность руководителя:</p>
-              <span>{{ card.acf.fio }}</span>
-            </li> -->
+                <Icons icon="solar:user-id-broken" size="18" />
+                <p>ФИО, должность руководителя:</p>
+                <span>{{ card.acf.fio }}</span>
+              </li> -->
           </ul>
         </li>
         <!-- <li class="card_tab__content" v-if="activeTab === 'info'">
-          <ul class="contacts_people">
-            <li>
-              <ul class="info__list">
-                <li>
-                  <Icons icon="solar:case-broken" :size="18" />
-                  <p>Ф.И.О:</p>
-                  <span>{{ card.acf.name }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:city-broken" :size="18" />
-                  <p>Год рождения:</p>
-                  <span>{{ card.acf.name }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:map-arrow-square-broken" :size="18" />
-                  <p>Должность:</p>
-                  <span>{{ card.acf.address }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:phone-rounded-broken" :size="18" />
-                  <p>Телефон контактный:</p>
-                  <div
-                    class="card__phone"
-                    v-if="formattedPhone"
-                    @click.stop="handlePhoneClick"
-                  >
-                    <span>{{ formattedPhone }}</span>
-                  </div>
-                </li>
-                <li>
-                  <Icons icon="solar:document-add-broken" :size="18" />
-                  <p>E-mail:</p>
-                  <span>{{ card.acf.email }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:code-circle-broken" :size="18" />
-                  <p>ЛПР:</p>
-                  <span class="tags">Да</span>
-                </li>
-                <li>
-                  <Icons icon="solar:code-circle-broken" :size="18" />
-                  <p>ЛПР Связаный с клиентом:</p>
-                  <span>Иванов Иван Иванович</span>
-                </li>
-                <li class="list_item__full">
-                  <Icons icon="solar:user-id-broken" :size="18" />
-                  <p>Услуги:</p>
-                  <ul class="box__list">
-                    <li>Продвижение сайта</li>
-                    <li>Разработка сайта</li>
-                    <li>Контекстная реклама</li>
-                    <li>Правки на сайте</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <div class="card_tab_infoAdd">
-            <Icons icon="solar:traffic-economy-broken" />
-            <p>Добавить</p>
-          </div>
-        </li> -->
+            <ul class="contacts_people">
+              <li>
+                <ul class="info__list">
+                  <li>
+                    <Icons icon="solar:case-broken" :size="18" />
+                    <p>Ф.И.О:</p>
+                    <span>{{ card.acf.name }}</span>
+                  </li>
+                  <li>
+                    <Icons icon="solar:city-broken" :size="18" />
+                    <p>Год рождения:</p>
+                    <span>{{ card.acf.name }}</span>
+                  </li>
+                  <li>
+                    <Icons icon="solar:map-arrow-square-broken" :size="18" />
+                    <p>Должность:</p>
+                    <span>{{ card.acf.address }}</span>
+                  </li>
+                  <li>
+                    <Icons icon="solar:phone-rounded-broken" :size="18" />
+                    <p>Телефон контактный:</p>
+                    <div
+                      class="card__phone"
+                      v-if="formattedPhone"
+                      @click.stop="handlePhoneClick"
+                    >
+                      <span>{{ formattedPhone }}</span>
+                    </div>
+                  </li>
+                  <li>
+                    <Icons icon="solar:document-add-broken" :size="18" />
+                    <p>E-mail:</p>
+                    <span>{{ card.acf.email }}</span>
+                  </li>
+                  <li>
+                    <Icons icon="solar:code-circle-broken" :size="18" />
+                    <p>ЛПР:</p>
+                    <span class="tags">Да</span>
+                  </li>
+                  <li>
+                    <Icons icon="solar:code-circle-broken" :size="18" />
+                    <p>ЛПР Связаный с клиентом:</p>
+                    <span>Иванов Иван Иванович</span>
+                  </li>
+                  <li class="list_item__full">
+                    <Icons icon="solar:user-id-broken" :size="18" />
+                    <p>Услуги:</p>
+                    <ul class="box__list">
+                      <li>Продвижение сайта</li>
+                      <li>Разработка сайта</li>
+                      <li>Контекстная реклама</li>
+                      <li>Правки на сайте</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <div class="card_tab_infoAdd">
+              <Icons icon="solar:traffic-economy-broken" />
+              <p>Добавить</p>
+            </div>
+          </li> -->
         <li class="card_tab__content" v-if="activeTab === 'history'">
           <ul class="info__list history_list">
             <li class="history_item">
@@ -262,9 +259,9 @@
             Комментарий
           </div>
           <!-- <div class="card_link__btn">
-            <IcBtn icon="solar:trash-bin-minimalistic-2-broken" />
-            Удалить
-          </div> -->
+              <IcBtn icon="solar:trash-bin-minimalistic-2-broken" />
+              Удалить
+            </div> -->
         </div>
         <div class="card_bottom__right">
           <div class="card__view">
@@ -290,9 +287,9 @@ import { useRouter } from "vue-router";
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { ru } from "date-fns/locale";
-import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
 import { useUsersStoreRefs } from "@/store/useUserStore";
 import { api } from "@/api/api";
+import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 // import axios from "axios";
 
 const props = withDefaults(
@@ -305,8 +302,8 @@ const props = withDefaults(
 );
 
 const { openModal } = useModalStore();
-const clientStore = useClientStore();
-const { statuses } = useClientStoreRefs();
+const dealStore = useDealStore();
+const { statuses } = useDealStore();
 const { users } = useUsersStoreRefs();
 const router = useRouter();
 const activeTab = ref<any>("org");
@@ -316,10 +313,6 @@ const newComment = ref("");
 const emit = defineEmits(["deleteCard", "updateCard"]);
 const isLoading = ref(false);
 const isDeleted = ref(false);
-// const isLoad = ref(false);
-const isSavingEmail = ref(false);
-const showSendKPButton = ref(false);
-const localEmail = ref(props.card.acf.email);
 
 const isStatusSendKP = computed(() => {
   return props.card.acf.status_kp === "Отправлено";
@@ -387,7 +380,7 @@ function formatPhoneNumber(phone: string): string {
 }
 
 function updateStatus(newStatus: string) {
-  clientStore.updateClientStatus(props.card.id, newStatus);
+  dealStore.updateDealStatus(props.card.id, newStatus);
   emit("updateCard", {
     ...props.card,
     acf: { ...props.card.acf, status: newStatus },
@@ -397,18 +390,6 @@ function updateStatus(newStatus: string) {
 function clearCallback() {
   callback.value = null;
 }
-
-// function openClient(id: number) {
-//   openModal("client");
-//   const query = { ...router.currentRoute.value.query, client: id };
-//   router.push({ query });
-// }
-
-watch(localEmail, async (newEmail, oldEmail) => {
-  if (newEmail && newEmail !== oldEmail) {
-    await saveEmail();
-  }
-});
 
 function onEnter(event: KeyboardEvent) {
   // Проверяем, нажата ли клавиша Shift
@@ -420,35 +401,6 @@ function onEnter(event: KeyboardEvent) {
     addComment();
     // Предотвращаем стандартное поведение Enter
     event.preventDefault();
-  }
-}
-
-async function saveEmail() {
-  if (!localEmail.value) return;
-
-  isSavingEmail.value = true;
-
-  try {
-    // Обновляем данные клиента через метод updateClient
-    const updatedClient = {
-      id: props.card.id,
-      email: localEmail.value,
-      acf: {
-        ...props.card.acf, // Сохраняем все текущие поля acf
-        status_kp: "Не отправлено", // Сбрасываем статус отправки КП при сохранении нового email
-      },
-    };
-    await clientStore.updateClient(updatedClient);
-
-    // Обновляем props.card.acf.email после успешного сохранения
-    props.card.acf.email = localEmail.value;
-
-    emit("updateCard", updatedClient); // Обновляем данные в родительском компоненте
-    showSendKPButton.value = true; // Показываем кнопку отправки КП после успешного сохранения
-  } catch (error) {
-    console.error("Ошибка при сохранении почты:", error);
-  } finally {
-    isSavingEmail.value = false;
   }
 }
 
@@ -469,7 +421,7 @@ async function addComment() {
       );
 
       // Обновляем карточку клиента в хранилище
-      clientStore.updateClientInStore(updatedCard.data);
+      dealStore.updateDealInStore(updatedCard.data);
 
       console.log("Комментарий успешно добавлен и карточка обновлена.");
     } catch (error) {
@@ -481,7 +433,7 @@ async function addComment() {
 }
 
 async function handlePhoneClick() {
-  await clientStore.updateClient({
+  await dealStore.updateDeal({
     id: props.card.id,
     acf: {
       ...props.card.acf,
@@ -536,7 +488,7 @@ async function updateCallback(newCallback: Date) {
   try {
     isLoading.value = true;
 
-    await clientStore.updateClient({
+    await dealStore.updateDeal({
       id: props.card.id,
       acf: {
         ...props.card.acf,
@@ -949,41 +901,53 @@ async function updateCallback(newCallback: Date) {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 14px;
     text-transform: uppercase;
     color: $white;
     font-weight: 500;
-    letter-spacing: 5px;
+    letter-spacing: 2px;
   }
   &.status-new {
     border: 1px solid transparent;
     &:before {
       background-color: rgb(77, 221, 247);
-      content: "Новый";
+      content: "КП";
     }
   }
   &.status-not-relevant {
     &:before {
       background-color: rgb(247, 77, 77);
-      content: "Не актуально";
+      content: "Отработка возражений";
     }
   }
   &.status-working {
     &:before {
       background-color: rgb(103, 77, 247);
-      content: "В работе";
+      content: "Подготовка документов";
     }
   }
   &.status-processing {
     &:before {
       background-color: rgb(247, 154, 77);
-      content: "В обработке";
+      content: "Ожидание оплаты";
+    }
+  }
+  &.status-pay {
+    &:before {
+      background-color: rgb(17, 126, 63);
+      content: "Ожидание оплаты";
     }
   }
   &.status-client {
     &:before {
       background-color: rgb(77, 247, 120);
-      content: "Клиент";
+      content: "Успех";
+    }
+  }
+  &.status-client {
+    &:before {
+      background-color: rgb(77, 247, 120);
+      content: "Провал";
     }
   }
 }

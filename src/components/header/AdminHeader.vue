@@ -13,7 +13,7 @@
       </div>
       <div class="row-end">
         <IcBtn icon="solar:settings-broken" />
-        <IcBtn icon="solar:add-square-broken" />
+        <IcBtn icon="solar:add-square-broken" @click="openModal('create')" />
         <IcBtn icon="solar:align-bottom-broken" />
         <IcBtn icon="solar:bell-broken" />
         <IcBtn icon="solar:chat-round-unread-broken" />
@@ -38,6 +38,7 @@ import avatar from "../ui/people/avatar.vue";
 import UserModal from "../modal/view/UserModal.vue";
 import { useUsersStoreRefs } from "@/store/useUserStore";
 import IcBtn from "../ui/buttons/IcBtn.vue";
+import { useModalStore } from "@/store/useModalStore";
 
 const userModal = ref<boolean>(false);
 const userModalRef = ref<HTMLElement | null>(null);
@@ -45,6 +46,8 @@ const { users } = useUsersStoreRefs();
 const toggleUserModal = () => {
   userModal.value = !userModal.value;
 };
+
+const { openModal } = useModalStore();
 
 onMounted(() => {
   // document.addEventListener("click", handleClickOutside);

@@ -1,6 +1,6 @@
 <template>
-  <div class="clients">
-    <h3>Клиенты</h3>
+  <div class="deals">
+    <h3>Сделки</h3>
     <div class="filter">
       <div class="filter_row">
         <DatePicker
@@ -16,7 +16,7 @@
           :hide-offset-dates="false"
           select-text="Выбрать"
           cancel-text="Закрыть"
-          @update:modelValue="clientStore.updateSelectedDate"
+          @update:modelValue="dealStore.updateSelectedDate"
           :markers="markers"
         >
           <template #marker="{ marker }">
@@ -26,78 +26,52 @@
 
         <Selects
           v-model="selectedCategory"
-          :options="clientStore.categories"
+          :options="dealStore.categories"
           placeholder="Выберите категорию"
-          @update:modelValue="clientStore.updateCategory"
+          @update:modelValue="dealStore.updateCategory"
         />
         <Selects
           v-model="selectedStatus"
-          :options="clientStore.statuses"
+          :options="dealStore.statuses"
           placeholder="Выберите статус"
-          @update:modelValue="clientStore.updateStatus"
+          @update:modelValue="dealStore.updateStatus"
           class="select_status"
         />
         <Selects
           v-model="selectedCity"
-          :options="clientStore.cities"
+          :options="dealStore.cities"
           placeholder="Выберите город"
-          @update:modelValue="clientStore.updateCity"
-        />
-        <Selects
-          v-model="hasWebsite"
-          :options="clientStore.hasWebsiteOptions"
-          placeholder="Наличие сайта"
-          @update:modelValue="clientStore.updateHasWebsite"
-          class="select_website"
+          @update:modelValue="dealStore.updateCity"
         />
         <Selects
           v-model="perPage"
-          :options="clientStore.perPageOptions"
+          :options="dealStore.perPageOptions"
           placeholder="Элементов на странице"
-          @update:modelValue="clientStore.updatePerPage"
+          @update:modelValue="dealStore.updatePerPage"
           class="select_perpage"
         />
       </div>
-      <div class="filter_row">
-        <div class="search-filter">
-          <input
-            type="text"
-            v-model="dynamicSearchModel"
-            :placeholder="
-              isPhoneSearch
-                ? 'Введите номер телефона'
-                : 'Введите запрос для поиска'
-            "
-            @input="filterBySearch"
-            class="search-input"
-          />
-          <Switcher v-model="isPhoneSearch" />
-        </div>
-
-        <div class="clear_filter" @click="clearFilters">
-          <IcBtn icon="solar:refresh-broken" />
-        </div>
-      </div>
     </div>
-    <div class="clients_main">
+
+    <div class="deals_main">
       <Loader
-        v-if="clientStore.isLoading"
+        v-if="dealStore.isLoading"
         style="background-color: transparent"
       />
       <div v-else>
-        <div class="client_list__w" v-if="clientStore.clients.length > 0">
-          <div class="clients__list">
-            <ClientCard
-              v-for="item in clients"
+        <div class="deal_list__w" v-if="dealStore.deals.length > 0">
+          <div class="deals__list">
+            <deal
+              v-for="item in deals"
               :key="item.id"
               :card="item"
-              :class="clientStore.getStatusClass(item.acf.status)"
+              :class="dealStore.getStatusClass(item.acf.status)"
             />
           </div>
           <pagination
-            @nextPage="clientStore.updatePage(page + 1)"
-            @prevPage="clientStore.updatePage(page - 1)"
-            :totalPages="clientStore.totalPages"
+            @nextPage="dealStore.updatePage(page + 1)"
+            @prevPage="dealStore.updatePage(page - 1)"
+            :totalPages="dealStore.totalPages"
             :currentPage="page"
             @goToPage="goToPage"
           />
@@ -111,128 +85,53 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, watchEffect } from "vue";
-import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
-import ClientCard from "@/components/ui/card/ClientCard.vue";
+import { onMounted, ref, watch } from "vue";
+import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
+import ClientCard from "@/components/ui/card/ClientCard.vue"; // при наличии можно заменить на DealCard.vue
 import pagination from "@/components/ui/buttons/pagination.vue";
 import Loader from "@/components/ui/loading/Loader.vue";
 import Selects from "@/components/ui/dropdown/Selects.vue";
 import Switcher from "@/components/ui/inputs/Switcher.vue";
 import IcBtn from "@/components/ui/buttons/IcBtn.vue";
 import { ru } from "date-fns/locale";
-import axios from "axios";
+import deal from "@/components/ui/card/deal.vue";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+
 const isPhoneSearch = ref(false);
-const clientStore = useClientStore();
+const dealStore = useDealStore();
+
 const {
-  clients,
+  deals,
   selectedCategory,
   selectedStatus,
   selectedCity,
-  hasWebsite,
   perPage,
-  searchPhone,
-  searchQuery,
   selectedDate,
   totalPages,
+  statuses,
   page,
-} = useClientStoreRefs();
+} = useDealStoreRefs();
+
+const dynamicSearchModel = ref("");
 
 onMounted(() => {
-  clientStore.getClients();
-  clientStore.getCategories();
+  dealStore.getDeals();
 });
-
-const dynamicSearchModel = computed({
-  get() {
-    return isPhoneSearch.value ? searchPhone.value : searchQuery.value;
-  },
-  set(value) {
-    if (isPhoneSearch.value) {
-      clientStore.updateSearchPhone(value);
-    } else {
-      clientStore.updateSearchQuery(value);
-    }
-  },
-});
-
-// Наблюдение за изменением переключателя
-watch(isPhoneSearch, (newValue) => {
-  if (newValue) {
-    // Очистить поле для поиска по имени при переключении на поиск по телефону
-    clientStore.updateSearchQuery("");
-  } else {
-    // Очистить поле для поиска по телефону при переключении на поиск по имени
-    clientStore.updateSearchPhone("");
-  }
-});
-
-function filterBySearch() {
-  if (isPhoneSearch.value) {
-    clientStore.updateSearchPhone(dynamicSearchModel.value);
-  } else {
-    clientStore.updateSearchQuery(dynamicSearchModel.value);
-  }
-}
 
 function clearFilters() {
-  clientStore.clearFilters();
+  dealStore.clearFilters();
 }
 
 const goToPage = (newPage: number) => {
   if (newPage >= 1 && newPage <= totalPages.value) {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    clientStore.updatePage(newPage);
+    dealStore.updatePage(newPage);
   }
 };
 
 const markers = ref<any>([]);
-
-// onMounted(async () => {
-//   await clientStore.getClients();
-//   updateMarkers();
-// });
-
-onMounted(async () => {
-  // isLoadingDeals.value = true;
-  try {
-    const res = await axios.get(`https://crm.gleede.ru/wp-json/wp/v2/deal`);
-    // deals.value = res.data;
-  } catch (e) {
-    console.error("Ошибка загрузки сделок", e);
-  } finally {
-    // isLoadingDeals.value = false;
-  }
-});
-watchEffect(() => {
-  if (clients.value.length > 0) {
-    updateMarkers();
-  }
-});
-
-function updateMarkers() {
-  markers.value = clients.value
-    .map((client) => {
-      const callbackDate = client.acf.callback;
-
-      // Проверка на валидность даты
-      const date = callbackDate ? new Date(callbackDate) : null;
-
-      if (date && !isNaN(date.getTime())) {
-        return {
-          date: date,
-          type: "dot",
-          tooltip: [{ text: "Звонки", color: "blue" }],
-        };
-      } else {
-        // console.warn(`Invalid date found for client ID: ${client.id}`);
-        return null; // Возвращаем null, чтобы исключить невалидные даты
-      }
-    })
-    .filter((marker) => marker !== null); // Фильтруем null значения
-}
 </script>
 
 <style scoped lang="scss">
@@ -385,5 +284,12 @@ h3 {
 
 :deep(.dp__marker_tooltip) {
   font-size: 12px;
+}
+
+.deals__list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 </style>

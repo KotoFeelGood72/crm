@@ -1,17 +1,19 @@
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore, storeToRefs } from "pinia";
 
 interface ModalsState {
   client: boolean;
   qr: boolean;
-  user: boolean
+  user: boolean;
+  create: boolean;
 }
 
-export const useModalStore = defineStore('modal', {
+export const useModalStore = defineStore("modal", {
   state: (): { modals: ModalsState } => ({
     modals: {
       client: false,
       user: false,
       qr: false,
+      create: false,
     },
   }),
   actions: {
@@ -22,7 +24,7 @@ export const useModalStore = defineStore('modal', {
       this.modals[modalName] = false;
       this.clearQueryParams(router);
     },
-   clearQueryParams(router: any) {
+    clearQueryParams(router: any) {
       const query = { ...router.currentRoute.value.query };
       delete query.client;
       delete query.phone;

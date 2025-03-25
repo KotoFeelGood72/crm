@@ -94,6 +94,30 @@ export const useClientStore = defineStore("clientStore", {
         this.isLoading = false;
       }
     },
+
+    async createClient(newClient: any) {
+      try {
+        const response = await api.post("/wp-json/custom/v1/create-client", {
+          name: newClient.name,
+          city: newClient.city,
+          phones: newClient.phones,
+          websites: newClient.websites,
+          category: newClient.category,
+          status: newClient.status,
+          callback: newClient.callback,
+          email: newClient.email,
+          note: newClient.note,
+        });
+
+        // Можно сразу подтянуть новых клиентов
+        await this.getClients();
+
+        return response.data;
+      } catch (error) {
+        console.error("Ошибка при создании клиента:", error);
+        throw error;
+      }
+    },
     formatDate(date: any) {
       const day = String(date.getDate()).padStart(2, "0");
       const month = String(date.getMonth() + 1).padStart(2, "0");

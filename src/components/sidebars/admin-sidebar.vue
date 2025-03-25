@@ -1,12 +1,7 @@
 <template>
   <div class="admin-sidebar">
     <div class="admin_logo">
-      <RouterLink to="/">
-        <img
-          src="http://manager.dynamic-devs-collective.ru/wp-content/uploads/2024/09/logo.svg"
-          alt=""
-        />
-      </RouterLink>
+      <RouterLink to="/" class="gradient-text"> GLEEDE </RouterLink>
     </div>
     <ul class="nav">
       <li v-for="(link, i) in AdminNav" :key="'admin-nav-item-' + i">
@@ -81,7 +76,7 @@ import { AdminNav } from "@/consts/AdminNav";
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   padding: 0 20px;
   p {
     font-size: 20px;
@@ -96,12 +91,20 @@ import { AdminNav } from "@/consts/AdminNav";
 }
 
 .admin_logo {
-  max-width: 120px;
-  @include flex-center;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  @include flex-start;
+  .gradient-text {
+    font-size: 34px;
+    font-weight: bold;
+    background: linear-gradient(
+      45deg,
+      #fbc531,
+      /* ярко-жёлтый */ #e67e22,
+      /* оранжевый */ #00b894 /* зелёно-бирюзовый */
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text; /* для Firefox */
+    text-fill-color: transparent;
   }
 }
 </style>
