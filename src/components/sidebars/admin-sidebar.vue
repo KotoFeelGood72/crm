@@ -25,7 +25,7 @@ import { AdminNav } from "@/consts/AdminNav";
   min-height: 100vh;
   height: 100%;
   border-right: 1px solid $bg-color-secondary;
-  min-width: 270px;
+  width: 15%;
   padding-top: 20px;
   position: sticky;
   top: 0;

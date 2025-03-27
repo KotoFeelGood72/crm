@@ -5,6 +5,7 @@ interface ModalsState {
   qr: boolean;
   user: boolean;
   create: boolean;
+  filter: boolean;
 }
 
 export const useModalStore = defineStore("modal", {
@@ -14,6 +15,7 @@ export const useModalStore = defineStore("modal", {
       user: false,
       qr: false,
       create: false,
+      filter: false,
     },
   }),
   actions: {

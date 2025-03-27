@@ -3,12 +3,12 @@
     <div v-if="!isDeleted" class="card">
       <div class="card_top">
         <ul class="card_tab__link">
-          <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
+          <li
+            @click.stop="activeTab = 'org'"
+            :class="{ active: activeTab === 'org' }"
+          >
             Сведение об организации
           </li>
-          <!-- <li @click.stop="activeTab = 'info'" :class="{ active: activeTab === 'info' }">
-            Сведение о контактном лице
-          </li> -->
           <li
             @click.stop="activeTab = 'history'"
             :class="{ active: activeTab === 'history' }"
@@ -37,11 +37,6 @@
               <p>Отрасль:</p>
               <span>{{ card.category_name?.[0]?.name || "Не указано" }}</span>
             </li>
-            <!-- <li>
-              <Icons icon="solar:map-arrow-square-broken" :size="18" />
-              <p>Адрес организации:</p>
-              <span>{{ card.acf.address }}</span>
-            </li> -->
             <li>
               <Icons icon="solar:phone-rounded-broken" :size="18" />
               <p>Телефон контактный:</p>
@@ -56,110 +51,15 @@
             <li>
               <Icons icon="solar:code-circle-broken" :size="18" />
               <p>Сайт:</p>
-              <a :href="firstWebsite" target="_blank" @click.stop="handleWebsiteClick">{{
-                firstWebsite
-              }}</a>
+              <a
+                :href="firstWebsite"
+                target="_blank"
+                @click.stop="handleWebsiteClick"
+                >{{ firstWebsite }}</a
+              >
             </li>
-            <!-- <li>
-              <Icons icon="solar:document-add-broken" :size="18" />
-              <p>E-mail:</p>
-              <div class="card_email__w">
-                <div class="card_email">
-                  <input
-                    type="email"
-                    v-model="localEmail"
-                    @input="handleEmailInput"
-                    @click.stop
-                    @keydown.enter="sendKP"
-                    placeholder="Внести E-Mail"
-                  />
-
-                  <div
-                    class="send__kp"
-                    v-if="showSendKPButton || props.card.acf.email"
-                    @click.stop="sendKP"
-                    :class="{ disabled: isStatusSendKP }"
-                  >
-                    {{ isStatusSendKP ? "Отправлено" : "Отправить" }}
-
-                    <Icons icon="solar:login-2-broken" v-if="!isLoad" size="16" />
-                    <div class="send_load" v-if="isLoad">
-                      <Icons icon="line-md:loading-loop" size="16" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </li> -->
-            <!-- <li>
-              <Icons icon="solar:user-id-broken" size="18" />
-              <p>ФИО, должность руководителя:</p>
-              <span>{{ card.acf.fio }}</span>
-            </li> -->
           </ul>
         </li>
-        <!-- <li class="card_tab__content" v-if="activeTab === 'info'">
-          <ul class="contacts_people">
-            <li>
-              <ul class="info__list">
-                <li>
-                  <Icons icon="solar:case-broken" :size="18" />
-                  <p>Ф.И.О:</p>
-                  <span>{{ card.acf.name }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:city-broken" :size="18" />
-                  <p>Год рождения:</p>
-                  <span>{{ card.acf.name }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:map-arrow-square-broken" :size="18" />
-                  <p>Должность:</p>
-                  <span>{{ card.acf.address }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:phone-rounded-broken" :size="18" />
-                  <p>Телефон контактный:</p>
-                  <div
-                    class="card__phone"
-                    v-if="formattedPhone"
-                    @click.stop="handlePhoneClick"
-                  >
-                    <span>{{ formattedPhone }}</span>
-                  </div>
-                </li>
-                <li>
-                  <Icons icon="solar:document-add-broken" :size="18" />
-                  <p>E-mail:</p>
-                  <span>{{ card.acf.email }}</span>
-                </li>
-                <li>
-                  <Icons icon="solar:code-circle-broken" :size="18" />
-                  <p>ЛПР:</p>
-                  <span class="tags">Да</span>
-                </li>
-                <li>
-                  <Icons icon="solar:code-circle-broken" :size="18" />
-                  <p>ЛПР Связаный с клиентом:</p>
-                  <span>Иванов Иван Иванович</span>
-                </li>
-                <li class="list_item__full">
-                  <Icons icon="solar:user-id-broken" :size="18" />
-                  <p>Услуги:</p>
-                  <ul class="box__list">
-                    <li>Продвижение сайта</li>
-                    <li>Разработка сайта</li>
-                    <li>Контекстная реклама</li>
-                    <li>Правки на сайте</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <div class="card_tab_infoAdd">
-            <Icons icon="solar:traffic-economy-broken" />
-            <p>Добавить</p>
-          </div>
-        </li> -->
         <li class="card_tab__content" v-if="activeTab === 'history'">
           <ul class="info__list history_list">
             <li class="history_item">
@@ -234,7 +134,10 @@
                   @keydown.enter="onEnter"
                 ></textarea>
                 <div class="send_comment" @click.stop="addComment">
-                  <Icons icon="solar:chat-round-unread-bold" :size="20" />Отправить
+                  <Icons
+                    icon="solar:chat-round-unread-bold"
+                    :size="20"
+                  />Отправить
                 </div>
               </div>
             </li>
@@ -242,30 +145,12 @@
         </li>
       </ul>
       <div class="card_bottom">
-        <div class="card_bottom__left">
-          <div class="card_link__btn">
-            <IcBtn icon="solar:login-broken" />
-            Открыть
-          </div>
-
-          <div class="card_link__btn">
-            <IcBtn icon="solar:chat-line-broken" />
-            Комментарий
-          </div>
-          <!-- <div class="card_link__btn">
-            <IcBtn icon="solar:trash-bin-minimalistic-2-broken" />
-            Удалить
-          </div> -->
-        </div>
-        <div class="card_bottom__right">
-          <div class="card__view">
-            <Icons icon="solar:eye-broken" :size="20" />Просмотрено: 1
-          </div>
-          <div class="card__kp">
-            <Icons icon="solar:file-right-broken" :size="20" />КП:
-            {{ isStatusSendKP ? "Отправлено" : "Не отправлено" }}
-          </div>
-        </div>
+        <p>
+          <Icons icon="solar:clipboard-text-broken" :size="14" />{{
+            lastComment.comment_content
+          }}
+        </p>
+        <div class="date">{{ lastComment.comment_date }}</div>
       </div>
     </div>
   </transition>
@@ -274,7 +159,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import Selects from "../dropdown/Selects.vue";
-import IcBtn from "../buttons/IcBtn.vue";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "vue-router";
 // @ts-ignore
@@ -308,8 +192,14 @@ const emit = defineEmits(["deleteCard", "updateCard"]);
 const isLoading = ref(false);
 const isDeleted = ref(false);
 
-const isStatusSendKP = computed(() => {
-  return props.card.acf.status_kp === "Отправлено";
+const lastComment = computed(() => {
+  if (!props.card.comments || props.card.comments.length === 0) return null;
+  // Сортируем по дате и берём последний
+  return [...props.card.comments].sort((a, b) => {
+    return (
+      new Date(b.comment_date).getTime() - new Date(a.comment_date).getTime()
+    );
+  })[0];
 });
 
 const groupedComments = computed(() => {
@@ -334,7 +224,9 @@ const firstWebsite = computed(() => {
 
 const formattedPhone = computed(() => {
   if (!props.card.acf.phones) return null;
-  const phones = props.card.acf.phones.split(" ").map((phone: any) => phone.trim());
+  const phones = props.card.acf.phones
+    .split(" ")
+    .map((phone: any) => phone.trim());
   const firstPhone = phones[0];
   if (firstPhone.startsWith("8")) {
     return formatPhoneNumber(firstPhone.replace("8", "+7"));
@@ -398,7 +290,9 @@ async function addComment() {
       });
 
       // После успешной отправки комментария, заново получаем обновленную карточку клиента
-      const updatedCard = await api.get(`/wp-json/wp/v2/client_new/${props.card.id}`);
+      const updatedCard = await api.get(
+        `/wp-json/wp/v2/client_new/${props.card.id}`
+      );
 
       // Обновляем карточку клиента в хранилище
       clientStore.updateClientInStore(updatedCard.data);
@@ -490,7 +384,6 @@ async function updateCallback(newCallback: Date) {
 .card {
   background-color: $white;
   border: 1px solid $light;
-  // padding: 20px;
 }
 .card_top {
   margin-bottom: 10px;
@@ -505,14 +398,12 @@ async function updateCallback(newCallback: Date) {
 .card_tab__link {
   @include flex-start;
   list-style: none;
-  // gap: 10px;
 
   li {
     border-bottom: 2px solid transparent;
-    // background-color: $ulight;
     height: 100%;
-    padding: 15px 15px;
-    font-size: 14px;
+    padding: 10px;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     &:hover {
@@ -540,9 +431,9 @@ async function updateCallback(newCallback: Date) {
     border-bottom: 1px dotted $light;
     @include flex-start;
     // align-items: flex-start;
-    font-size: 14px;
+    font-size: 11px;
     gap: 5px;
-    padding: 15px 0;
+    padding: 8px 0;
 
     span {
       font-weight: 500;
@@ -552,8 +443,7 @@ async function updateCallback(newCallback: Date) {
 }
 
 .card_tab__content {
-  padding: 20px;
-  padding-bottom: 40px;
+  padding: 10px 10px 20px 10px;
   font-weight: 400;
 }
 
@@ -569,8 +459,8 @@ async function updateCallback(newCallback: Date) {
 
 .card_bottom {
   @include flex-space;
-  gap: 20px;
-  padding: 0 20px 20px 20px;
+  gap: 10px;
+  padding: 0 10px 10px 10px;
 }
 
 .card__view,
@@ -818,13 +708,12 @@ async function updateCallback(newCallback: Date) {
 }
 
 .card {
-  border-radius: 10px;
-  overflow: hidden;
+  border-radius: 5px;
   position: relative;
-  padding-left: 50px;
+  padding-left: 30px;
   &:before {
     content: "";
-    width: 50px;
+    width: 30px;
     height: 100%;
     position: absolute;
     top: 0;
@@ -836,11 +725,11 @@ async function updateCallback(newCallback: Date) {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 10px;
     text-transform: uppercase;
     color: $white;
     font-weight: 500;
-    letter-spacing: 5px;
+    letter-spacing: 1px;
   }
   &.status-new {
     border: 1px solid transparent;
@@ -962,6 +851,20 @@ async function updateCallback(newCallback: Date) {
     font-size: 22px;
     font-weight: 600;
     margin-left: 20px;
+  }
+}
+
+.card_bottom {
+  background-color: #f5f5f5f5;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin: 10px;
+  border-radius: 5px;
+  gap: 40px;
+
+  p {
+    @include flex-start;
+    gap: 5px;
   }
 }
 </style>

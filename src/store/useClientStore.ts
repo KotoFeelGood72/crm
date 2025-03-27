@@ -37,14 +37,13 @@ export const useClientStore = defineStore("clientStore", {
     perPage: "10" as any,
     totalPages: 1 as any,
     selectedCategory: "",
-    selectedStatus: "",
+    selectedStatus: "Новый",
     selectedCity: "",
     hasWebsite: "",
     searchQuery: "",
     searchPhone: "",
     selectedDate: null, // Добавляем переменную для выбранной даты
     isLoading: false,
-    currentView: "list", // 'list' or 'card'
   }),
   actions: {
     async getClients() {
@@ -173,8 +172,7 @@ export const useClientStore = defineStore("clientStore", {
         const index = this.clients.findIndex(
           (item) => item.id === updatedClient.id
         );
-
-        // Если клиент найден, обновляем его данные
+        
         if (index !== -1) {
           this.clients[index] = {
             ...this.clients[index], // сохраняем все существующие данные
@@ -191,6 +189,8 @@ export const useClientStore = defineStore("clientStore", {
             },
             email: updatedClient.email, // обновляем email
           };
+          this.getClients();
+          console.log("updatedClient", updatedClient);
         }
       } catch (error) {
         console.error(`Failed to update client ${updatedClient.id}:`, error);
@@ -205,11 +205,6 @@ export const useClientStore = defineStore("clientStore", {
       }
     },
 
-    setCurrentView(view: string) {
-      this.currentView = view;
-    },
-
-    // Эти методы будут вызываться при изменении фильтров
     updateCategory(category: string) {
       this.selectedCategory = category;
       this.page = 1;
@@ -284,27 +279,36 @@ export const useClientStore = defineStore("clientStore", {
     },
     async updateClientStatus(clientId: number, newStatus: string) {
       try {
-        // Находим клиента в хранилище
-        const clientIndex = this.clients.findIndex(
-          (client) => client.id === clientId
-        );
+        const clientIndex = this.clients.findIndex((client) => client.id === clientId);
         if (clientIndex === -1) return;
-
-        // Обновляем статус клиента на сервере
-        const updatedClient = {
-          ...this.clients[clientIndex],
-          acf: { ...this.clients[clientIndex].acf, status: newStatus },
-        };
+    
+        // Отправка обновлённого статуса на сервер
         await api.post(`/wp-json/custom/v1/update-client/${clientId}`, {
           status: newStatus,
         });
-
-        // Обновляем клиента в хранилище
-        this.clients[clientIndex] = updatedClient;
+    
+        const currentClient = this.clients[clientIndex];
+    
+        // Если клиент стал "Клиент" — удаляем из списка
+        if (newStatus === "Клиент") {
+          this.clients.splice(clientIndex, 1);
+          console.log(`Клиент #${clientId} перемещён в сделки и удалён из стора`);
+          return;
+        }
+    
+        // Обновляем статус клиента
+        this.clients[clientIndex].acf.status = newStatus;
+    
+        // Если активный фильтр по статусу больше не совпадает — удаляем карточку из текущего списка
+        if (this.selectedStatus && newStatus !== this.selectedStatus) {
+          this.clients.splice(clientIndex, 1);
+          console.log(`Клиент #${clientId} обновлён до статуса ${newStatus} и скрыт из текущего фильтра`);
+        }
+    
       } catch (error) {
-        console.error(`Failed to update status for client ${clientId}:`, error);
+        console.error(`Ошибка при обновлении статуса клиента ${clientId}:`, error);
       }
-    },
+    }
   },
 });
 

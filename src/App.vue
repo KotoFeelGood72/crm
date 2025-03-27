@@ -22,8 +22,20 @@ const isAnyModalActive = computed(() => {
 });
 const isCart = computed(() => modals.value.client);
 const isQr = computed(() => modals.value.qr);
+const isFilter = computed(() => modals.value.filter);
 
-const modalPositionX = computed(() => (isCart.value || isQr.value ? "right" : "center"));
+const modalPositionX = computed(() => {
+  switch (true) {
+    case isCart.value:
+      return "right";
+    case isQr.value:
+      return "right";
+    case isFilter.value:
+      return "right";
+    default:
+      return "center";
+  }
+});
 
 const route = useRoute();
 

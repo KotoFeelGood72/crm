@@ -81,7 +81,7 @@ export const useDealStore = defineStore("deals", {
         case "Отработка возражений":
           return "status-working";
         case "Подготовка документов":
-          return "status-closed";
+          return "status-not-relevant";
         case "Ожидание оплаты":
           return "status-pay";
         case "Успех":

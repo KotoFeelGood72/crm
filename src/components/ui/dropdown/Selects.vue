@@ -3,7 +3,7 @@
     <div class="select-trigger">
       <span>{{ selectedOption ? getSelectedOptionName() : placeholder }}</span>
       <span class="arrow" :class="{ open: dropdownOpen }">
-        <Icons icon="bi:chevron-up" :size="16" />
+        <Icons icon="bi:chevron-up" :size="12" />
       </span>
     </div>
     <div class="select-dropdown" v-if="dropdownOpen">
@@ -21,7 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted, onBeforeUnmount, watch } from "vue";
+import {
+  ref,
+  defineProps,
+  defineEmits,
+  onMounted,
+  onBeforeUnmount,
+  watch,
+} from "vue";
 
 const props = defineProps<{
   modelValue: any;
@@ -45,7 +52,9 @@ const selectOption = (option: string) => {
 };
 
 const getSelectedOptionName = () => {
-  const option = props.options.find((opt: any) => opt.id === selectedOption.value);
+  const option = props.options.find(
+    (opt: any) => opt.id === selectedOption.value
+  );
   return option ? option.name : "";
 };
 
@@ -78,7 +87,7 @@ onBeforeUnmount(() => {
   width: 100%;
   cursor: pointer;
   user-select: none;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .select-trigger {
@@ -87,7 +96,7 @@ onBeforeUnmount(() => {
   align-items: center;
   background-color: #fff;
   border: 1px solid $light;
-  padding: 7px;
+  padding: 4px;
   border-radius: 4px;
   position: relative;
 }

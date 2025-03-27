@@ -1,84 +1,18 @@
 <template>
   <div class="clients">
-    <h3>Клиенты</h3>
-    <div class="filter">
-      <div class="filter_row">
-        <DatePicker
-          v-model="selectedDate"
-          :format="'dd.MM.yyyy'"
-          :enable-time-picker="false"
-          :month-change-on-scroll="false"
-          auto-apply
-          disable-year-select
-          :format-locale="ru"
-          placeholder="Выберите дату"
-          position="left"
-          :hide-offset-dates="false"
-          select-text="Выбрать"
-          cancel-text="Закрыть"
-          @update:modelValue="clientStore.updateSelectedDate"
-          :markers="markers"
-        >
-          <template #marker="{ marker }">
-            <span v-if="marker" class="custom-marker"></span>
-          </template>
-        </DatePicker>
-
-        <Selects
-          v-model="selectedCategory"
-          :options="clientStore.categories"
-          placeholder="Выберите категорию"
-          @update:modelValue="clientStore.updateCategory"
-        />
-        <Selects
-          v-model="selectedStatus"
-          :options="clientStore.statuses"
-          placeholder="Выберите статус"
-          @update:modelValue="clientStore.updateStatus"
-          class="select_status"
-        />
-        <Selects
-          v-model="selectedCity"
-          :options="clientStore.cities"
-          placeholder="Выберите город"
-          @update:modelValue="clientStore.updateCity"
-        />
-        <Selects
-          v-model="hasWebsite"
-          :options="clientStore.hasWebsiteOptions"
-          placeholder="Наличие сайта"
-          @update:modelValue="clientStore.updateHasWebsite"
-          class="select_website"
-        />
-        <Selects
-          v-model="perPage"
-          :options="clientStore.perPageOptions"
-          placeholder="Элементов на странице"
-          @update:modelValue="clientStore.updatePerPage"
-          class="select_perpage"
-        />
-      </div>
-      <div class="filter_row">
-        <div class="search-filter">
-          <input
-            type="text"
-            v-model="dynamicSearchModel"
-            :placeholder="
-              isPhoneSearch ? 'Введите номер телефона' : 'Введите запрос для поиска'
-            "
-            @input="filterBySearch"
-            class="search-input"
-          />
-          <Switcher v-model="isPhoneSearch" />
-        </div>
-
-        <div class="clear_filter" @click="clearFilters">
-          <IcBtn icon="solar:refresh-broken" />
-        </div>
+    <div class="row_top">
+      <h3>Клиенты</h3>
+      <div class="filter-btn" @click="openModal('filter')">
+        <Icons icon="solar:soundwave-square-broken" :size="14" />
+        <p>Фильтры</p>
       </div>
     </div>
+
     <div class="clients_main">
-      <Loader v-if="clientStore.isLoading" style="background-color: transparent" />
+      <Loader
+        v-if="clientStore.isLoading"
+        style="background-color: transparent"
+      />
       <div v-else>
         <div class="client_list__w" v-if="clientStore.clients.length > 0">
           <div class="clients__list">
@@ -108,6 +42,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed, watch, watchEffect } from "vue";
 import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
+import { useModalStore } from "@/store/useModalStore";
 import ClientCard from "@/components/ui/card/ClientCard.vue";
 import pagination from "@/components/ui/buttons/pagination.vue";
 import Loader from "@/components/ui/loading/Loader.vue";
@@ -120,6 +55,8 @@ import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 const isPhoneSearch = ref(false);
 const clientStore = useClientStore();
+
+const { openModal } = useModalStore();
 const {
   clients,
   selectedCategory,
@@ -288,7 +225,7 @@ function updateMarkers() {
   margin-bottom: 30px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 7px;
 }
 
 .clients_main {
@@ -347,7 +284,6 @@ function updateMarkers() {
 h3 {
   color: $dark;
   font-size: 20px;
-  margin-bottom: 20px;
 }
 :deep(.dp__cell_inner) {
   position: relative;
@@ -368,5 +304,25 @@ h3 {
 
 :deep(.dp__marker_tooltip) {
   font-size: 12px;
+}
+
+.filter-btn {
+  @include flex-center;
+  cursor: pointer;
+  background-color: hsla(215, 100%, 54%, 0.12);
+  padding: 5px 20px;
+  border-radius: 5px;
+  font-size: 12px;
+  gap: 5px;
+  font-weight: 500;
+  user-select: none;
+}
+
+.row_top {
+  @include flex-space;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid rgb(230, 235, 241);
+  margin-bottom: 20px;
 }
 </style>
