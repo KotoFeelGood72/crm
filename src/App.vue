@@ -2,6 +2,9 @@
   <component :is="layoutComponent" :class="{ fixed: isAnyModalActive }">
     <router-view />
     <Modal :positionX="modalPositionX" />
+    <Transition name="fade-bg">
+      <div v-if="isAnyModalActive" class="bg"></div>
+    </Transition>
   </component>
 </template>
 
@@ -67,6 +70,15 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000a6;
+}
+
 .tooltip-holder {
   display: flex;
   justify-content: center;
@@ -85,5 +97,20 @@ html {
 
 body {
   font-family: "Montserrat", sans-serif;
+}
+
+.fade-bg-enter-active,
+.fade-bg-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-bg-enter-from,
+.fade-bg-leave-to {
+  opacity: 0;
+}
+
+.fade-bg-enter-to,
+.fade-bg-leave-from {
+  opacity: 1;
 }
 </style>

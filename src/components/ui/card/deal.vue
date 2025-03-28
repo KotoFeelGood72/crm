@@ -1,27 +1,46 @@
 <template>
-  <div v-if="!isDeleted" class="card">
-    <div class="card_edit">
-      <IcBtn icon="solar:menu-dots-bold" />
+  <div class="card">
+    <div class="card__head">
+      <chip :title="formatedDate(card.date)" icon="solar:calendar-date-bold" />
+      <div class="card_edit">
+        <Icons icon="solar:menu-dots-bold" />
+      </div>
     </div>
     <div class="card_top">
       <p>{{ card.acf.name }}</p>
-      <span>{{ card.acf.name }}</span>
-    </div>
-    <div class="card_body">
-      <div class="deal_info">
+      <div class="row">
+        <chip title="http://localhost:5123/deals" icon="solar:planet-3-bold" />
         <chip title="150 000" icon="solar:dollar-minimalistic-linear" />
-        <chip title="Сайт" icon="solar:chart-square-linear" />
-        <chip title="27.05.2025" icon="solar:calendar-date-linear" />
       </div>
     </div>
-    <div class="card_bottom"></div>
+    <div class="card_body">
+      <div class="row">
+        <chip
+          :title="formatedPhone(card.acf.phones)"
+          icon="solar:phone-calling-bold"
+        />
+        <p>Виктор Иванович</p>
+      </div>
+    </div>
+    <div class="card_bottom">
+      <div class="card__reviews">
+        <p :class="{ hidden: !hiddenText }">
+          Уточнить по протоколу как правильно общаться с людьми и продавать им
+          потрясающие продукты
+        </p>
+        <div class="more" @click="hiddenText = !hiddenText">Развернуть</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import chip from "../buttons/chip.vue";
 import { ref } from "vue";
-import IcBtn from "../buttons/IcBtn.vue";
+// @ts-ignore
+import { formatedDate } from "@/utils/formatedDate.js";
+// @ts-ignore
+import { formatedPhone } from "@/utils/formatedPhone.js";
 
 withDefaults(
   defineProps<{
@@ -32,8 +51,7 @@ withDefaults(
   }
 );
 
-const emit = defineEmits(["deleteCard", "updateCard"]);
-const isDeleted = ref(false);
+const hiddenText = ref(false);
 </script>
 
 <style scoped lang="scss">
@@ -44,6 +62,15 @@ const isDeleted = ref(false);
   border-radius: 10px;
   position: relative;
   cursor: grab;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card_top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .deal_info {
@@ -51,15 +78,19 @@ const isDeleted = ref(false);
   gap: 4px;
 }
 
+.card__head,
+.row {
+  @include flex-space;
+}
+
 .card_edit {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  @include flex-center;
+  width: 20px;
+  height: 20px;
 }
 
 .card_top {
   font-size: 12px;
-  margin-bottom: 20px;
   font-weight: 500;
   p {
     max-width: 80%;
@@ -67,5 +98,32 @@ const isDeleted = ref(false);
   span {
     font-size: 10px;
   }
+}
+
+.card_body {
+  p {
+    font-size: 10px;
+    font-weight: 600;
+  }
+}
+
+.card__reviews {
+  font-size: 12px;
+  p {
+    margin-bottom: 5px;
+  }
+}
+
+.more {
+  font-size: 10px;
+  font-weight: 600;
+  color: $blue;
+  cursor: pointer;
+}
+
+.hidden {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

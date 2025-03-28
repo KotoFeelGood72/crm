@@ -22,10 +22,7 @@
           class="kanban__cards"
         >
           <template #item="{ element }">
-            <deal
-              :card="element"
-              :class="dealStore.getStatusClass(element.acf.status)"
-            />
+            <deal :card="element" />
           </template>
         </draggable>
       </div>
@@ -36,15 +33,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import Loader from "@/components/ui/loading/Loader.vue";
-import Selects from "@/components/ui/dropdown/Selects.vue";
-import { ru } from "date-fns/locale";
 import deal from "@/components/ui/card/deal.vue";
 // @ts-ignore
 import draggable from "vuedraggable";
-import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const groupedDeals = ref<Record<string, any[]>>({});

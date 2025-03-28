@@ -1,19 +1,19 @@
-<!-- @format -->
-
 <template>
-  <div
-    class="modal"
-    v-if="activeModalComponent"
-    :class="['modal_postionY__' + positionY, 'modal_postionX__' + positionX]"
-  >
-    <div class="modal__bg" @click="closeCurrentModal"></div>
-    <div class="modal_main__w">
-      <div class="modal_main">
-        <CloseModal v-if="isCloseModalBtn" @click="closeCurrentModal()" />
-        <component :is="activeModalComponent" />
+  <Transition name="fade-modal">
+    <div
+      class="modal"
+      v-if="activeModalComponent"
+      :class="['modal_postionY__' + positionY, 'modal_postionX__' + positionX]"
+    >
+      <div class="modal__bg" @click="closeCurrentModal"></div>
+      <div class="modal_main__w">
+        <div class="modal_main">
+          <CloseModal v-if="isCloseModalBtn" @click="closeCurrentModal()" />
+          <component :is="activeModalComponent" />
+        </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -80,8 +80,6 @@ const isCloseModalBtn = computed(() => {
   switch (activeModalName.value) {
     case "client":
       return true;
-    case "create":
-      return true;
     case "qr":
       return true;
     case "user":
@@ -146,14 +144,6 @@ const closeCurrentModal = () => {
     }
   }
 }
-.modal__bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000000a6;
-}
 
 .modal_main__w {
   position: relative;
@@ -178,5 +168,22 @@ const closeCurrentModal = () => {
   @include bp($point_4) {
     display: none;
   }
+}
+
+.fade-modal-enter-active,
+.fade-modal-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-modal-enter-from,
+.fade-modal-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-modal-enter-to,
+.fade-modal-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

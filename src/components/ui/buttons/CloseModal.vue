@@ -11,12 +11,12 @@
   width: 40px;
   height: 40px;
   @include flex-center;
-  background-color: #fff;
+  background-color: #fdeded;
   border-radius: 100px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   &:hover {
-    background-color: #ffffff65;
+    background-color: #ffe2e2;
   }
 }
 </style>

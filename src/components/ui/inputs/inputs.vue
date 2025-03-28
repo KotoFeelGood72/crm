@@ -1,5 +1,6 @@
 <template>
   <div class="input">
+    <div class="label" v-if="label">{{ label }}</div>
     <div class="input__w">
       <div class="input-icon" v-if="icon">
         <SvgIcon :name="icon" />
@@ -21,6 +22,7 @@ const props = withDefaults(
     error?: boolean;
     icon: string;
     modelValue: string;
+    label?: string;
   }>(),
   {
     type: "text",
@@ -29,6 +31,7 @@ const props = withDefaults(
     error: false,
     icon: "",
     modelValue: "",
+    label: "",
   }
 );
 
@@ -42,31 +45,24 @@ const localValue = computed({
 
 <style scoped lang="scss">
 .input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
-}
-.input__w {
-  border: 1px solid $bg-color-secondary;
-  border-radius: 15px;
-  @include flex-start;
-  position: relative;
-  overflow: hidden;
-  .input-icon {
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    transform: translateY(-50%);
+  .label {
+    font-size: 12px;
+    font-weight: 600;
   }
-
   input {
+    -webkit-appearance: none;
     appearance: none;
     -moz-appearance: none;
-    -webkit-appearance: none;
+    border: 1px solid #cccccc;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
     width: 100%;
-    padding: 16px 15px 16px 50px;
-    font-size: $body-2;
-    &:focus {
-      outline: none;
-    }
+    background-color: $white;
   }
 }
 </style>

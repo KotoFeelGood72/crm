@@ -22,7 +22,7 @@ export const useModalStore = defineStore("modal", {
     openModal(modalName: keyof ModalsState) {
       this.modals[modalName] = true;
     },
-    closeModal(modalName: keyof ModalsState, router: any): void {
+    closeModal(modalName: keyof ModalsState, router?: any): void {
       this.modals[modalName] = false;
       this.clearQueryParams(router);
     },
