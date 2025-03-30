@@ -22,7 +22,7 @@
           class="kanban__cards"
         >
           <template #item="{ element }">
-            <deal :card="element" />
+            <deal :card="element" @click="openModal('deal')" />
           </template>
         </draggable>
       </div>
@@ -37,9 +37,12 @@ import { onMounted, ref } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import Loader from "@/components/ui/loading/Loader.vue";
 import deal from "@/components/ui/card/deal.vue";
+import { useModalStore } from "@/store/useModalStore";
 // @ts-ignore
 import draggable from "vuedraggable";
 import "@vuepic/vue-datepicker/dist/main.css";
+
+const { openModal } = useModalStore();
 
 const groupedDeals = ref<Record<string, any[]>>({});
 

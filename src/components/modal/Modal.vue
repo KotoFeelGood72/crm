@@ -24,6 +24,9 @@ import { useRouter } from "vue-router";
 const AsyncModalSingleData = defineAsyncComponent(
   () => import("./view/ModalSingleData.vue")
 );
+const AsyncModalDeal = defineAsyncComponent(
+  () => import("./view/ModalDeal.vue")
+);
 
 const AsyncModalSingleQR = defineAsyncComponent(
   () => import("./view/SingleQR.vue")
@@ -68,6 +71,8 @@ const activeModalComponent = computed(() => {
           return AsyncModalCreate;
         case "filter":
           return AsyncModalFilter;
+        case "deal":
+          return AsyncModalDeal;
         default:
           return null;
       }

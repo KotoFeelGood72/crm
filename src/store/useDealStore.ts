@@ -203,6 +203,16 @@ export const useDealStore = defineStore("deals", {
       }
     },
 
+    async getDealById(id: number) {
+      try {
+        const response = await api.get(`/wp-json/custom/v1/deal/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error(`Failed to fetch deal with id ${id}:`, error);
+        return null;
+      }
+    },
+
     async updateDealStatus(dealId: number, newStatus: string) {
       try {
         const index = this.deals.findIndex((deal) => deal.id === dealId);
