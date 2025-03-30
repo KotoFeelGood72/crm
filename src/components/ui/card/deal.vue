@@ -25,10 +25,11 @@
     <div class="card_bottom">
       <div class="card__reviews">
         <p :class="{ hidden: !hiddenText }">
-          Уточнить по протоколу как правильно общаться с людьми и продавать им
-          потрясающие продукты
+          {{ lastComment }}
         </p>
-        <div class="more" @click="hiddenText = !hiddenText">Развернуть</div>
+        <div class="more" @click.stop="hiddenText = !hiddenText">
+          Развернуть
+        </div>
       </div>
     </div>
   </div>
@@ -36,13 +37,13 @@
 
 <script setup lang="ts">
 import chip from "../buttons/chip.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 // @ts-ignore
 import { formatedDate } from "@/utils/formatedDate.js";
 // @ts-ignore
 import { formatedPhone } from "@/utils/formatedPhone.js";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     card: any;
   }>(),
@@ -52,6 +53,14 @@ withDefaults(
 );
 
 const hiddenText = ref(false);
+
+const lastComment = computed(() => {
+  const history = props.card.acf?.history;
+  if (Array.isArray(history) && history.length > 0) {
+    return history[history.length - 1].txt;
+  }
+  return "Комментариев пока нет";
+});
 </script>
 
 <style scoped lang="scss">

@@ -5,7 +5,12 @@
       <div class="input-icon" v-if="icon">
         <SvgIcon :name="icon" />
       </div>
-      <input :type="type" :placeholder="placeholder" v-model="localValue" />
+      <input
+        :type="type"
+        :placeholder="placeholder"
+        v-model="localValue"
+        :disabled="disabled"
+      />
     </div>
     <span v-if="error" class="input-message">{{ message }}</span>
   </div>
@@ -23,6 +28,7 @@ const props = withDefaults(
     icon: string;
     modelValue: string;
     label?: string;
+    disabled?: boolean;
   }>(),
   {
     type: "text",
@@ -32,6 +38,7 @@ const props = withDefaults(
     icon: "",
     modelValue: "",
     label: "",
+    disabled: false,
   }
 );
 
@@ -57,12 +64,16 @@ const localValue = computed({
     -webkit-appearance: none;
     appearance: none;
     -moz-appearance: none;
-    border: 1px solid #cccccc;
-    padding: 10px 20px;
-    border-radius: 4px;
+    border: 1px solid #cccccc4a;
+    padding: 5px 20px;
     font-size: 14px;
     width: 100%;
     background-color: $white;
+
+    &:disabled {
+      background-color: #f1f1f1;
+      // cursor: not-allowed;
+    }
   }
 }
 </style>

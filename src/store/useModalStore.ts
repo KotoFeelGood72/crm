@@ -10,7 +10,7 @@ interface ModalsState {
 }
 
 export const useModalStore = defineStore("modal", {
-  state: (): { modals: ModalsState } => ({
+  state: (): { modals: any } => ({
     modals: {
       client: false,
       user: false,
@@ -27,6 +27,13 @@ export const useModalStore = defineStore("modal", {
     closeModal(modalName: keyof ModalsState, router?: any): void {
       this.modals[modalName] = false;
       this.clearQueryParams(router);
+    },
+    closeAllModals(router?: any, route?: any) {
+      Object.keys(this.modals).forEach((modalName) => {
+        // if (modalName !== "AlertPromo" && modalName !== "AlertSquare") {
+        this.modals[modalName as keyof any] = false;
+        // }
+      });
     },
     clearQueryParams(router: any) {
       const query = { ...router.currentRoute.value.query };

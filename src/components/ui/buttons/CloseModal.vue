@@ -1,10 +1,14 @@
 <template>
-  <div class="close-modal">
+  <div class="close-modal" @click="closeAllModals">
     <Icons icon="ic:round-close" size="18px" color="#424242" />
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useModalStore } from "@/store/useModalStore";
+
+const { closeAllModals } = useModalStore();
+</script>
 
 <style scoped lang="scss">
 .close-modal {

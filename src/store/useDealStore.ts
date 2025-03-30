@@ -104,31 +104,19 @@ export const useDealStore = defineStore("deals", {
       }
     },
 
-    async updateDeal(updatedDeal: any) {
-      try {
-        await api.post(`/wp-json/custom/v1/update-deal/${updatedDeal.id}`, {
-          name: updatedDeal.acf.name,
-          city: updatedDeal.acf.city,
-          client: updatedDeal.acf.client,
-          status: updatedDeal.acf.status,
-          callback: updatedDeal.acf.callback,
-          value: updatedDeal.acf.value,
-        });
 
-        const index = this.deals.findIndex(
-          (item) => item.id === updatedDeal.id
+    
+    async updateDeal(id: number, fields: Record<string, any>) {
+      try {
+        const response = await api.post(
+          `/wp-json/custom/v1/update-deal/${id}`,
+          fields // 👈 только нужные поля
         );
-        if (index !== -1) {
-          this.deals[index] = {
-            ...this.deals[index],
-            acf: {
-              ...this.deals[index].acf,
-              ...updatedDeal.acf,
-            },
-          };
-        }
+    
+        return response.data;
       } catch (error) {
-        console.error(`Failed to update deal ${updatedDeal.id}:`, error);
+        console.error(`Failed to update deal ${id}:`, error);
+        throw error;
       }
     },
 
