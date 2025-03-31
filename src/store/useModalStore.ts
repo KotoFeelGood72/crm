@@ -1,5 +1,4 @@
 import { defineStore, storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
 
 interface ModalsState {
   client: boolean;
