@@ -6,12 +6,6 @@
           <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
             Сведение об организации
           </li>
-          <li
-            @click.stop="activeTab = 'history'"
-            :class="{ active: activeTab === 'history' }"
-          >
-            Взаимодействие
-          </li>
         </ul>
         <Selects
           v-model="selectedStatus"
@@ -25,141 +19,55 @@
         <li class="card_tab__content" v-if="activeTab === 'org'">
           <ul class="info__list">
             <li>
-              <Icons icon="solar:case-broken" :size="18" />
               <p>Организация:</p>
               <span>{{ card.acf.name }}</span>
             </li>
             <li>
-              <Icons icon="solar:city-broken" :size="18" />
-              <p>Отрасль:</p>
-              <span>{{ card.category_name?.[0]?.name || "Не указано" }}</span>
+              <p>Город:</p>
+              <span>{{ card.acf.city }}</span>
             </li>
             <li>
-              <Icons icon="solar:phone-rounded-broken" :size="18" />
-              <p>Телефон контактный:</p>
-              <div
-                class="card__phone"
-                v-if="formattedPhone"
-                @click.stop="handlePhoneClick"
-              >
-                <span>{{ formattedPhone }}</span>
+              <p>Телефон:</p>
+              <div class="card__phone">
+                <span v-for="item in card.acf.phone_list" :key="item">{{
+                  item.item
+                }}</span>
               </div>
             </li>
             <li>
-              <Icons icon="solar:code-circle-broken" :size="18" />
-              <p>Сайт:</p>
-              <a :href="firstWebsite" target="_blank" @click.stop="handleWebsiteClick">{{
-                firstWebsite
-              }}</a>
-            </li>
-          </ul>
-        </li>
-        <li class="card_tab__content" v-if="activeTab === 'history'">
-          <ul class="info__list history_list">
-            <li class="history_item">
-              <div class="item_head">
-                <p>Перезвонить:</p>
-              </div>
-              <div class="input_date">
-                <DatePicker
-                  v-model="callback"
-                  :format="'dd.MM.yyyy HH:mm'"
-                  :month-change-on-scroll="false"
-                  auto-apply
-                  disable-year-select
-                  :format-locale="ru"
-                  placeholder="Выберите дату"
-                  position="left"
-                  @update:model-value="updateCallback"
-                  select-text="Выбрать"
-                  cancel-text="Закрыть"
-                  @clear="clearCallback"
-                />
-                <Icons icon="solar:calendar-date-broken" />
+              <p>What`s App:</p>
+              <div class="card__phone">
+                <span v-for="item in card.acf.whatsapps_list" :key="item">{{
+                  item.item
+                }}</span>
               </div>
             </li>
-            <li class="history_item comment">
-              <div class="history_item__review">
-                <div
-                  class="empty_comment"
-                  v-if="Object.keys(groupedComments).length === 0"
-                >
-                  <img
-                    src="http://manager.dynamic-devs-collective.ru/wp-content/uploads/2024/09/empty-message.png"
-                    alt=""
-                  />
-                  <p>Пусто</p>
-                </div>
-                <div class="comment__w" v-else>
-                  <ul
-                    v-for="(comments, date) in groupedComments"
-                    :key="date"
-                    class="comment_group"
-                  >
-                    <li class="comment_date">
-                      <p>{{ date }}</p>
-                    </li>
-                    <ul class="comment_list">
-                      <li
-                        v-for="comment in comments"
-                        :key="comment.id"
-                        class="comment_item"
-                      >
-                        <div class="comment__head">
-                          <span>{{ comment.comment_author }}</span>
-                          <span class="comment_time">{{
-                            new Date(comment.comment_date).toLocaleTimeString()
-                          }}</span>
-                        </div>
-                        <p>{{ comment?.comment_content }}</p>
-                      </li>
-                    </ul>
-                  </ul>
-                </div>
-              </div>
-              <div class="history_item__action">
-                <textarea
-                  name=""
-                  id=""
-                  placeholder="Оставить комментарий"
-                  v-model="newComment"
-                  @input="adjustTextareaHeight"
-                  @click.stop
-                  @keydown.enter="onEnter"
-                ></textarea>
-                <div class="send_comment" @click.stop="addComment">
-                  <Icons icon="solar:chat-round-unread-bold" :size="20" />Отправить
-                </div>
+            <li>
+              <p>Telegram:</p>
+              <div class="card__phone">
+                <span v-for="item in card.acf.telegrams_list" :key="item">{{
+                  item.item
+                }}</span>
               </div>
             </li>
           </ul>
         </li>
       </ul>
-      <div class="card_bottom">
-        <p>
-          <Icons icon="solar:clipboard-text-broken" :size="14" />{{
-            lastComment?.comment_content
-          }}
-        </p>
-        <div class="date">{{ lastComment?.comment_date }}</div>
-      </div>
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import Selects from "../dropdown/Selects.vue";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "vue-router";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { ru } from "date-fns/locale";
 import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
-import { useUsersStoreRefs } from "@/store/useUserStore";
-import { api } from "@/api/api";
-// import axios from "axios";
+// import { useUsersStoreRefs } from "@/store/useUserStore";
+// import { api } from "@/api/api";
 
 const props = withDefaults(
   defineProps<{
@@ -173,72 +81,12 @@ const props = withDefaults(
 const { openModal } = useModalStore();
 const clientStore = useClientStore();
 const { statuses } = useClientStoreRefs();
-const { users } = useUsersStoreRefs();
 const router = useRouter();
 const activeTab = ref<any>("org");
-const callback = ref<any>(props.card.acf.callback);
 const selectedStatus = ref<any>(props.card.acf.status);
-const newComment = ref("");
 const emit = defineEmits(["deleteCard", "updateCard"]);
 const isLoading = ref(false);
 const isDeleted = ref(false);
-
-const lastComment = computed(() => {
-  if (!props.card.comments || props.card.comments.length === 0) return null;
-  // Сортируем по дате и берём последний
-  return [...props.card.comments].sort((a, b) => {
-    return new Date(b.comment_date).getTime() - new Date(a.comment_date).getTime();
-  })[0];
-});
-
-const groupedComments = computed(() => {
-  return props.card.comments.reduce((groups: any, comment: any) => {
-    const date = new Date(comment.comment_date).toLocaleDateString();
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(comment);
-    return groups;
-  }, {});
-});
-
-const firstWebsite = computed(() => {
-  if (!props.card.acf.websites) return null;
-  const websitesArray = props.card.acf.websites
-    .split(/[\s|,]+/)
-    .map((item: any) => item.trim())
-    .filter(isValidUrl);
-  return websitesArray[0] || null;
-});
-
-const formattedPhone = computed(() => {
-  if (!props.card.acf.phones) return null;
-  const phones = props.card.acf.phones.split(" ").map((phone: any) => phone.trim());
-  const firstPhone = phones[0];
-  if (firstPhone.startsWith("8")) {
-    return formatPhoneNumber(firstPhone.replace("8", "+7"));
-  } else {
-    return formatPhoneNumber(firstPhone);
-  }
-});
-
-function isValidUrl(string: string): boolean {
-  try {
-    new URL(string);
-    return true;
-  } catch (_) {
-    return false;
-  }
-}
-
-function formatPhoneNumber(phone: string): string {
-  const cleaned = ("" + phone).replace(/\D/g, "");
-  const match = cleaned.match(/^(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})$/);
-  if (match) {
-    return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}-${match[5]}`;
-  }
-  return phone;
-}
 
 function updateStatus(newStatus: string) {
   clientStore.updateClientStatus(props.card.id, newStatus);
@@ -248,73 +96,13 @@ function updateStatus(newStatus: string) {
   });
 }
 
-function clearCallback() {
-  callback.value = null;
-}
-
-function onEnter(event: KeyboardEvent) {
-  // Проверяем, нажата ли клавиша Shift
-  if (event.shiftKey) {
-    // Если Shift + Enter, то добавляем новую строку
-    newComment.value += "\n";
-  } else {
-    // Если просто Enter, то вызываем метод отправки комментария
-    addComment();
-    // Предотвращаем стандартное поведение Enter
-    event.preventDefault();
-  }
-}
-
-async function addComment() {
-  if (newComment.value.trim()) {
-    try {
-      // Отправляем новый комментарий через API
-      await api.post("/wp-json/wp/v2/comments", {
-        post: props.card.id,
-        content: newComment.value.trim(),
-        author_name: users.value.userInfo.name,
-        author_email: users.value.userInfo.acf.user_email,
-      });
-
-      // После успешной отправки комментария, заново получаем обновленную карточку клиента
-      const updatedCard = await api.get(`/wp-json/wp/v2/client_new/${props.card.id}`);
-
-      // Обновляем карточку клиента в хранилище
-      clientStore.updateClientInStore(updatedCard.data);
-
-      console.log("Комментарий успешно добавлен и карточка обновлена.");
-    } catch (error) {
-      console.error("Ошибка при добавлении комментария:", error);
-    }
-
-    newComment.value = ""; // Очищаем поле ввода после отправки
-  }
-}
-
-async function handlePhoneClick() {
-  await clientStore.updateClient({
-    id: props.card.id,
-    acf: {
-      ...props.card.acf,
-      phone_visible: true,
-    },
-  });
-  console.log(props.card.phone_visible);
-  openQR(formattedPhone.value, "phone");
-}
-
-function handleWebsiteClick(event: Event) {
-  event.preventDefault();
-  window.open(firstWebsite.value, "_blank");
-}
-
-function openQR(link: any, type: "phone" | "url") {
-  openModal("qr");
-  if (type === "phone") {
-    const query = { ...router.currentRoute.value.query, phone: link };
-    router.push({ query });
-  }
-}
+// function openQR(link: any, type: "phone" | "url") {
+//   openModal("qr");
+//   if (type === "phone") {
+//     const query = { ...router.currentRoute.value.query, phone: link };
+//     router.push({ query });
+//   }
+// }
 
 async function deleteCard() {
   isLoading.value = true;
@@ -329,39 +117,8 @@ async function deleteCard() {
   }
 }
 
-// function triggerDelete() {
-//   isDeleted.value = true;
-// }
-
 function handleAfterLeave() {
   deleteCard();
-}
-
-function adjustTextareaHeight(event: Event) {
-  const textarea = event.target as HTMLTextAreaElement;
-  textarea.style.height = "auto";
-  textarea.style.height = `${textarea.scrollHeight}px`;
-}
-
-async function updateCallback(newCallback: Date) {
-  try {
-    isLoading.value = true;
-
-    await clientStore.updateClient({
-      id: props.card.id,
-      acf: {
-        ...props.card.acf,
-        callback: newCallback,
-      },
-    });
-
-    callback.value = newCallback;
-    props.card.acf.callback = newCallback;
-  } catch (error) {
-    console.error("Ошибка при обновлении поля 'Перезвонить':", error);
-  } finally {
-    isLoading.value = false;
-  }
 }
 </script>
 

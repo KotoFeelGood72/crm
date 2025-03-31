@@ -1,13 +1,11 @@
 <template>
   <div class="clients">
     <div class="row_top">
-      <h3>Клиенты</h3>
-      <div class="row">
-        <Button @click="openModal('create')" name="Добавить лид" />
-        <div class="filter-btn" @click="openModal('filter')">
-          <Icons icon="solar:soundwave-square-broken" :size="14" />
-          <p>Фильтры</p>
-        </div>
+      <h3>Лиды</h3>
+      <Button @click="openModal('create')" name="Добавить лид" />
+      <div class="filter-btn" @click="openModal('filter')">
+        <Icons icon="solar:soundwave-square-broken" :size="14" />
+        <p>Фильтры</p>
       </div>
     </div>
 
@@ -321,10 +319,5 @@ h3 {
   background-color: #ffffff;
   border: 1px solid rgb(230, 235, 241);
   margin-bottom: 20px;
-}
-
-.row {
-  @include flex-end;
-  gap: 10px;
 }
 </style>
