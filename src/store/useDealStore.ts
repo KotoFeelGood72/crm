@@ -55,7 +55,9 @@ export const useDealStore = defineStore("deals", {
         if (this.searchQuery) params.search = this.searchQuery;
         if (this.selectedDate) params.date = this.formatDate(this.selectedDate);
 
-        const response = await api.get("/wp-json/wp/v2/deal", { params });
+        const response = await api.get("/wp-json/custom/v1/deals-full", {
+          params,
+        });
         this.deals = response.data;
         this.totalPages = Math.ceil(
           response.headers["x-wp-total"] / this.perPage
@@ -104,15 +106,13 @@ export const useDealStore = defineStore("deals", {
       }
     },
 
-
-    
     async updateDeal(id: number, fields: Record<string, any>) {
       try {
         const response = await api.post(
           `/wp-json/custom/v1/update-deal/${id}`,
           fields // 👈 только нужные поля
         );
-    
+
         return response.data;
       } catch (error) {
         console.error(`Failed to update deal ${id}:`, error);

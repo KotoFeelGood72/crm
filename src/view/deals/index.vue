@@ -8,9 +8,7 @@
       <div class="kanban__column" v-for="status in statuses" :key="status.id">
         <div class="kanban__header">
           <h4>{{ status.name }}</h4>
-          <span class="count">{{
-            groupedDeals[status.name]?.length || 0
-          }}</span>
+          <span class="count">{{ groupedDeals[status.name]?.length || 0 }}</span>
         </div>
 
         <draggable
@@ -22,7 +20,10 @@
           class="kanban__cards"
         >
           <template #item="{ element }">
-            <deal :card="element" @click="openModal('deal')" />
+            <deal
+              :card="element"
+              @click="openModal('deal', { deal: element.id }, router)"
+            />
           </template>
         </draggable>
       </div>
@@ -38,11 +39,14 @@ import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import Loader from "@/components/ui/loading/Loader.vue";
 import deal from "@/components/ui/card/deal.vue";
 import { useModalStore } from "@/store/useModalStore";
+import { useRouter } from "vue-router";
 // @ts-ignore
 import draggable from "vuedraggable";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const { openModal } = useModalStore();
+
+const router = useRouter();
 
 const groupedDeals = ref<Record<string, any[]>>({});
 

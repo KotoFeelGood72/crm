@@ -9,8 +9,8 @@
           <h3>{{ deal.title }}</h3>
         </div>
         <div class="right">
-          <Button name="Сохранить" theme="primary" @click="saveDeal" />
-          <p :class="{ active: isEditing }">
+          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
+          <p :class="{ active: isEditing }" @click="isEditing = !isEditing">
             {{ isEditing ? "Редактирование" : "Просмотр" }}
           </p>
           <CloseModal />
@@ -124,10 +124,7 @@
                   :edit="isEditing"
                 />
                 <ul class="reviews__stars">
-                  <li
-                    v-for="n in Number(deal.acf.stars)"
-                    :key="'stars-item' + n"
-                  >
+                  <li v-for="n in Number(deal.acf.stars)" :key="'stars-item' + n">
                     <Icons icon="fluent-emoji-flat:star" :size="16" />
                   </li>
                 </ul>
@@ -185,7 +182,9 @@ import { onMounted, ref, onBeforeUnmount } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
 import listItem from "@/components/ui/row/list-item.vue";
 import Switcher from "@/components/ui/inputs/Switcher.vue";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const deal = ref<any>(null);
 const isEditing = ref(false);
 
@@ -245,7 +244,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 onMounted(() => {
   window.addEventListener("keydown", handleKeydown);
 
-  const dealId = 111469;
+  const dealId: any = route.query.deal;
   getDealById(dealId).then((data) => {
     const repeaterFields = [
       "phone_list",
@@ -281,9 +280,6 @@ onBeforeUnmount(() => {
   ul {
     list-style: none;
   }
-}
-
-.deal__w {
 }
 
 .modal_block__list {
@@ -342,6 +338,7 @@ onBeforeUnmount(() => {
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
+    cursor: pointer;
 
     &.active {
       background-color: #f0a02919;

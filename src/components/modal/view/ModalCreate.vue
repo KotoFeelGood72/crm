@@ -197,7 +197,7 @@ const form = reactive<any>({
 const handleCreateClient = async () => {
   try {
     await clientStore.createClient(form);
-    alert("Клиент успешно создан");
+    // alert("Клиент успешно создан");
     Object.keys(form).forEach((key) => {
       form[key] = Array.isArray(form[key])
         ? []
@@ -207,7 +207,7 @@ const handleCreateClient = async () => {
     });
     closeModal("create");
   } catch (err) {
-    alert("Ошибка при создании клиента");
+    // alert("Ошибка при создании клиента");
   }
 };
 

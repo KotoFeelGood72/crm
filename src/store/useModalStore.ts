@@ -1,4 +1,5 @@
 import { defineStore, storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
 interface ModalsState {
   client: boolean;
@@ -10,7 +11,10 @@ interface ModalsState {
 }
 
 export const useModalStore = defineStore("modal", {
-  state: (): { modals: any } => ({
+  state: (): {
+    modals: ModalsState;
+    queryCache: Record<string, Record<string, any>>;
+  } => ({
     modals: {
       client: false,
       user: false,
@@ -19,27 +23,63 @@ export const useModalStore = defineStore("modal", {
       filter: false,
       deal: false,
     },
+    queryCache: {}, // Сохраняем добавленные query для каждой модалки
   }),
   actions: {
-    openModal(modalName: keyof ModalsState) {
+    openModal(
+      modalName: keyof ModalsState,
+      query?: Record<string, any>,
+      router?: any
+    ) {
       this.modals[modalName] = true;
+
+      if (query && router) {
+        this.queryCache[modalName] = query;
+
+        router.replace({
+          query: {
+            ...router.currentRoute.value.query,
+            ...query,
+          },
+        });
+      }
     },
+
     closeModal(modalName: keyof ModalsState, router?: any): void {
       this.modals[modalName] = false;
-      this.clearQueryParams(router);
+
+      if (router && this.queryCache[modalName]) {
+        const currentQuery = { ...router.currentRoute?.value?.query };
+        const addedQuery = this.queryCache[modalName];
+
+        Object.keys(addedQuery).forEach((key) => {
+          delete currentQuery[key];
+        });
+
+        router.replace({ query: currentQuery });
+
+        // Очищаем кэш после удаления
+        delete this.queryCache[modalName];
+      }
     },
-    closeAllModals() {
+
+    closeAllModals(router?: any, route?: any) {
       Object.keys(this.modals).forEach((modalName) => {
-        // if (modalName !== "AlertPromo" && modalName !== "AlertSquare") {
-        this.modals[modalName as keyof any] = false;
-        // }
+        this.modals[modalName as keyof ModalsState] = false;
       });
-    },
-    clearQueryParams(router: any) {
-      const query = { ...router.currentRoute.value.query };
-      delete query.client;
-      delete query.phone;
-      router.replace({ query });
+
+      if (router && route) {
+        const currentQuery = { ...route.query };
+
+        Object.values(this.queryCache).forEach((cachedQuery) => {
+          Object.keys(cachedQuery).forEach((key) => {
+            delete currentQuery[key];
+          });
+        });
+
+        this.queryCache = {};
+        router.replace({ query: currentQuery });
+      }
     },
   },
 });
