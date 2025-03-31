@@ -60,8 +60,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import Selects from "../dropdown/Selects.vue";
-import { useModalStore } from "@/store/useModalStore";
-import { useRouter } from "vue-router";
+// import { useModalStore } from "@/store/useModalStore";
+// import { useRouter } from "vue-router";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -78,10 +78,10 @@ const props = withDefaults(
   }
 );
 
-const { openModal } = useModalStore();
+// const { openModal } = useModalStore();
 const clientStore = useClientStore();
 const { statuses } = useClientStoreRefs();
-const router = useRouter();
+// const router = useRouter();
 const activeTab = ref<any>("org");
 const selectedStatus = ref<any>(props.card.acf.status);
 const emit = defineEmits(["deleteCard", "updateCard"]);
