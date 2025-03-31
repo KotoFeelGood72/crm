@@ -164,6 +164,12 @@ function handleAfterLeave() {
   list-style: none;
 }
 
+.card__phone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .info__list {
   display: flex;
   flex-wrap: wrap;
