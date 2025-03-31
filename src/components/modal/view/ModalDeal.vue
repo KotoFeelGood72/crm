@@ -201,11 +201,11 @@ const addHistory = (text: string) => {
     minute: "2-digit",
   });
 
-  if (!Array.isArray(deal.value.acf.history)) {
-    deal.value.acf.history = [];
+  if (!Array.isArray(currentDeal.value.acf.history)) {
+    currentDeal.value.acf.history = [];
   }
 
-  deal.value.acf.history.push({ txt: text, time });
+  currentDeal.value.acf.history.push({ txt: text, time });
 };
 
 const newComment = ref("");
