@@ -1,12 +1,12 @@
 <template>
-  <div class="deal" v-if="deal && deal.acf">
+  <div class="deal" v-if="currentDeal && currentDeal.acf">
     <div class="deal__w">
       <div class="deal__head">
         <div class="deal__preview">
-          <div class="deal_preview__img" v-if="deal.acf.img?.link">
-            <img :src="deal.acf.img.link" alt="" />
+          <div class="deal_preview__img" v-if="currentDeal.acf.img?.link">
+            <img :src="currentDeal.acf.img.link" alt="" />
           </div>
-          <h3>{{ deal.title }}</h3>
+          <h3>{{ currentDeal.title }}</h3>
         </div>
         <div class="right">
           <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
@@ -22,7 +22,7 @@
             <li>
               <singleItem
                 label="Наименование:"
-                v-model="deal.acf.name"
+                v-model="currentDeal.acf.name"
                 place="Введите название"
                 :edit="isEditing"
               />
@@ -31,7 +31,7 @@
             <li>
               <listItem
                 label="Номера телефонов:"
-                v-model="deal.acf.phone_list"
+                v-model="currentDeal.acf.phone_list"
                 place="Введите номер телефона"
                 :edit="isEditing"
               />
@@ -40,7 +40,7 @@
             <li>
               <listItem
                 label="Сайты:"
-                v-model="deal.acf.websites_list"
+                v-model="currentDeal.acf.websites_list"
                 place="Введите адрес сайта"
                 :edit="isEditing"
               />
@@ -49,7 +49,7 @@
             <li>
               <listItem
                 label="Whats App:"
-                v-model="deal.acf.whatsapps_list"
+                v-model="currentDeal.acf.whatsapps_list"
                 place="Введите номер WhatsApp"
                 :edit="isEditing"
               />
@@ -58,7 +58,7 @@
             <li>
               <listItem
                 label="E-Mail:"
-                v-model="deal.acf.emails_list"
+                v-model="currentDeal.acf.emails_list"
                 place="Введите e-mail"
                 :edit="isEditing"
               />
@@ -71,7 +71,7 @@
             <li>
               <listItem
                 label="Telegram:"
-                v-model="deal.acf.telegrams_list"
+                v-model="currentDeal.acf.telegrams_list"
                 place="Введите Telegram"
                 :edit="isEditing"
               />
@@ -80,13 +80,13 @@
             <li class="row">
               <singleItem
                 label="Youtube:"
-                v-model="deal.acf.youtube"
+                v-model="currentDeal.acf.youtube"
                 place="Введите Youtube"
                 :edit="isEditing"
               />
               <singleItem
                 label="ВКонтакте:"
-                v-model="deal.acf.vk"
+                v-model="currentDeal.acf.vk"
                 place="Введите ВКонтакте"
                 :edit="isEditing"
               />
@@ -99,13 +99,13 @@
             <li class="row">
               <singleItem
                 label="Адрес:"
-                v-model="deal.acf.address"
+                v-model="currentDeal.acf.address"
                 place="Введите Адрес"
                 :edit="isEditing"
               />
               <singleItem
                 label="Город:"
-                v-model="deal.acf.city"
+                v-model="currentDeal.acf.city"
                 place="Введите Адрес"
                 :edit="isEditing"
               />
@@ -114,17 +114,17 @@
             <li class="row">
               <div class="flex-row">
                 <p>Есть ли реклама?</p>
-                <Switcher v-model="deal.acf.is_ads" />
+                <Switcher v-model="currentDeal.acf.is_ads" />
               </div>
               <div class="reviews__count">
                 <singleItem
                   label="Кол-во отзывов:"
-                  v-model="deal.acf.reviews_count"
+                  v-model="currentDeal.acf.reviews_count"
                   place="кол-во отзывов"
                   :edit="isEditing"
                 />
                 <ul class="reviews__stars">
-                  <li v-for="n in Number(deal.acf.stars)" :key="'stars-item' + n">
+                  <li v-for="n in Number(currentDeal.acf.stars)" :key="'stars-item' + n">
                     <Icons icon="fluent-emoji-flat:star" :size="16" />
                   </li>
                 </ul>
@@ -134,13 +134,13 @@
             <li class="row">
               <singleItem
                 label="График работы:"
-                v-model="deal.acf.schedule"
+                v-model="currentDeal.acf.schedule"
                 place="Введите график работы"
                 :edit="isEditing"
               />
               <singleItem
                 label="Источник:"
-                v-model="deal.acf.spring"
+                v-model="currentDeal.acf.spring"
                 place="Введите источник"
                 :edit="isEditing"
               />
@@ -148,12 +148,12 @@
           </ul>
         </div>
 
-        <div class="deal__blocks history-chat" v-if="deal.acf.history?.length">
+        <div class="deal__blocks history-chat" v-if="currentDeal.acf.history?.length">
           <h4>История комментариев:</h4>
           <div class="chat-wrapper">
             <div
               class="message"
-              v-for="(entry, index) in deal.acf.history"
+              v-for="(entry, index) in currentDeal.acf.history"
               :key="index"
               :class="{ self: entry.role === 'me' }"
             >
@@ -175,10 +175,10 @@
 
 <script setup lang="ts">
 import CloseModal from "@/components/ui/buttons/CloseModal.vue";
-import { useDealStore } from "@/store/useDealStore";
+import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import Button from "@/components/ui/buttons/Button.vue";
 import Textarea from "@/components/ui/inputs/Textarea.vue";
-import { onMounted, ref, onBeforeUnmount } from "vue";
+import { ref, watchEffect } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
 import listItem from "@/components/ui/row/list-item.vue";
 import Switcher from "@/components/ui/inputs/Switcher.vue";
@@ -189,10 +189,7 @@ const deal = ref<any>(null);
 const isEditing = ref(false);
 
 const { getDealById, updateDeal } = useDealStore();
-
-const toggleEditing = () => {
-  isEditing.value = !isEditing.value;
-};
+const { currentDeal } = useDealStoreRefs();
 
 const addHistory = (text: string) => {
   const now = new Date();
@@ -235,37 +232,11 @@ const saveDeal = async () => {
   }
 };
 
-const handleKeydown = (e: KeyboardEvent) => {
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
-    toggleEditing();
+watchEffect(async () => {
+  const dealId = route.query.deal;
+  if (dealId) {
+    deal.value = await getDealById(dealId);
   }
-};
-
-onMounted(() => {
-  window.addEventListener("keydown", handleKeydown);
-
-  const dealId: any = route.query.deal;
-  getDealById(dealId).then((data) => {
-    const repeaterFields = [
-      "phone_list",
-      "emails_list",
-      "whatsapps_list",
-      "websites_list",
-      "telegrams_list",
-    ];
-
-    repeaterFields.forEach((field) => {
-      if (!Array.isArray(data.acf[field])) {
-        data.acf[field] = [];
-      }
-    });
-
-    deal.value = data;
-  });
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("keydown", handleKeydown);
 });
 </script>
 

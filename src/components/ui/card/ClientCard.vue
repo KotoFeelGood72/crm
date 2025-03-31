@@ -1,73 +1,67 @@
 <template>
-  <transition name="fade" @after-leave="handleAfterLeave">
-    <div v-if="!isDeleted" class="card">
-      <div class="card_top">
-        <ul class="card_tab__link">
-          <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
-            Сведение об организации
-          </li>
-        </ul>
-        <Selects
-          v-model="selectedStatus"
-          :options="statuses"
-          placeholder="Выберите статус"
-          class="select_status"
-          @update:modelValue="updateStatus(selectedStatus)"
-        />
-      </div>
-      <ul class="card_tab__contents">
-        <li class="card_tab__content" v-if="activeTab === 'org'">
-          <ul class="info__list">
-            <li>
-              <p>Организация:</p>
-              <span>{{ card.acf.name }}</span>
-            </li>
-            <li>
-              <p>Город:</p>
-              <span>{{ card.acf.city }}</span>
-            </li>
-            <li>
-              <p>Телефон:</p>
-              <div class="card__phone">
-                <span v-for="item in card.acf.phone_list" :key="item">{{
-                  item.item
-                }}</span>
-              </div>
-            </li>
-            <li>
-              <p>What`s App:</p>
-              <div class="card__phone">
-                <span v-for="item in card.acf.whatsapps_list" :key="item">{{
-                  item.item
-                }}</span>
-              </div>
-            </li>
-            <li>
-              <p>Telegram:</p>
-              <div class="card__phone">
-                <span v-for="item in card.acf.telegrams_list" :key="item">{{
-                  item.item
-                }}</span>
-              </div>
-            </li>
-          </ul>
+  <div class="card">
+    <div class="card_top">
+      <ul class="card_tab__link">
+        <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
+          Сведение об организации
         </li>
       </ul>
+      <Selects
+        v-model="selectedStatus"
+        :options="statuses"
+        placeholder="Выберите статус"
+        class="select_status"
+        @update:modelValue="updateStatus(selectedStatus)"
+      />
     </div>
-  </transition>
+    <ul class="card_tab__contents">
+      <li class="card_tab__content" v-if="activeTab === 'org'">
+        <ul class="info__list">
+          <li>
+            <p>Организация:</p>
+            <span>{{ card.acf.name }}</span>
+          </li>
+          <li>
+            <p>Город:</p>
+            <span>{{ card.acf.city }}</span>
+          </li>
+          <li>
+            <p>Телефон:</p>
+            <div class="card__phone">
+              <span v-for="item in card.acf.phone_list" :key="item">{{
+                formatPhone(item.item)
+              }}</span>
+            </div>
+          </li>
+          <li>
+            <p>What`s App:</p>
+            <div class="card__phone">
+              <span v-for="item in card.acf.whatsapps_list" :key="item">{{
+                item.item
+              }}</span>
+            </div>
+          </li>
+          <li>
+            <p>Telegram:</p>
+            <div class="card__phone">
+              <span v-for="item in card.acf.telegrams_list" :key="item">{{
+                item.item
+              }}</span>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Selects from "../dropdown/Selects.vue";
-// import { useModalStore } from "@/store/useModalStore";
-// import { useRouter } from "vue-router";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
-// import { useUsersStoreRefs } from "@/store/useUserStore";
-// import { api } from "@/api/api";
 
 const props = withDefaults(
   defineProps<{
@@ -78,15 +72,32 @@ const props = withDefaults(
   }
 );
 
-// const { openModal } = useModalStore();
+function formatPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, "");
+
+  let number = digits;
+
+  if (digits.length === 11 && digits.startsWith("8")) {
+    number = "7" + digits.slice(1);
+  } else if (digits.length === 10) {
+    number = "7" + digits;
+  } else if (digits.length === 11 && digits.startsWith("7")) {
+    number = digits;
+  }
+
+  if (number.length !== 11) return raw; // если не получилось — отдаем как есть
+
+  return `+7 (${number.slice(1, 4)}) ${number.slice(4, 7)}-${number.slice(
+    7,
+    9
+  )}-${number.slice(9)}`;
+}
+
 const clientStore = useClientStore();
 const { statuses } = useClientStoreRefs();
-// const router = useRouter();
 const activeTab = ref<any>("org");
 const selectedStatus = ref<any>(props.card.acf.status);
 const emit = defineEmits(["deleteCard", "updateCard"]);
-const isLoading = ref(false);
-const isDeleted = ref(false);
 
 function updateStatus(newStatus: string) {
   clientStore.updateClientStatus(props.card.id, newStatus);
@@ -94,31 +105,6 @@ function updateStatus(newStatus: string) {
     ...props.card,
     acf: { ...props.card.acf, status: newStatus },
   });
-}
-
-// function openQR(link: any, type: "phone" | "url") {
-//   openModal("qr");
-//   if (type === "phone") {
-//     const query = { ...router.currentRoute.value.query, phone: link };
-//     router.push({ query });
-//   }
-// }
-
-async function deleteCard() {
-  isLoading.value = true;
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    emit("deleteCard");
-    isDeleted.value = true;
-  } catch (error) {
-    console.error("Failed to delete card: ", error);
-  } finally {
-    isLoading.value = false;
-  }
-}
-
-function handleAfterLeave() {
-  deleteCard();
 }
 </script>
 

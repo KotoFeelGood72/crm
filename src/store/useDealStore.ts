@@ -5,6 +5,7 @@ export const useDealStore = defineStore("deals", {
   state: () => ({
     deals: [] as any[],
     categories: [] as any[],
+    currentDeal: null as any,
     statuses: [
       { name: "КП", id: "КП" },
       { name: "Отработка возражений", id: "Отработка возражений" },
@@ -191,10 +192,10 @@ export const useDealStore = defineStore("deals", {
       }
     },
 
-    async getDealById(id: number) {
+    async getDealById(id: any) {
       try {
         const response = await api.get(`/wp-json/custom/v1/deal/${id}`);
-        return response.data;
+        this.currentDeal = response.data;
       } catch (error) {
         console.error(`Failed to fetch deal with id ${id}:`, error);
         return null;
