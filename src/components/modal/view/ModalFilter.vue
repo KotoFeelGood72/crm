@@ -56,9 +56,7 @@
           type="text"
           v-model="dynamicSearchModel"
           :placeholder="
-            isPhoneSearch
-              ? 'Введите номер телефона'
-              : 'Введите запрос для поиска'
+            isPhoneSearch ? 'Введите номер телефона' : 'Введите запрос для поиска'
           "
           @input="filterBySearch"
           class="search-input"
@@ -103,14 +101,14 @@ const {
   selectedCategory,
   selectedStatus,
   selectedCity,
-  hasWebsite,
+  // hasWebsite,
   perPage,
   searchPhone,
   searchQuery,
   selectedDate,
-  totalPages,
+  // totalPages,
   perPageOptions,
-  page,
+  // page,
 } = useClientStoreRefs();
 
 const dynamicSearchModel = computed({

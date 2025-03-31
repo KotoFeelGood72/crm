@@ -172,7 +172,7 @@ export const useClientStore = defineStore("clientStore", {
         const index = this.clients.findIndex(
           (item) => item.id === updatedClient.id
         );
-        
+
         if (index !== -1) {
           this.clients[index] = {
             ...this.clients[index], // сохраняем все существующие данные
@@ -279,36 +279,44 @@ export const useClientStore = defineStore("clientStore", {
     },
     async updateClientStatus(clientId: number, newStatus: string) {
       try {
-        const clientIndex = this.clients.findIndex((client) => client.id === clientId);
+        const clientIndex = this.clients.findIndex(
+          (client) => client.id === clientId
+        );
         if (clientIndex === -1) return;
-    
+
         // Отправка обновлённого статуса на сервер
         await api.post(`/wp-json/custom/v1/update-client/${clientId}`, {
           status: newStatus,
         });
-    
-        const currentClient = this.clients[clientIndex];
-    
+
+        // const currentClient = this.clients[clientIndex];
+
         // Если клиент стал "Клиент" — удаляем из списка
         if (newStatus === "Клиент") {
           this.clients.splice(clientIndex, 1);
-          console.log(`Клиент #${clientId} перемещён в сделки и удалён из стора`);
+          console.log(
+            `Клиент #${clientId} перемещён в сделки и удалён из стора`
+          );
           return;
         }
-    
+
         // Обновляем статус клиента
         this.clients[clientIndex].acf.status = newStatus;
-    
+
         // Если активный фильтр по статусу больше не совпадает — удаляем карточку из текущего списка
         if (this.selectedStatus && newStatus !== this.selectedStatus) {
           this.clients.splice(clientIndex, 1);
-          console.log(`Клиент #${clientId} обновлён до статуса ${newStatus} и скрыт из текущего фильтра`);
+          console.log(
+            `Клиент #${clientId} обновлён до статуса ${newStatus} и скрыт из текущего фильтра`
+          );
         }
-    
       } catch (error) {
-        console.error(`Ошибка при обновлении статуса клиента ${clientId}:`, error);
+        console.error(
+          `Ошибка при обновлении статуса клиента ${clientId}:`,
+          error
+        );
       }
-    }
+    },
   },
 });
 

@@ -9,10 +9,7 @@
     </div>
 
     <div class="clients_main">
-      <Loader
-        v-if="clientStore.isLoading"
-        style="background-color: transparent"
-      />
+      <Loader v-if="clientStore.isLoading" style="background-color: transparent" />
       <div v-else>
         <div class="client_list__w" v-if="clientStore.clients.length > 0">
           <div class="clients__list">
@@ -40,16 +37,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, watchEffect } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
 import { useModalStore } from "@/store/useModalStore";
 import ClientCard from "@/components/ui/card/ClientCard.vue";
 import pagination from "@/components/ui/buttons/pagination.vue";
 import Loader from "@/components/ui/loading/Loader.vue";
-import Selects from "@/components/ui/dropdown/Selects.vue";
-import Switcher from "@/components/ui/inputs/Switcher.vue";
-import IcBtn from "@/components/ui/buttons/IcBtn.vue";
-import { ru } from "date-fns/locale";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -59,14 +52,14 @@ const clientStore = useClientStore();
 const { openModal } = useModalStore();
 const {
   clients,
-  selectedCategory,
-  selectedStatus,
-  selectedCity,
-  hasWebsite,
-  perPage,
-  searchPhone,
-  searchQuery,
-  selectedDate,
+  // selectedCategory,
+  // selectedStatus,
+  // selectedCity,
+  // hasWebsite,
+  // perPage,
+  // searchPhone,
+  // searchQuery,
+  // selectedDate,
   totalPages,
   page,
 } = useClientStoreRefs();
@@ -76,18 +69,18 @@ onMounted(() => {
   clientStore.getCategories();
 });
 
-const dynamicSearchModel = computed({
-  get() {
-    return isPhoneSearch.value ? searchPhone.value : searchQuery.value;
-  },
-  set(value) {
-    if (isPhoneSearch.value) {
-      clientStore.updateSearchPhone(value);
-    } else {
-      clientStore.updateSearchQuery(value);
-    }
-  },
-});
+// const dynamicSearchModel = computed({
+//   get() {
+//     return isPhoneSearch.value ? searchPhone.value : searchQuery.value;
+//   },
+//   set(value) {
+//     if (isPhoneSearch.value) {
+//       clientStore.updateSearchPhone(value);
+//     } else {
+//       clientStore.updateSearchQuery(value);
+//     }
+//   },
+// });
 
 // Наблюдение за изменением переключателя
 watch(isPhoneSearch, (newValue) => {
@@ -100,17 +93,17 @@ watch(isPhoneSearch, (newValue) => {
   }
 });
 
-function filterBySearch() {
-  if (isPhoneSearch.value) {
-    clientStore.updateSearchPhone(dynamicSearchModel.value);
-  } else {
-    clientStore.updateSearchQuery(dynamicSearchModel.value);
-  }
-}
+// function filterBySearch() {
+//   if (isPhoneSearch.value) {
+//     clientStore.updateSearchPhone(dynamicSearchModel.value);
+//   } else {
+//     clientStore.updateSearchQuery(dynamicSearchModel.value);
+//   }
+// }
 
-function clearFilters() {
-  clientStore.clearFilters();
-}
+// function clearFilters() {
+//   clientStore.clearFilters();
+// }
 
 const goToPage = (newPage: number) => {
   if (newPage >= 1 && newPage <= totalPages.value) {

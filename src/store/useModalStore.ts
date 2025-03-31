@@ -28,7 +28,7 @@ export const useModalStore = defineStore("modal", {
       this.modals[modalName] = false;
       this.clearQueryParams(router);
     },
-    closeAllModals(router?: any, route?: any) {
+    closeAllModals() {
       Object.keys(this.modals).forEach((modalName) => {
         // if (modalName !== "AlertPromo" && modalName !== "AlertSquare") {
         this.modals[modalName as keyof any] = false;
