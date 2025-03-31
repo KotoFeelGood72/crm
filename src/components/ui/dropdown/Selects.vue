@@ -21,14 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  defineProps,
-  defineEmits,
-  onMounted,
-  onBeforeUnmount,
-  watch,
-} from "vue";
+import { ref, defineProps, defineEmits, onMounted, onBeforeUnmount, watch } from "vue";
 
 const props = defineProps<{
   modelValue: any;
@@ -52,9 +45,7 @@ const selectOption = (option: string) => {
 };
 
 const getSelectedOptionName = () => {
-  const option = props.options.find(
-    (opt: any) => opt.id === selectedOption.value
-  );
+  const option = props.options.find((opt: any) => opt.id === selectedOption.value);
   return option ? option.name : "";
 };
 

@@ -16,16 +16,19 @@
                 place="Введите наименование"
                 :edit="true"
               />
-              <select v-model="form.category">
-                <option disabled value="">Выберите категорию</option>
-                <option
-                  v-for="cat in clientStore.categories"
-                  :key="cat.id"
-                  :value="cat.id"
-                >
-                  {{ cat.name }}
-                </option>
-              </select>
+              <div class="selects">
+                <p>Выберите категорию</p>
+                <select class="select_cat" v-model="form.category">
+                  <option disabled value="">Выберите категорию</option>
+                  <option
+                    v-for="cat in clientStore.categories"
+                    :key="cat.id"
+                    :value="cat.id"
+                  >
+                    {{ cat.name }}
+                  </option>
+                </select>
+              </div>
 
               <singleItem
                 label="Описание"
@@ -166,8 +169,6 @@ import CloseModal from "@/components/ui/buttons/CloseModal.vue";
 import { useModalStore } from "@/store/useModalStore";
 import listItem from "@/components/ui/row/list-item.vue";
 import singleItem from "@/components/ui/row/single-item.vue";
-import Selects from "@/components/ui/dropdown/Selects.vue";
-
 const { closeModal } = useModalStore();
 const clientStore = useClientStore();
 const { getCategories } = useClientStore();
@@ -277,6 +278,26 @@ onMounted(() => {
   padding: 20px;
   :deep(.default-btn) {
     width: auto;
+  }
+}
+
+.select_cat {
+  -webkit-appearance: none;
+  appearance: none;
+  -moz-appearance: none;
+  border: 1px solid rgba(204, 204, 204, 0.2901960784);
+  padding: 5px 20px;
+  font-size: 14px;
+  width: 100%;
+  background-color: #ffffff;
+  height: 33px;
+}
+
+.selects {
+  p {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 5px;
   }
 }
 </style>
