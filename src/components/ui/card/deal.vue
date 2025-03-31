@@ -16,10 +16,10 @@
     <div class="card_body">
       <div class="row">
         <chip
-          :title="formatedPhone(card.acf.phones)"
+          :title="formatedPhone(card.acf.phone_list[0].item)"
           icon="solar:phone-calling-bold"
         />
-        <p>Виктор Иванович</p>
+        <p>{{ card.acf.name }}</p>
       </div>
     </div>
     <div class="card_bottom">
@@ -27,9 +27,7 @@
         <p :class="{ hidden: !hiddenText }">
           {{ lastComment }}
         </p>
-        <div class="more" @click.stop="hiddenText = !hiddenText">
-          Развернуть
-        </div>
+        <div class="more" @click.stop="hiddenText = !hiddenText">Развернуть</div>
       </div>
     </div>
   </div>
