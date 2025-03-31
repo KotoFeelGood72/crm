@@ -185,7 +185,6 @@ import Switcher from "@/components/ui/inputs/Switcher.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const deal = ref<any>(null);
 const isEditing = ref(false);
 
 const { getDealById, updateDeal } = useDealStore();
@@ -217,7 +216,7 @@ const handleComment = async () => {
   newComment.value = "";
 
   try {
-    await updateDeal(deal.value.id, deal.value.acf);
+    await updateDeal(currentDeal.value.id, currentDeal.value.acf);
   } catch (err) {
     console.error("Ошибка при сохранении комментария:", err);
   }
@@ -225,7 +224,7 @@ const handleComment = async () => {
 
 const saveDeal = async () => {
   try {
-    await updateDeal(deal.value.id, deal.value.acf);
+    await updateDeal(currentDeal.value.id, currentDeal.value.acf);
     isEditing.value = false;
   } catch (error) {
     console.error("Ошибка при обновлении:", error);
@@ -235,7 +234,7 @@ const saveDeal = async () => {
 watchEffect(async () => {
   const dealId = route.query.deal;
   if (dealId) {
-    deal.value = await getDealById(dealId);
+    await getDealById(dealId);
   }
 });
 </script>
