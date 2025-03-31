@@ -10,93 +10,136 @@
           <div class="modal_block">
             <h5>Основные данные</h5>
             <div class="modal_block__grid">
-              <inputs
+              <singleItem
                 label="Наименование"
                 v-model="form.name"
-                placeholder="Наименование"
+                place="Введите наименование"
+                :edit="true"
               />
-              <inputs
+              <select v-model="form.category">
+                <option disabled value="">Выберите категорию</option>
+                <option
+                  v-for="cat in clientStore.categories"
+                  :key="cat.id"
+                  :value="cat.id"
+                >
+                  {{ cat.name }}
+                </option>
+              </select>
+
+              <singleItem
                 label="Описание"
-                v-model="form.name"
-                placeholder="Описание"
+                v-model="form.description"
+                place="Введите описание"
+                :edit="true"
               />
-              <inputs
+              <singleItem
                 label="График работы"
-                v-model="form.name"
-                placeholder="График работы"
+                v-model="form.schedule"
+                place="Введите график"
+                :edit="true"
               />
             </div>
           </div>
+
           <div class="modal_block">
             <h5>Местонахождение</h5>
             <div class="modal_block__grid">
-              <inputs label="Адрес" v-model="form.name" placeholder="Адрес" />
-              <inputs label="Город" v-model="form.name" placeholder="Город" />
+              <singleItem
+                label="Адрес"
+                v-model="form.address"
+                place="Введите адрес"
+                :edit="true"
+              />
+              <singleItem
+                label="Город"
+                v-model="form.city"
+                place="Введите город"
+                :edit="true"
+              />
             </div>
           </div>
+
           <div class="modal_block">
             <h5>Контактные данные</h5>
             <div class="modal_block__grid">
-              <inputs
-                label="Телефон"
-                v-model="form.name"
-                placeholder="Телефон"
+              <listItem
+                label="Телефоны"
+                v-model="form.phone_list"
+                place="Введите номер телефона"
+                :edit="true"
               />
-              <inputs
-                label="What`s App"
-                v-model="form.name"
-                placeholder="What`s App"
+              <listItem
+                label="WhatsApp"
+                v-model="form.whatsapps_list"
+                place="Введите номер WhatsApp"
+                :edit="true"
               />
-              <inputs
+              <listItem
                 label="Telegram"
-                v-model="form.name"
-                placeholder="Telegram"
+                v-model="form.telegrams_list"
+                place="Введите Telegram"
+                :edit="true"
               />
-              <inputs label="E-Mail" v-model="form.name" placeholder="E-Mail" />
+              <listItem
+                label="E-Mail"
+                v-model="form.emails_list"
+                place="Введите e-mail"
+                :edit="true"
+              />
             </div>
           </div>
+
           <div class="modal_block">
             <h5>Медиа</h5>
             <div class="modal_block__grid">
-              <inputs
-                label="Веб-сайт"
-                v-model="form.name"
-                placeholder="Веб-сайт"
+              <listItem
+                label="Сайты"
+                v-model="form.websites_list"
+                place="Введите сайт"
+                :edit="true"
               />
-              <inputs
+              <singleItem
                 label="ВКонтакте"
-                v-model="form.name"
-                placeholder="ВКонтакте"
+                v-model="form.vk"
+                place="Введите ссылку"
+                :edit="true"
               />
-              <inputs
-                label="Youtube"
-                v-model="form.name"
-                placeholder="Youtube"
+              <singleItem
+                label="YouTube"
+                v-model="form.youtube"
+                place="Введите ссылку"
+                :edit="true"
               />
             </div>
           </div>
+
           <div class="modal_block">
             <h5>Доп. информация</h5>
             <div class="modal_block__grid">
-              <inputs
+              <singleItem
                 label="Источник"
-                v-model="form.name"
-                placeholder="Источник"
+                v-model="form.spring"
+                place="Введите источник"
+                :edit="true"
               />
-              <inputs
+              <singleItem
                 label="Часовой пояс"
-                v-model="form.name"
-                placeholder="Часовой пояс"
+                v-model="form.times"
+                place="Введите часовой пояс"
+                :edit="true"
               />
-              <inputs
+              <singleItem
                 label="Кол-во отзывов"
-                v-model="form.name"
-                placeholder="Кол-во отзывов"
+                v-model="form.reviews_count"
+                place="Введите число"
+                :edit="true"
               />
-              <inputs
+              <singleItem
                 label="Рейтинг"
-                v-model="form.name"
-                placeholder="Рейтинг"
+                v-model="form.stars"
+                place="Введите рейтинг"
+                :edit="true"
               />
               <div class="is_ads">
                 <p>Есть реклама?</p>
@@ -107,46 +150,69 @@
         </form>
       </div>
       <div class="bottom">
-        <defaultBtn name="Создать" />
-        <defaultBtn name="Отменить" color="danger" />
+        <defaultBtn name="Создать" @click="handleCreateClient" />
+        <defaultBtn name="Отменить" color="danger" @click="closeModal('create')" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import Switcher from "@/components/ui/inputs/Switcher.vue";
 import { useClientStore } from "@/store/useClientStore";
-import inputs from "@/components/ui/inputs/inputs.vue";
 import defaultBtn from "@/components/ui/buttons/default-btn.vue";
 import CloseModal from "@/components/ui/buttons/CloseModal.vue";
 import { useModalStore } from "@/store/useModalStore";
-const { closeModal } = useModalStore();
+import listItem from "@/components/ui/row/list-item.vue";
+import singleItem from "@/components/ui/row/single-item.vue";
+import Selects from "@/components/ui/dropdown/Selects.vue";
 
+const { closeModal } = useModalStore();
 const clientStore = useClientStore();
+const { getCategories } = useClientStore();
 
 const form = reactive<any>({
   name: "",
-  city: "",
-  phones: "",
-  websites: "",
+  description: "",
+  schedule: "",
+  address: "",
   category: "",
-  status: "Новый",
-  callback: "",
-  email: "",
-  note: "",
+  city: "",
+  phone_list: [],
+  whatsapps_list: [],
+  telegrams_list: [],
+  emails_list: [],
+  websites_list: [],
+  vk: "",
+  youtube: "",
+  spring: "",
+  timezone: "",
+  reviews_count: "",
+  stars: "",
+  is_ads: false,
 });
 
 const handleCreateClient = async () => {
   try {
     await clientStore.createClient(form);
     alert("Клиент успешно создан");
-    Object.keys(form).forEach((key) => (form[key] = "")); // сброс формы
+    Object.keys(form).forEach((key) => {
+      form[key] = Array.isArray(form[key])
+        ? []
+        : typeof form[key] === "boolean"
+        ? false
+        : "";
+    });
+    closeModal("create");
   } catch (err) {
     alert("Ошибка при создании клиента");
   }
 };
+
+onMounted(() => {
+  getCategories();
+});
 </script>
 
 <style scoped lang="scss">

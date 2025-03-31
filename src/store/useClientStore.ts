@@ -98,22 +98,32 @@ export const useClientStore = defineStore("clientStore", {
       try {
         const response = await api.post("/wp-json/custom/v1/create-client", {
           name: newClient.name,
-          city: newClient.city,
-          phones: newClient.phones,
-          websites: newClient.websites,
+          description: newClient.description,
+          schedule: newClient.schedule,
+          address: newClient.address,
           category: newClient.category,
-          status: newClient.status,
-          callback: newClient.callback,
-          email: newClient.email,
-          note: newClient.note,
+          city: newClient.city,
+          phone_list: newClient.phone_list,
+          whatsapps_list: newClient.whatsapps_list,
+          telegrams_list: newClient.telegrams_list,
+          emails_list: newClient.emails_list,
+          websites_list: newClient.websites_list,
+          vk: newClient.vk,
+          youtube: newClient.youtube,
+          spring: newClient.spring,
+          times: newClient.times,
+          reviews_count: newClient.reviews_count,
+          stars: newClient.stars,
+          is_ads: newClient.is_ads,
+          status: "Новый",
         });
 
-        // Можно сразу подтянуть новых клиентов
+        // Обновляем список клиентов
         await this.getClients();
 
         return response.data;
       } catch (error) {
-        console.error("Ошибка при создании клиента:", error);
+        // console.error("Ошибка при создании клиента:", error);
         throw error;
       }
     },
