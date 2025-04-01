@@ -69,10 +69,11 @@ onMounted(() => {
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 0 20px 0 #0000001c;
-  max-height: calc(100dvh - 100px);
+  max-height: 60dvh;
   overflow-y: auto;
   font-size: 12px;
   font-weight: 500;
+  z-index: 99;
 }
 
 .note-header {
