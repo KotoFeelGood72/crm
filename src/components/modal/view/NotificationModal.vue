@@ -62,14 +62,14 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .note {
-  position: fixed;
+  position: absolute;
   top: 80px;
   border-radius: 10px;
   right: 40px;
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 0 20px 0 #0000001c;
-  max-height: 60dvh;
+  max-height: 400px;
   overflow-y: auto;
   font-size: 12px;
   font-weight: 500;
