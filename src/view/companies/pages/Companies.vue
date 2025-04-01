@@ -9,10 +9,7 @@
     </div>
 
     <div class="clients_main">
-      <Loader
-        v-if="clientStore.isLoading"
-        style="background-color: transparent"
-      />
+      <Loader v-if="clientStore.isLoading" style="background-color: transparent" />
       <div v-else>
         <div class="client_list__w" v-if="clientStore.clients.length > 0">
           <div class="clients__list">

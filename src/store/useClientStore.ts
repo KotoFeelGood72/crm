@@ -9,6 +9,7 @@ export const useClientStore = defineStore("clientStore", {
     statuses: [
       { name: "Новый", id: "Новый" },
       { name: "Не актуально", id: "Не актуально" },
+      { name: "Перезвонить", id: "Перезвонить" },
       { name: "В обработке", id: "В обработке" },
       { name: "В работе", id: "В работе" },
       { name: "Клиент", id: "Клиент" },

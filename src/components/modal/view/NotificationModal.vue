@@ -23,17 +23,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { api } from "@/api/api";
 import { useUsersStore } from "@/store/useUserStore";
 
 const store = useUsersStore();
-const dropdownOpen = ref(false);
+// const dropdownOpen = ref(false);
 const notifications = ref<any[]>([]);
-
-const toggleDropdown = () => {
-  dropdownOpen.value = !dropdownOpen.value;
-};
 
 const fetchNotifications = async () => {
   if (!store?.users?.userInfo?.id) return;
@@ -42,9 +38,9 @@ const fetchNotifications = async () => {
   notifications.value = response.data;
 };
 
-const unreadCount = computed(
-  () => notifications.value.filter((n) => n.is_read === 0).length
-);
+// const unreadCount = computed(
+//   () => notifications.value.filter((n) => n.is_read === 0).length
+// );
 
 const markAsRead = async (id: number) => {
   await api.post(`/wp-json/custom/v1/mark-notification-read/${id}`);
@@ -54,15 +50,9 @@ const markAsRead = async (id: number) => {
 const markAllAsRead = async () => {
   const unread = notifications.value.filter((n) => n.is_read === 0);
   await Promise.all(
-    unread.map((n) =>
-      api.post(`/wp-json/custom/v1/mark-notification-read/${n.id}`)
-    )
+    unread.map((n) => api.post(`/wp-json/custom/v1/mark-notification-read/${n.id}`))
   );
   fetchNotifications();
-};
-
-const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleString();
 };
 
 onMounted(() => {

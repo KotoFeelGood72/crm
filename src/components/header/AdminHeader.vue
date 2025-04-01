@@ -14,20 +14,12 @@
 
         <IcBtn icon="solar:chat-round-unread-broken" />
         <div class="user">
-          <div
-            class="user__main"
-            @click="toggleUserModal"
-            v-if="users && users.userInfo"
-          >
+          <div class="user__main" @click="toggleUserModal" v-if="users && users.userInfo">
             <avatar :img="users.userInfo?.acf?.user_img" />
             <p>{{ users.user_display_name }}</p>
           </div>
           <transition>
-            <UserModal
-              v-if="userModal"
-              ref="userModalRef"
-              class="user-dropdown"
-            />
+            <UserModal v-if="userModal" ref="userModalRef" class="user-dropdown" />
           </transition>
         </div>
       </div>
@@ -42,7 +34,6 @@ import avatar from "../ui/people/avatar.vue";
 import UserModal from "../modal/view/UserModal.vue";
 import { useUsersStoreRefs } from "@/store/useUserStore";
 import IcBtn from "../ui/buttons/IcBtn.vue";
-import { useModalStore } from "@/store/useModalStore";
 import NotificationModal from "../modal/view/NotificationModal.vue";
 
 const note = ref<boolean>(false);

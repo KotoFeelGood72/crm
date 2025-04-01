@@ -14,7 +14,7 @@
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.13",
-    "firebase": "^11.5.0",
+    "firebase": "^11.6.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "qrcode": "^1.5.3",
