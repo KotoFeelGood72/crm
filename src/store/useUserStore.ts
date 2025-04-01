@@ -6,8 +6,37 @@ export const useUsersStore = defineStore("user", {
   state: () => ({
     users: null as any,
     auth: null as string | null,
+    notifications: [] as any[],
   }),
   actions: {
+    async fetchUserNotifications() {
+      try {
+        const userId = this.users?.userInfo?.id;
+        if (!userId) {
+          console.warn("Нет userId для загрузки уведомлений");
+          return;
+        }
+
+        const response = await api.get(`/wp-json/custom/v1/notifications/${userId}`);
+        this.notifications = response.data;
+        console.log("📩 Notifications fetched:", this.notifications);
+      } catch (error) {
+        console.error("Ошибка при получении уведомлений:", error);
+      }
+    },
+
+    async saveFcmToken(token: string) {
+      try {
+        const response = await api.post("/wp-json/custom/v1/save-fcm-token", {
+          token,
+        });
+        console.log("FCM token saved:", response.data);
+      } catch (error) {
+        console.error("FCM token save error:", error);
+      }
+    },
+
+    
     async signIn(user: any) {
       try {
         await axios.post("/wp-json/wp/v2/register/user", user, {

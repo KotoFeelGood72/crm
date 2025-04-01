@@ -4,15 +4,15 @@
       <h3>Клиенты</h3>
       <div class="row">
         <Button @click="openModal('create')" name="Добавить лид" />
-        <div class="filter-btn" @click="openModal('filter')">
-          <Icons icon="solar:soundwave-square-broken" :size="14" />
-          <p>Фильтры</p>
-        </div>
+        <Button @click="openModal('filter')" name="Фильтры" />
       </div>
     </div>
 
     <div class="clients_main">
-      <Loader v-if="clientStore.isLoading" style="background-color: transparent" />
+      <Loader
+        v-if="clientStore.isLoading"
+        style="background-color: transparent"
+      />
       <div v-else>
         <div class="client_list__w" v-if="clientStore.clients.length > 0">
           <div class="clients__list">

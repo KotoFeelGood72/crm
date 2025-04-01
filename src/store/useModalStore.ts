@@ -7,6 +7,7 @@ interface ModalsState {
   create: boolean;
   filter: boolean;
   deal: boolean;
+  note: boolean;
 }
 
 export const useModalStore = defineStore("modal", {
@@ -21,6 +22,7 @@ export const useModalStore = defineStore("modal", {
       create: false,
       filter: false,
       deal: false,
+      note: false,
     },
     queryCache: {}, // Сохраняем добавленные query для каждой модалки
   }),

@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+import "vue3-toastify/dist/index.css";
 import { computed, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import AdminLayout from "@/layouts/AdminLayout.vue";
@@ -17,6 +18,14 @@ import EmptyLayout from "@/layouts/EmptyLayout.vue";
 import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
+
+import { useNotifications } from "@/composables/useNotifications";
+
+const { requestPermission } = useNotifications();
+
+onMounted(() => {
+  requestPermission();
+});
 
 const { modals } = useModalStoreRefs();
 const { fetchUserInfo } = useUsersStore();

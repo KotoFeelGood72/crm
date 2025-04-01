@@ -1,5 +1,3 @@
-<!-- @format -->
-
 <template>
   <div class="admin-header">
     <div class="admin__main">
@@ -12,22 +10,28 @@
         </nav>
       </div>
       <div class="row-end">
-        <IcBtn icon="solar:settings-broken" />
-        <IcBtn icon="solar:add-square-broken" @click="openModal('create')" />
-        <IcBtn icon="solar:align-bottom-broken" />
-        <IcBtn icon="solar:bell-broken" />
+        <IcBtn icon="solar:bell-broken" @click="toggleNotification" />
+
         <IcBtn icon="solar:chat-round-unread-broken" />
-        <IcBtn icon="solar:remove-folder-broken" />
         <div class="user">
-          <div class="user__main" @click="toggleUserModal" v-if="users && users.userInfo">
+          <div
+            class="user__main"
+            @click="toggleUserModal"
+            v-if="users && users.userInfo"
+          >
             <avatar :img="users.userInfo?.acf?.user_img" />
             <p>{{ users.user_display_name }}</p>
           </div>
           <transition>
-            <UserModal v-if="userModal" ref="userModalRef" class="user-dropdown" />
+            <UserModal
+              v-if="userModal"
+              ref="userModalRef"
+              class="user-dropdown"
+            />
           </transition>
         </div>
       </div>
+      <NotificationModal v-if="note" />
     </div>
   </div>
 </template>
@@ -39,6 +43,9 @@ import UserModal from "../modal/view/UserModal.vue";
 import { useUsersStoreRefs } from "@/store/useUserStore";
 import IcBtn from "../ui/buttons/IcBtn.vue";
 import { useModalStore } from "@/store/useModalStore";
+import NotificationModal from "../modal/view/NotificationModal.vue";
+
+const note = ref<boolean>(false);
 
 const userModal = ref<boolean>(false);
 const userModalRef = ref<HTMLElement | null>(null);
@@ -47,8 +54,6 @@ const toggleUserModal = () => {
   userModal.value = !userModal.value;
 };
 
-const { openModal } = useModalStore();
-
 onMounted(() => {
   // document.addEventListener("click", handleClickOutside);
 });
@@ -56,6 +61,13 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // document.removeEventListener("click", handleClickOutside);
 });
+
+const toggleNotification = () => {
+  note.value = !note.value;
+  if (note.value) {
+    localStorage.removeItem("hasNewNotification");
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -71,6 +83,7 @@ onBeforeUnmount(() => {
     width: 100%;
     gap: 20px;
     padding: 5px 0;
+    position: relative;
   }
 }
 

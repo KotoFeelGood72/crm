@@ -24,12 +24,25 @@ import { useRouter } from "vue-router";
 const AsyncModalSingleData = defineAsyncComponent(
   () => import("./view/ModalSingleData.vue")
 );
-const AsyncModalDeal = defineAsyncComponent(() => import("./view/ModalDeal.vue"));
+const AsyncModalDeal = defineAsyncComponent(
+  () => import("./view/ModalDeal.vue")
+);
 
-const AsyncModalSingleQR = defineAsyncComponent(() => import("./view/SingleQR.vue"));
-const AsyncModalUser = defineAsyncComponent(() => import("./view/UserModal.vue"));
-const AsyncModalCreate = defineAsyncComponent(() => import("./view/ModalCreate.vue"));
-const AsyncModalFilter = defineAsyncComponent(() => import("./view/ModalFilter.vue"));
+const AsyncModalSingleQR = defineAsyncComponent(
+  () => import("./view/SingleQR.vue")
+);
+const AsyncModalUser = defineAsyncComponent(
+  () => import("./view/UserModal.vue")
+);
+const AsyncModalCreate = defineAsyncComponent(
+  () => import("./view/ModalCreate.vue")
+);
+const AsyncModalFilter = defineAsyncComponent(
+  () => import("./view/ModalFilter.vue")
+);
+const AsyncModalNote = defineAsyncComponent(
+  () => import("./view/NotificationModal.vue")
+);
 
 withDefaults(
   defineProps<{
@@ -53,6 +66,8 @@ const activeModalComponent = computed(() => {
       switch (key) {
         case "client":
           return AsyncModalSingleData;
+        case "note":
+          return AsyncModalNote;
         case "qr":
           return AsyncModalSingleQR;
         case "user":

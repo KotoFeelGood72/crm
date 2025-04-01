@@ -25,6 +25,17 @@ import '@programic/vue3-tooltip/dist/index.css';
 
 
 
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('/firebase-messaging-sw.js')
+      .then((registration) => {
+        console.log('✅ Firebase SW registered:', registration);
+      })
+      .catch((err) => {
+        console.error('❌ Firebase SW registration error:', err);
+      });
+  }
+
 
 const pinia = createPinia();
 const app = createApp(App);
