@@ -165,6 +165,31 @@ export const useClientStore = defineStore("clientStore", {
       }
     },
 
+    async addComment(updatedClient: any) {
+      try {
+        // Отправляем ТОЛЬКО поле history
+        await api.post(`/wp-json/custom/v1/update-client/${updatedClient.id}`, {
+          history: updatedClient.history,
+        });
+    
+        // Обновляем локального клиента (если найден)
+        const index = this.clients.findIndex(
+          (item) => item.id === updatedClient.id
+        );
+    
+        if (index !== -1) {
+          this.clients[index].acf = {
+            ...this.clients[index].acf,
+            history: updatedClient.history,
+          };
+        }
+    
+        console.log("✅ Комментарий обновлён", updatedClient.history);
+      } catch (error) {
+        console.error(`❌ Ошибка при обновлении комментария:`, error);
+      }
+    },
+
     async updateClient(updatedClient: any) {
       try {
         // Отправляем запрос на сервер с обновленными полями

@@ -111,9 +111,21 @@ export const useDealStore = defineStore("deals", {
       try {
         const response = await api.post(
           `/wp-json/custom/v1/update-deal/${id}`,
-          fields // 👈 только нужные поля
+          fields
         );
-
+    
+        // Обновляем локально в сторе
+        const index = this.deals.findIndex((deal) => deal.id === id);
+        if (index !== -1) {
+          this.deals[index] = {
+            ...this.deals[index],
+            acf: {
+              ...this.deals[index].acf,
+              ...fields,
+            },
+          };
+        }
+    
         return response.data;
       } catch (error) {
         console.error(`Failed to update deal ${id}:`, error);

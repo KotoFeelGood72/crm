@@ -43,6 +43,9 @@ const AsyncModalFilter = defineAsyncComponent(
 const AsyncModalNote = defineAsyncComponent(
   () => import("./view/NotificationModal.vue")
 );
+const AsyncModalComment = defineAsyncComponent(
+  () => import("./view/ModalComment.vue")
+);
 
 withDefaults(
   defineProps<{
@@ -76,6 +79,8 @@ const activeModalComponent = computed(() => {
           return AsyncModalCreate;
         case "filter":
           return AsyncModalFilter;
+        case "comment":
+          return AsyncModalComment;
         case "deal":
           return AsyncModalDeal;
         default:
@@ -89,6 +94,8 @@ const activeModalComponent = computed(() => {
 const isCloseModalBtn = computed(() => {
   switch (activeModalName.value) {
     case "client":
+      return true;
+    case "comment":
       return true;
     case "qr":
       return true;

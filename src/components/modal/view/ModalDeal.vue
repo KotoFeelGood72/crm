@@ -9,164 +9,267 @@
           <h3>{{ currentDeal.title }}</h3>
         </div>
         <div class="right">
-          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
+          <Button
+            name="Сохранить"
+            theme="primary"
+            @click="saveDeal"
+            v-if="isEditing"
+          />
           <p :class="{ active: isEditing }" @click="isEditing = !isEditing">
-            {{ isEditing ? "Редактирование" : "Просмотр" }}
+            {{ isEditing ? "Просмотреть" : "Редактировать" }}
           </p>
           <CloseModal />
         </div>
       </div>
       <div class="deal__body">
-        <div class="deal__blocks">
-          <ul class="deal__info">
-            <li>
-              <singleItem
-                label="Наименование:"
-                v-model="currentDeal.acf.name"
-                place="Введите название"
-                :edit="isEditing"
-              />
+        <div class="deal__tabs">
+          <ul class="tabs">
+            <li
+              :class="{ active: activeTab === 'deal' }"
+              @click="activeTab = 'deal'"
+            >
+              Сделка
             </li>
-
-            <li>
-              <listItem
-                label="Номера телефонов:"
-                v-model="currentDeal.acf.phone_list"
-                place="Введите номер телефона"
-                :edit="isEditing"
-              />
-            </li>
-
-            <li>
-              <listItem
-                label="Сайты:"
-                v-model="currentDeal.acf.websites_list"
-                place="Введите адрес сайта"
-                :edit="isEditing"
-              />
-            </li>
-
-            <li>
-              <listItem
-                label="Whats App:"
-                v-model="currentDeal.acf.whatsapps_list"
-                place="Введите номер WhatsApp"
-                :edit="isEditing"
-              />
-            </li>
-
-            <li>
-              <listItem
-                label="E-Mail:"
-                v-model="currentDeal.acf.emails_list"
-                place="Введите e-mail"
-                :edit="isEditing"
-              />
+            <li
+              :class="{ active: activeTab === 'tasks' }"
+              @click="activeTab = 'tasks'"
+            >
+              Дела
             </li>
           </ul>
         </div>
-
-        <div class="deal__blocks">
-          <ul class="deal__info">
-            <li>
-              <listItem
-                label="Telegram:"
-                v-model="currentDeal.acf.telegrams_list"
-                place="Введите Telegram"
-                :edit="isEditing"
-              />
-            </li>
-
-            <li class="row">
-              <singleItem
-                label="Youtube:"
-                v-model="currentDeal.acf.youtube"
-                place="Введите Youtube"
-                :edit="isEditing"
-              />
-              <singleItem
-                label="ВКонтакте:"
-                v-model="currentDeal.acf.vk"
-                place="Введите ВКонтакте"
-                :edit="isEditing"
-              />
-            </li>
-          </ul>
-        </div>
-
-        <div class="deal__blocks">
-          <ul class="deal__info">
-            <li class="row">
-              <singleItem
-                label="Адрес:"
-                v-model="currentDeal.acf.address"
-                place="Введите Адрес"
-                :edit="isEditing"
-              />
-              <singleItem
-                label="Город:"
-                v-model="currentDeal.acf.city"
-                place="Введите Адрес"
-                :edit="isEditing"
-              />
-            </li>
-
-            <li class="row">
-              <div class="flex-row">
-                <p>Есть ли реклама?</p>
-                <Switcher v-model="currentDeal.acf.is_ads" />
-              </div>
-              <div class="reviews__count">
+        <div v-if="activeTab === 'deal'">
+          <!-- вся текущая информация о сделке -->
+          <div class="deal__blocks">
+            <ul class="deal__info">
+              <li>
                 <singleItem
-                  label="Кол-во отзывов:"
-                  v-model="currentDeal.acf.reviews_count"
-                  place="кол-во отзывов"
+                  label="Наименование:"
+                  v-model="currentDeal.acf.name"
+                  place="Введите название"
                   :edit="isEditing"
                 />
-                <ul class="reviews__stars">
-                  <li v-for="n in Number(currentDeal.acf.stars)" :key="'stars-item' + n">
-                    <Icons icon="fluent-emoji-flat:star" :size="16" />
+              </li>
+
+              <li>
+                <listItem
+                  label="Номера телефонов:"
+                  v-model="currentDeal.acf.phone_list"
+                  place="Введите номер телефона"
+                  :edit="isEditing"
+                />
+              </li>
+
+              <li>
+                <listItem
+                  label="Сайты:"
+                  v-model="currentDeal.acf.websites_list"
+                  place="Введите адрес сайта"
+                  :edit="isEditing"
+                />
+              </li>
+
+              <li>
+                <listItem
+                  label="Whats App:"
+                  v-model="currentDeal.acf.whatsapps_list"
+                  place="Введите номер WhatsApp"
+                  :edit="isEditing"
+                />
+              </li>
+
+              <li>
+                <listItem
+                  label="E-Mail:"
+                  v-model="currentDeal.acf.emails_list"
+                  place="Введите e-mail"
+                  :edit="isEditing"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <div class="deal__blocks">
+            <ul class="deal__info">
+              <li>
+                <listItem
+                  label="Telegram:"
+                  v-model="currentDeal.acf.telegrams_list"
+                  place="Введите Telegram"
+                  :edit="isEditing"
+                />
+              </li>
+
+              <li class="row">
+                <singleItem
+                  label="Youtube:"
+                  v-model="currentDeal.acf.youtube"
+                  place="Введите Youtube"
+                  :edit="isEditing"
+                />
+                <singleItem
+                  label="ВКонтакте:"
+                  v-model="currentDeal.acf.vk"
+                  place="Введите ВКонтакте"
+                  :edit="isEditing"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <div class="deal__blocks">
+            <ul class="deal__info">
+              <li class="row">
+                <singleItem
+                  label="Адрес:"
+                  v-model="currentDeal.acf.address"
+                  place="Введите Адрес"
+                  :edit="isEditing"
+                />
+                <singleItem
+                  label="Город:"
+                  v-model="currentDeal.acf.city"
+                  place="Введите Адрес"
+                  :edit="isEditing"
+                />
+              </li>
+
+              <li class="row">
+                <div class="flex-row">
+                  <p>Есть ли реклама?</p>
+                  <Switcher v-model="currentDeal.acf.is_ads" />
+                </div>
+                <div class="reviews__count">
+                  <singleItem
+                    label="Кол-во отзывов:"
+                    v-model="currentDeal.acf.reviews_count"
+                    place="кол-во отзывов"
+                    :edit="isEditing"
+                  />
+                  <ul class="reviews__stars">
+                    <li
+                      v-for="n in Number(currentDeal.acf.stars)"
+                      :key="'stars-item' + n"
+                    >
+                      <Icons icon="fluent-emoji-flat:star" :size="16" />
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              <li class="row-3">
+                <singleItem
+                  label="График работы:"
+                  v-model="currentDeal.acf.schedule"
+                  place="Введите график работы"
+                  :edit="isEditing"
+                />
+                <singleItem
+                  label="Источник:"
+                  v-model="currentDeal.acf.spring"
+                  place="Введите источник"
+                  :edit="isEditing"
+                />
+                <singleItem
+                  label="Цена:"
+                  v-model="currentDeal.acf.price"
+                  place="Введите стоимость"
+                  :edit="isEditing"
+                />
+              </li>
+              <li class="row-flex">
+                <ul class="contacts__list">
+                  <li
+                    class="contacts__item"
+                    v-for="(item, index) in currentDeal.acf.contacts_list"
+                  >
+                    <singleItem
+                      label="ФИО:"
+                      v-model="item.fio"
+                      place="Введите ФИо"
+                      :edit="isEditing"
+                    />
+                    <singleItem
+                      label="Номер телефона:"
+                      v-model="item.phone"
+                      place="Введите номер телефона"
+                      :edit="isEditing"
+                    />
+                    <singleItem
+                      label="Должность:"
+                      v-model="item.prof"
+                      place="Введите должность"
+                      :edit="isEditing"
+                    />
+                    <div class="toggle__contacts">
+                      <input
+                        type="radio"
+                        name="contacts"
+                        :value="index"
+                        v-model="selectedContactIndex"
+                      />
+                    </div>
                   </li>
                 </ul>
-              </div>
-            </li>
+                <div class="add" @click="addContact" v-if="isEditing">
+                  <div class="add-icon">
+                    <Icons icon="ic:round-plus" :size="14" color=" #f0a029e9" />
+                  </div>
+                  <p>Добавить</p>
+                </div>
+              </li>
+            </ul>
+          </div>
 
-            <li class="row">
-              <singleItem
-                label="График работы:"
-                v-model="currentDeal.acf.schedule"
-                place="Введите график работы"
-                :edit="isEditing"
-              />
-              <singleItem
-                label="Источник:"
-                v-model="currentDeal.acf.spring"
-                place="Введите источник"
-                :edit="isEditing"
-              />
-            </li>
-          </ul>
-        </div>
-
-        <div class="deal__blocks history-chat" v-if="currentDeal.acf.history?.length">
-          <h4>История комментариев:</h4>
-          <div class="chat-wrapper">
-            <div
-              class="message"
-              v-for="(entry, index) in currentDeal.acf.history"
-              :key="index"
-              :class="{ self: entry.role === 'me' }"
-            >
-              <div class="bubble">
-                <p class="txt">{{ entry.txt }}</p>
-                <span class="time">{{ entry.time }}</span>
+          <div
+            class="deal__blocks history-chat"
+            v-if="currentDeal.acf.history?.length"
+          >
+            <h4>История комментариев:</h4>
+            <div class="chat-wrapper">
+              <div
+                class="message"
+                v-for="(entry, index) in currentDeal.acf.history"
+                :key="index"
+                :class="{ self: entry.role === 'me' }"
+              >
+                <div class="bubble">
+                  <p class="txt">{{ entry.txt }}</p>
+                  <span class="time">{{ entry.time }}</span>
+                </div>
               </div>
             </div>
           </div>
+          <div class="textarea__w">
+            <Textarea v-model="newComment" />
+            <Button name="Отправить" @click="handleComment" />
+          </div>
         </div>
-        <div class="textarea__w">
-          <Textarea v-model="newComment" />
-          <Button name="Отправить" @click="handleComment" />
+        <div v-if="activeTab === 'tasks'" class="tasks_tab">
+          <div class="task_input">
+            <input v-model="newTaskTitle" placeholder="Что нужно сделать" />
+            <input type="datetime-local" v-model="newTaskDateTime" />
+            <Button name="Добавить" @click="addTask" />
+          </div>
+
+          <div class="task_list">
+            <div
+              v-for="task in tasks"
+              :key="task.id"
+              class="task_item"
+              :class="{ done: task.done }"
+            >
+              <div class="task_top">
+                <input
+                  type="checkbox"
+                  v-model="task.done"
+                  @change="updateTask(task.id!, { done: task.done })"
+                />
+                <strong>{{ task.title }}</strong>
+                <small>{{ formatTaskDate(task.date, task.time) }}</small>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -176,9 +279,10 @@
 <script setup lang="ts">
 import CloseModal from "@/components/ui/buttons/CloseModal.vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
+import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
 import Button from "@/components/ui/buttons/Button.vue";
 import Textarea from "@/components/ui/inputs/Textarea.vue";
-import { ref, watchEffect } from "vue";
+import { ref, watch, watchEffect } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
 import listItem from "@/components/ui/row/list-item.vue";
 import Switcher from "@/components/ui/inputs/Switcher.vue";
@@ -186,9 +290,59 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const isEditing = ref(false);
-
+const selectedContactIndex = ref<number | null>(null);
 const { getDealById, updateDeal } = useDealStore();
+const { getTasks, updateTask, createTask, deleteTask } = useTaskStore();
+const { tasks } = useTaskStoreRefs();
 const { currentDeal } = useDealStoreRefs();
+const activeTab = ref<"deal" | "tasks">("deal");
+
+const newTaskTitle = ref("");
+const newTaskDateTime = ref("");
+
+const addTask = async () => {
+  if (!newTaskTitle.value || !newTaskDateTime.value) return;
+
+  const [date, time] = newTaskDateTime.value.split("T");
+
+  await createTask({
+    deal_id: currentDeal.value.id,
+    title: newTaskTitle.value,
+    date,
+    time,
+    done: false,
+  });
+
+  newTaskTitle.value = "";
+  newTaskDateTime.value = "";
+};
+
+const formatTaskDate = (date: string, time: string) =>
+  `Сделать до ${new Date(`${date}T${time}`).toLocaleString("ru-RU", {
+    weekday: "short",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  })}`;
+
+watch(selectedContactIndex, (newIndex: any) => {
+  currentDeal.value.acf.contacts_list.forEach((contact: any, i: any) => {
+    contact.priority = i === newIndex;
+  });
+});
+
+watchEffect(() => {
+  const deal = currentDeal.value;
+  if (!deal || !deal.acf || !Array.isArray(deal.acf.contacts_list)) return;
+
+  const index = deal.acf.contacts_list.findIndex(
+    (c: any) => c.priority === true
+  );
+  if (index !== -1) {
+    selectedContactIndex.value = index;
+  }
+});
 
 const addHistory = (text: string) => {
   const now = new Date();
@@ -205,6 +359,19 @@ const addHistory = (text: string) => {
   }
 
   currentDeal.value.acf.history.push({ txt: text, time });
+};
+
+const addContact = () => {
+  if (!Array.isArray(currentDeal.value.acf.contacts_list)) {
+    currentDeal.value.acf.contacts_list = [];
+  }
+
+  currentDeal.value.acf.contacts_list.push({
+    fio: "",
+    phone: "",
+    prof: "",
+    priority: false,
+  });
 };
 
 const newComment = ref("");
@@ -235,6 +402,7 @@ watchEffect(async () => {
   const dealId = route.query.deal;
   if (dealId) {
     await getDealById(dealId);
+    await getTasks(+dealId); // 👈 Подгружаем дела
   }
 });
 </script>
@@ -359,6 +527,12 @@ watchEffect(async () => {
   grid-gap: 10px;
 }
 
+.row-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  grid-gap: 10px;
+}
+
 .flex-row {
   @include flex-start;
   gap: 10px;
@@ -422,6 +596,103 @@ watchEffect(async () => {
   .bubble {
     background-color: #e6f9e8;
     border-color: #b7e6bd;
+  }
+}
+
+.add {
+  @include flex-center;
+  gap: 5px;
+  background-color: #f0a02912;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px dashed #f0a0296b;
+  color: #f0a029e9;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: #f0a02935;
+  }
+}
+
+.add-icon {
+  @include flex-center;
+}
+
+.contacts__item {
+  @include flex-center;
+  gap: 10px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  li {
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    &.active {
+      background-color: #f0a02919;
+      border-color: #f0a029;
+      color: #f0a029;
+    }
+  }
+}
+
+.tasks_tab {
+  .task_input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  }
+
+  .task_list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .task_item {
+    background-color: #fff8e5;
+    border: 1px solid #f0a0293b;
+    padding: 12px;
+    border-radius: 10px;
+
+    &.done {
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .task_top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between;
+
+      strong {
+        font-size: 14px;
+      }
+
+      small {
+        font-size: 12px;
+        color: #888;
+      }
+    }
+
+    .task_actions {
+      margin-top: 8px;
+    }
   }
 }
 </style>

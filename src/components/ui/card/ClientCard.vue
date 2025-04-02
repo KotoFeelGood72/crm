@@ -2,7 +2,10 @@
   <div class="card">
     <div class="card_top">
       <ul class="card_tab__link">
-        <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
+        <li
+          @click.stop="activeTab = 'org'"
+          :class="{ active: activeTab === 'org' }"
+        >
           Сведение об организации
         </li>
       </ul>
@@ -52,16 +55,35 @@
         </ul>
       </li>
     </ul>
+    <div
+      class="prefooter"
+      v-if="Array.isArray(card.acf?.history) && card.acf.history.length"
+    >
+      {{ card.acf.history[card.acf.history.length - 1].txt }}
+      <div class="comment_date">
+        {{ card.acf.history[card.acf.history.length - 1].time }}
+      </div>
+    </div>
+    <div class="footer">
+      <div
+        class="btn"
+        @click="openModal('comment', { comment: card.id }, router)"
+      >
+        Оставить комментарий
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useModalStore } from "@/store/useModalStore";
 import { ref } from "vue";
 import Selects from "../dropdown/Selects.vue";
 // @ts-ignore
 import DatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { useClientStore, useClientStoreRefs } from "@/store/useClientStore";
+import { useRouter } from "vue-router";
 
 const props = withDefaults(
   defineProps<{
@@ -71,6 +93,9 @@ const props = withDefaults(
     card: {},
   }
 );
+
+const { openModal } = useModalStore();
+const router = useRouter();
 
 function formatPhone(raw: string): string {
   const digits = raw.replace(/\D/g, "");
@@ -588,17 +613,37 @@ function updateStatus(newStatus: string) {
   }
 }
 
-.card_bottom {
-  background-color: #f5f5f5f5;
-  padding: 5px 10px;
-  font-size: 12px;
-  margin: 10px;
-  border-radius: 5px;
-  gap: 40px;
+.footer {
+  padding: 0 10px 10px 10px;
+}
 
-  p {
-    @include flex-start;
-    gap: 5px;
-  }
+.btn {
+  border: 1px dashed #f0a029b9;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  padding: 3px 5px;
+  background-color: #f0a02915;
+  color: #f0a129;
+  cursor: pointer;
+}
+
+.prefooter {
+  font-size: 12px;
+  padding: 5px 10px;
+  border: 1px dashed #e7e7e7b9;
+  background-color: #d4d4d415;
+  display: inline-flex;
+  margin: 0 10px 10px 10px;
+  position: relative;
+  min-width: 200px;
+  padding-right: 150px;
+}
+
+.comment_date {
+  font-size: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>

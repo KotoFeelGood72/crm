@@ -10,16 +10,16 @@
       <p>{{ card.acf.name }}</p>
       <div class="row">
         <chip title="http://localhost:5123/deals" icon="solar:planet-3-bold" />
-        <chip title="150 000" icon="solar:dollar-minimalistic-linear" />
+        <chip :title="card.acf.price" icon="cryptocurrency:rub" />
       </div>
     </div>
     <div class="card_body">
       <div class="row">
         <chip
-          :title="formatedPhone(card.acf.phone_list[0].item)"
+          :title="formatedPhone(primaryContact?.phone)"
           icon="solar:phone-calling-bold"
         />
-        <p>{{ card.acf.name }}</p>
+        <p>{{ primaryContact?.fio }}</p>
       </div>
     </div>
     <div class="card_bottom">
@@ -27,7 +27,9 @@
         <p :class="{ hidden: !hiddenText }">
           {{ lastComment }}
         </p>
-        <div class="more" @click.stop="hiddenText = !hiddenText">Развернуть</div>
+        <div class="more" @click.stop="hiddenText = !hiddenText">
+          Развернуть
+        </div>
       </div>
     </div>
   </div>
@@ -50,6 +52,11 @@ const props = withDefaults(
   }
 );
 
+const primaryContact = computed(() => {
+  const list = props.card.acf?.contacts_list;
+  if (!Array.isArray(list)) return null;
+  return list.find((c) => c.priority === true) || null;
+});
 const hiddenText = ref(false);
 
 const lastComment = computed(() => {
