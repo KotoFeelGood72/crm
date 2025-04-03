@@ -25,7 +25,7 @@ const props = withDefaults(
     placeholder?: string;
     message?: string;
     error?: boolean;
-    icon: string;
+    icon?: string;
     modelValue: string;
     label?: string;
     disabled?: boolean;
