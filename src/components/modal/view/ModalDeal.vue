@@ -227,7 +227,7 @@
             </div>
           </div>
           <div class="textarea__w">
-            <Textarea v-model="newComment" />
+            <Textarea v-model="newComment" placeholder="Введите дело"/>
             <Button name="Отправить" @click="handleComment" />
           </div>
         </div>
