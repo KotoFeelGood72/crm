@@ -101,7 +101,7 @@
 
         <div class="single_body__row commentary">
           <div class="commentary__label">Комментарий</div>
-          <InputArea v-model="commentary" />
+          <InputArea v-model="commentary" placeholder="Комментарий" />
         </div>
         <div class="single__action">
           <defaultBtn
