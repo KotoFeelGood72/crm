@@ -1,7 +1,7 @@
 <template>
   <div class="note">
-    <div class="note-header">
-      Уведомления
+    <div class="note-header flex items-center justify-between">
+      <p>Уведомления</p>
       <button class="clear" @click="markAllAsRead">Очистить</button>
     </div>
 
@@ -69,15 +69,16 @@ onMounted(() => {
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 0 20px 0 #0000001c;
-  max-height: 400px;
+  max-height: calc(100vh - 105px);
   overflow-y: auto;
   font-size: 12px;
   font-weight: 500;
   z-index: 99;
+  max-width: 400px;
 }
 
 .note-header {
-  @include flex-space;
+  // @include flex-space;
   margin-bottom: 10px;
 }
 

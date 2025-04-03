@@ -9,12 +9,7 @@
           <h3>{{ currentDeal.title }}</h3>
         </div>
         <div class="right">
-          <Button
-            name="Сохранить"
-            theme="primary"
-            @click="saveDeal"
-            v-if="isEditing"
-          />
+          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
           <p :class="{ active: isEditing }" @click="isEditing = !isEditing">
             {{ isEditing ? "Просмотреть" : "Редактировать" }}
           </p>
@@ -24,16 +19,10 @@
       <div class="deal__body">
         <div class="deal__tabs">
           <ul class="tabs">
-            <li
-              :class="{ active: activeTab === 'deal' }"
-              @click="activeTab = 'deal'"
-            >
+            <li :class="{ active: activeTab === 'deal' }" @click="activeTab = 'deal'">
               Сделка
             </li>
-            <li
-              :class="{ active: activeTab === 'tasks' }"
-              @click="activeTab = 'tasks'"
-            >
+            <li :class="{ active: activeTab === 'tasks' }" @click="activeTab = 'tasks'">
               Дела
             </li>
           </ul>
@@ -221,10 +210,7 @@
             </ul>
           </div>
 
-          <div
-            class="deal__blocks history-chat"
-            v-if="currentDeal.acf.history?.length"
-          >
+          <div class="deal__blocks history-chat" v-if="currentDeal.acf.history?.length">
             <h4>История комментариев:</h4>
             <div class="chat-wrapper">
               <div
@@ -292,7 +278,7 @@ const route = useRoute();
 const isEditing = ref(false);
 const selectedContactIndex = ref<number | null>(null);
 const { getDealById, updateDeal } = useDealStore();
-const { getTasks, updateTask, createTask, deleteTask } = useTaskStore();
+const { getTasks, updateTask, createTask } = useTaskStore();
 const { tasks } = useTaskStoreRefs();
 const { currentDeal } = useDealStoreRefs();
 const activeTab = ref<"deal" | "tasks">("deal");
@@ -336,9 +322,7 @@ watchEffect(() => {
   const deal = currentDeal.value;
   if (!deal || !deal.acf || !Array.isArray(deal.acf.contacts_list)) return;
 
-  const index = deal.acf.contacts_list.findIndex(
-    (c: any) => c.priority === true
-  );
+  const index = deal.acf.contacts_list.findIndex((c: any) => c.priority === true);
   if (index !== -1) {
     selectedContactIndex.value = index;
   }
