@@ -2,10 +2,7 @@
   <div class="card">
     <div class="card_top">
       <ul class="card_tab__link">
-        <li
-          @click.stop="activeTab = 'org'"
-          :class="{ active: activeTab === 'org' }"
-        >
+        <li @click.stop="activeTab = 'org'" :class="{ active: activeTab === 'org' }">
           Сведение об организации
         </li>
       </ul>
@@ -65,10 +62,7 @@
       </div>
     </div>
     <div class="footer">
-      <div
-        class="btn"
-        @click="openModal('comment', { comment: card.id }, router)"
-      >
+      <div class="btn" @click="openModal('comment', { comment: card.id }, router)">
         Оставить комментарий
       </div>
     </div>

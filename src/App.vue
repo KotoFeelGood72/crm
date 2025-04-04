@@ -15,9 +15,11 @@ import { useRoute } from "vue-router";
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 import EmptyLayout from "@/layouts/EmptyLayout.vue";
+import OwnerLayouts from "./layouts/OwnerLayouts.vue";
 import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
+import StandartModal from "./components/modal/view/StandartModal.vue";
 
 import { useNotifications } from "@/composables/useNotifications";
 
@@ -55,6 +57,8 @@ const layoutComponent = computed(() => {
   switch (route.meta.layout) {
     case "Admin":
       return AdminLayout;
+    case "owner":
+      return OwnerLayouts;
     case "Empty":
       return EmptyLayout;
     default:
@@ -99,8 +103,10 @@ onMounted(async () => {
 
 html {
   font-family: "Montserrat", sans-serif;
+  width: 100%;
   &.fixed {
-    overflow: hidden;
+    // overflow: hidden;
+    width: 100%;
   }
 }
 

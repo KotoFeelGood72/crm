@@ -1,11 +1,7 @@
 <template>
   <Transition name="fade-modal">
-    <div
-      class="modal"
-      v-if="activeModalComponent"
-      :class="['modal_postionY__' + positionY, 'modal_postionX__' + positionX]"
-    >
-      <div class="modal__bg" @click="closeCurrentModal"></div>
+    <div class="modal fixed top-0 left-0 z-50" v-if="activeModalComponent">
+      <!-- <div class="modal__bg" @click="closeCurrentModal"></div> -->
       <div class="modal_main__w">
         <div class="modal_main">
           <CloseModal v-if="isCloseModalBtn" @click="closeCurrentModal()" />
@@ -24,28 +20,16 @@ import { useRouter } from "vue-router";
 const AsyncModalSingleData = defineAsyncComponent(
   () => import("./view/ModalSingleData.vue")
 );
-const AsyncModalDeal = defineAsyncComponent(
-  () => import("./view/ModalDeal.vue")
-);
+const AsyncModalDeal = defineAsyncComponent(() => import("./view/ModalDeal.vue"));
 
-const AsyncModalSingleQR = defineAsyncComponent(
-  () => import("./view/SingleQR.vue")
-);
-const AsyncModalUser = defineAsyncComponent(
-  () => import("./view/UserModal.vue")
-);
-const AsyncModalCreate = defineAsyncComponent(
-  () => import("./view/ModalCreate.vue")
-);
-const AsyncModalFilter = defineAsyncComponent(
-  () => import("./view/ModalFilter.vue")
-);
-const AsyncModalNote = defineAsyncComponent(
-  () => import("./view/NotificationModal.vue")
-);
-const AsyncModalComment = defineAsyncComponent(
-  () => import("./view/ModalComment.vue")
-);
+const AsyncModalSingleQR = defineAsyncComponent(() => import("./view/SingleQR.vue"));
+const AsyncModalUser = defineAsyncComponent(() => import("./view/UserModal.vue"));
+const AsyncModalCreate = defineAsyncComponent(() => import("./view/ModalCreate.vue"));
+const AsyncModalFilter = defineAsyncComponent(() => import("./view/ModalFilter.vue"));
+const AsyncModalNote = defineAsyncComponent(() => import("./view/NotificationModal.vue"));
+const AsyncModalComment = defineAsyncComponent(() => import("./view/ModalComment.vue"));
+const AsyncModalStandart = defineAsyncComponent(() => import("./view/StandartModal.vue"));
+const AsyncModalStatus = defineAsyncComponent(() => import("./view/ModalStatus.vue"));
 
 withDefaults(
   defineProps<{
@@ -83,6 +67,10 @@ const activeModalComponent = computed(() => {
           return AsyncModalComment;
         case "deal":
           return AsyncModalDeal;
+        case "standart":
+          return AsyncModalStandart;
+        case "status":
+          return AsyncModalStatus;
         default:
           return null;
       }

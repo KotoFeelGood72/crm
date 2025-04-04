@@ -9,16 +9,16 @@ import text from "./components/ui/text/text.vue";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import Icons from "./components/ui/Icons.vue";
 import "vuetify/styles";
-import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
+// import { createVuetify } from "vuetify";
+// import * as components from "vuetify/components";
+// import * as directives from "vuetify/directives";
 import "@/assets/css/input.css";
 
-const vuetify = createVuetify({
-  components,
-  directives,
-  ssr: true,
-});
+// const vuetify = createVuetify({
+//   components,
+//   directives,
+//   ssr: true,
+// });
 
 import Tooltip from "@programic/vue3-tooltip";
 import "@programic/vue3-tooltip/dist/index.css";
@@ -43,7 +43,7 @@ app.component("SvgIcon", SvgIcon);
 app.component("heading", heading);
 app.component("v-text", text);
 app.use(pinia);
-app.use(vuetify);
+// app.use(vuetify);
 app.use(router);
 app.mount("#app");
 app.use(Tooltip);

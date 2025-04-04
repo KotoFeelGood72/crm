@@ -9,12 +9,15 @@ interface ModalsState {
   deal: boolean;
   note: boolean;
   comment: boolean;
+  standart: boolean;
+  status: boolean;
 }
 
 export const useModalStore = defineStore("modal", {
   state: (): {
     modals: ModalsState;
     queryCache: Record<string, Record<string, any>>;
+    current: any; // Храним текущий контент
   } => ({
     modals: {
       client: false,
@@ -25,16 +28,22 @@ export const useModalStore = defineStore("modal", {
       deal: false,
       note: false,
       comment: false,
+      standart: false,
+      status: false,
     },
-    queryCache: {}, // Сохраняем добавленные query для каждой модалки
+    queryCache: {},
+    current: null,
   }),
+
   actions: {
     openModal(
       modalName: keyof ModalsState,
+      content?: any,
       query?: Record<string, any>,
       router?: any
     ) {
       this.modals[modalName] = true;
+      this.current = content || null;
 
       if (query && router) {
         this.queryCache[modalName] = query;
@@ -50,6 +59,7 @@ export const useModalStore = defineStore("modal", {
 
     closeModal(modalName: keyof ModalsState, router?: any): void {
       this.modals[modalName] = false;
+      this.current = null;
 
       if (router && this.queryCache[modalName]) {
         const currentQuery = { ...router.currentRoute?.value?.query };
@@ -60,8 +70,6 @@ export const useModalStore = defineStore("modal", {
         });
 
         router.replace({ query: currentQuery });
-
-        // Очищаем кэш после удаления
         delete this.queryCache[modalName];
       }
     },
@@ -71,15 +79,21 @@ export const useModalStore = defineStore("modal", {
         this.modals[modalName as keyof ModalsState] = false;
       });
 
+      this.current = null;
+
       if (router && route) {
         const currentQuery = { ...route.query };
 
-        Object.values(this.queryCache).forEach((cachedQuery) => {
+        console.log(currentQuery);
+        // Сначала удалить из query всё, что было в кэше
+        for (const modal in this.queryCache) {
+          const cachedQuery = this.queryCache[modal as keyof ModalsState];
           Object.keys(cachedQuery).forEach((key) => {
             delete currentQuery[key];
           });
-        });
+        }
 
+        // Только теперь очищаем кэш и делаем router.replace
         this.queryCache = {};
         router.replace({ query: currentQuery });
       }

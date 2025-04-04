@@ -1,0 +1,407 @@
+import { defineStore, storeToRefs } from "pinia";
+import { api } from "@/api/api";
+// import custom from "@/api/custom";
+
+export const useLeadsStore = defineStore("leads", {
+  state: () => ({
+    clients: [] as any[],
+    leads: [] as any[],
+    categories: [] as any[],
+    statuses: [
+      { name: "Новый", id: "Новый" },
+      { name: "Не актуально", id: "Не актуально" },
+      { name: "Перезвонить", id: "Перезвонить" },
+      { name: "Не дозвонился", id: "Не дозвонился" },
+      { name: "В обработке", id: "В обработке" },
+      { name: "В работе", id: "В работе" },
+      { name: "Клиент", id: "Клиент" },
+    ],
+    cities: [
+      { name: "Тверь", id: "Тверь" },
+      { name: "Краснодар", id: "Краснодар" },
+      { name: "Москва", id: "Москва" },
+      { name: "Ростов на Дону", id: "Ростов на Дону" },
+      { name: "Пермь", id: "Пермь" },
+      { name: "Казань", id: "Казань" },
+    ],
+    perPageOptions: [
+      { name: "10", id: "10" },
+      { name: "20", id: "20" },
+      { name: "30", id: "30" },
+      { name: "40", id: "40" },
+      { name: "50", id: "50" },
+      { name: "100", id: "100" },
+    ],
+    hasWebsiteOptions: [
+      { name: "Есть сайт", id: "1" },
+      { name: "Нет сайта", id: "0" },
+    ],
+    page: 1,
+    perPage: "10" as any,
+    totalPages: 1 as any,
+    selectedCategory: "",
+    selectedStatus: "Новый",
+    selectedCity: "",
+    hasWebsite: "",
+    searchQuery: "",
+    searchPhone: "",
+    selectedDate: null, // Добавляем переменную для выбранной даты
+    isLoading: false,
+  }),
+  actions: {
+    async getLeads() {
+      try {
+        const params: any = {
+          page: this.page,
+          per_page: this.perPage,
+        };
+
+        if (this.selectedCategory) {
+          params.theme_bussines = this.selectedCategory;
+        }
+
+        if (this.selectedStatus) {
+          params.statuses = this.selectedStatus;
+        }
+
+        if (this.selectedCity) {
+          params.city = this.selectedCity;
+        }
+
+        if (this.hasWebsite) {
+          params.has_website = this.hasWebsite;
+        }
+
+        if (this.searchQuery) {
+          params.search = this.searchQuery;
+        }
+
+        if (this.searchPhone) {
+          params.phone = this.searchPhone;
+        }
+
+        if (this.selectedDate) {
+          params.callback_date = this.formatDate(this.selectedDate);
+        }
+
+        const response = await api.get("/wp-json/wp/v2/client_new", { params });
+        this.leads = response.data;
+        this.totalPages = Math.ceil(
+          response.headers["x-wp-total"] / this.perPage
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        // this.isLoading = false;
+      }
+    },
+    async getClients() {
+      this.isLoading = true;
+      try {
+        const params: any = {
+          page: this.page,
+          per_page: this.perPage,
+        };
+
+        if (this.selectedCategory) {
+          params.theme_bussines = this.selectedCategory;
+        }
+
+        if (this.selectedStatus) {
+          params.statuses = this.selectedStatus;
+        }
+
+        if (this.selectedCity) {
+          params.city = this.selectedCity;
+        }
+
+        if (this.hasWebsite) {
+          params.has_website = this.hasWebsite;
+        }
+
+        if (this.searchQuery) {
+          params.search = this.searchQuery;
+        }
+
+        if (this.searchPhone) {
+          params.phone = this.searchPhone;
+        }
+
+        if (this.selectedDate) {
+          params.callback_date = this.formatDate(this.selectedDate);
+        }
+
+        const response = await api.get("/wp-json/wp/v2/client_new", { params });
+        this.clients = response.data;
+        this.totalPages = Math.ceil(
+          response.headers["x-wp-total"] / this.perPage
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async createClient(newClient: any) {
+      try {
+        const response = await api.post("/wp-json/custom/v1/create-client", {
+          name: newClient.name,
+          description: newClient.description,
+          schedule: newClient.schedule,
+          address: newClient.address,
+          category: newClient.category,
+          city: newClient.city,
+          phone_list: newClient.phone_list,
+          whatsapps_list: newClient.whatsapps_list,
+          telegrams_list: newClient.telegrams_list,
+          emails_list: newClient.emails_list,
+          websites_list: newClient.websites_list,
+          vk: newClient.vk,
+          youtube: newClient.youtube,
+          spring: newClient.spring,
+          times: newClient.times,
+          reviews_count: newClient.reviews_count,
+          stars: newClient.stars,
+          is_ads: newClient.is_ads,
+          status: "Новый",
+        });
+
+        // Обновляем список клиентов
+        await this.getClients();
+
+        return response.data;
+      } catch (error) {
+        // console.error("Ошибка при создании клиента:", error);
+        throw error;
+      }
+    },
+    formatDate(date: any) {
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+
+      return `${year}-${month}-${day}`;
+    },
+
+    getStatusClass(status: string) {
+      switch (status) {
+        case "Новый":
+          return "status-new";
+        case "В обработке":
+          return "status-processing";
+        case "В работе":
+          return "status-working";
+        case "Клиент":
+          return "status-client";
+        case "Не актуально":
+          return "status-not-relevant";
+        default:
+          return "";
+      }
+    },
+
+    async getCategories() {
+      try {
+        const response = await api.get(
+          "/wp-json/wp/v2/theme_bussines/?per_page=100"
+        );
+        this.categories = response.data;
+      } catch (error) {
+        console.error("Failed to get categories:", error);
+      }
+    },
+
+    async addComment(updatedClient: any) {
+      try {
+        // Отправляем ТОЛЬКО поле history
+        await api.post(`/wp-json/custom/v1/update-client/${updatedClient.id}`, {
+          history: updatedClient.history,
+        });
+
+        // Обновляем локального клиента (если найден)
+        const index = this.clients.findIndex(
+          (item) => item.id === updatedClient.id
+        );
+
+        if (index !== -1) {
+          this.clients[index].acf = {
+            ...this.clients[index].acf,
+            history: updatedClient.history,
+          };
+        }
+
+        console.log("✅ Комментарий обновлён", updatedClient.history);
+      } catch (error) {
+        console.error(`❌ Ошибка при обновлении комментария:`, error);
+      }
+    },
+
+    async updateClient(updatedClient: any) {
+      try {
+        // Отправляем запрос на сервер с обновленными полями
+        await api.post(`/wp-json/custom/v1/update-client/${updatedClient.id}`, {
+          name: updatedClient.acf.name,
+          city: updatedClient.acf.city,
+          phones: updatedClient.acf.phones,
+          websites: updatedClient.acf.websites,
+          category: updatedClient.acf.category,
+          status: updatedClient.acf.status,
+          callback: updatedClient.acf.callback,
+          email: updatedClient.email,
+          status_kp: updatedClient.acf.status_kp,
+        });
+
+        // Ищем клиента в локальном хранилище
+        const index = this.clients.findIndex(
+          (item) => item.id === updatedClient.id
+        );
+
+        if (index !== -1) {
+          this.clients[index] = {
+            ...this.clients[index], // сохраняем все существующие данные
+            acf: {
+              ...this.clients[index].acf, // сохраняем все существующие поля acf
+              name: updatedClient.acf.name,
+              city: updatedClient.acf.city,
+              phones: updatedClient.acf.phones,
+              websites: updatedClient.acf.websites,
+              category: updatedClient.acf.category,
+              status: updatedClient.acf.status,
+              callback: updatedClient.acf.callback,
+              status_kp: updatedClient.acf.status_kp,
+            },
+            email: updatedClient.email, // обновляем email
+          };
+          this.getClients();
+          console.log("updatedClient", updatedClient);
+        }
+      } catch (error) {
+        console.error(`Failed to update client ${updatedClient.id}:`, error);
+      }
+    },
+    async deleteLead(leadId: number) {
+      try {
+        await api.delete(`/wp-json/wp/v2/delete-client/${leadId}`);
+        this.leads = this.leads.filter((lead) => lead.id !== leadId);
+      } catch (error) {
+        console.error(`Failed to delete client ${leadId}:`, error);
+      }
+    },
+
+    updateCategory(category: string) {
+      this.selectedCategory = category;
+      this.page = 1;
+      this.getClients();
+    },
+
+    updateStatus(status: string) {
+      this.selectedStatus = status;
+      this.page = 1;
+      this.getClients();
+    },
+
+    updateCity(city: string) {
+      this.selectedCity = city;
+      this.page = 1;
+      this.getClients();
+    },
+
+    updateHasWebsite(hasWebsite: string) {
+      this.hasWebsite = hasWebsite;
+      this.page = 1;
+      this.getClients();
+    },
+
+    updateSearchQuery(query: string) {
+      this.searchQuery = query;
+      this.page = 1;
+      this.getClients();
+    },
+
+    updateSearchPhone(phone: string) {
+      this.searchPhone = phone;
+      this.page = 1;
+      this.getClients();
+    },
+
+    updatePerPage(perPage: any) {
+      this.perPage = perPage;
+      this.page = 1;
+      this.getLeads();
+    },
+
+    updatePage(newPage: number) {
+      this.page = newPage;
+      this.getLeads();
+    },
+
+    updateSelectedDate(date: any) {
+      this.selectedDate = date;
+      this.page = 1;
+      this.getClients();
+    },
+
+    clearFilters() {
+      this.selectedCategory = "";
+      this.selectedStatus = "";
+      this.selectedCity = "";
+      this.hasWebsite = "";
+      this.page = 1;
+      this.perPage = "10";
+      this.searchQuery = "";
+      this.searchPhone = "";
+      this.getClients();
+    },
+    updateClientInStore(updatedClient: any) {
+      const index = this.clients.findIndex(
+        (client) => client.id === updatedClient.id
+      );
+      if (index !== -1) {
+        this.clients[index] = { ...this.clients[index], ...updatedClient };
+      }
+    },
+    async updateClientStatus(clientId: number, newStatus: string) {
+      try {
+        const clientIndex = this.clients.findIndex(
+          (client) => client.id === clientId
+        );
+        if (clientIndex === -1) return;
+
+        // Отправка обновлённого статуса на сервер
+        await api.post(`/wp-json/custom/v1/update-client/${clientId}`, {
+          status: newStatus,
+        });
+
+        // const currentClient = this.clients[clientIndex];
+
+        // Если клиент стал "Клиент" — удаляем из списка
+        if (newStatus === "Клиент") {
+          this.clients.splice(clientIndex, 1);
+          console.log(
+            `Клиент #${clientId} перемещён в сделки и удалён из стора`
+          );
+          return;
+        }
+
+        // Обновляем статус клиента
+        this.clients[clientIndex].acf.status = newStatus;
+
+        // Если активный фильтр по статусу больше не совпадает — удаляем карточку из текущего списка
+        if (this.selectedStatus && newStatus !== this.selectedStatus) {
+          this.clients.splice(clientIndex, 1);
+          console.log(
+            `Клиент #${clientId} обновлён до статуса ${newStatus} и скрыт из текущего фильтра`
+          );
+        }
+      } catch (error) {
+        console.error(
+          `Ошибка при обновлении статуса клиента ${clientId}:`,
+          error
+        );
+      }
+    },
+  },
+});
+
+export const useLeadsStoreRefs = () => storeToRefs(useLeadsStore());

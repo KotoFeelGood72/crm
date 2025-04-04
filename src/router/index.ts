@@ -1,10 +1,12 @@
 import { createWebHistory, createRouter } from "vue-router";
 import { CompaniesRouter } from "../view/companies/router/CompaniesRouter";
 import { ProfileRouter } from "../view/profile/router/ProfileRouter";
+import { LeadsRouter } from "../view/admin/router/LeadsRouter";
 
 const routes = [
   ...CompaniesRouter.options.routes,
   ...ProfileRouter.options.routes,
+  ...LeadsRouter.options.routes,
   {
     path: "/",
     name: "Home",
