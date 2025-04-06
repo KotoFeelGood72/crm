@@ -20,16 +20,37 @@ import { useRouter } from "vue-router";
 const AsyncModalSingleData = defineAsyncComponent(
   () => import("./view/ModalSingleData.vue")
 );
-const AsyncModalDeal = defineAsyncComponent(() => import("./view/ModalDeal.vue"));
+const AsyncModalDeal = defineAsyncComponent(
+  () => import("./view/ModalDeal.vue")
+);
 
-const AsyncModalSingleQR = defineAsyncComponent(() => import("./view/SingleQR.vue"));
-const AsyncModalUser = defineAsyncComponent(() => import("./view/UserModal.vue"));
-const AsyncModalCreate = defineAsyncComponent(() => import("./view/ModalCreate.vue"));
-const AsyncModalFilter = defineAsyncComponent(() => import("./view/ModalFilter.vue"));
-const AsyncModalNote = defineAsyncComponent(() => import("./view/NotificationModal.vue"));
-const AsyncModalComment = defineAsyncComponent(() => import("./view/ModalComment.vue"));
-const AsyncModalStandart = defineAsyncComponent(() => import("./view/StandartModal.vue"));
-const AsyncModalStatus = defineAsyncComponent(() => import("./view/ModalStatus.vue"));
+const AsyncModalSingleQR = defineAsyncComponent(
+  () => import("./view/SingleQR.vue")
+);
+const AsyncModalUser = defineAsyncComponent(
+  () => import("./view/UserModal.vue")
+);
+const AsyncModalCreate = defineAsyncComponent(
+  () => import("./view/ModalCreate.vue")
+);
+const AsyncModalFilter = defineAsyncComponent(
+  () => import("./view/ModalFilter.vue")
+);
+const AsyncModalNote = defineAsyncComponent(
+  () => import("./view/NotificationModal.vue")
+);
+const AsyncModalComment = defineAsyncComponent(
+  () => import("./view/ModalComment.vue")
+);
+const AsyncModalStandart = defineAsyncComponent(
+  () => import("./view/StandartModal.vue")
+);
+const AsyncModalStatus = defineAsyncComponent(
+  () => import("./view/ModalStatus.vue")
+);
+const AsyncModalCommentary = defineAsyncComponent(
+  () => import("./view/ModalCommentary.vue")
+);
 
 withDefaults(
   defineProps<{
@@ -71,6 +92,8 @@ const activeModalComponent = computed(() => {
           return AsyncModalStandart;
         case "status":
           return AsyncModalStatus;
+        case "commentary":
+          return AsyncModalCommentary;
         default:
           return null;
       }

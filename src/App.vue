@@ -1,5 +1,5 @@
 <template>
-  <component :is="layoutComponent" :class="{ fixed: isAnyModalActive }">
+  <component :is="layoutComponent">
     <router-view />
     <Modal :positionX="modalPositionX" />
     <Transition name="fade-bg">
@@ -19,9 +19,10 @@ import OwnerLayouts from "./layouts/OwnerLayouts.vue";
 import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
-import StandartModal from "./components/modal/view/StandartModal.vue";
-
+import "vue-skeletor/dist/vue-skeletor.css";
 import { useNotifications } from "@/composables/useNotifications";
+import { useScrollLock } from "@/composables/useLockScreen";
+const { lockScroll, unlockScroll } = useScrollLock();
 
 const { requestPermission } = useNotifications();
 
@@ -66,14 +67,12 @@ const layoutComponent = computed(() => {
   }
 });
 
-// Watch for changes in isAnyModalActive and toggle the 'fixed' class on body
-watch(isAnyModalActive, (newValue) => {
-  if (newValue) {
-    document.documentElement.classList.add("fixed");
-  } else {
-    document.documentElement.classList.remove("fixed");
+watch(
+  () => isAnyModalActive.value,
+  (visible) => {
+    visible ? lockScroll() : unlockScroll();
   }
-});
+);
 
 onMounted(async () => {
   await fetchUserInfo();
@@ -90,6 +89,7 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   background-color: #000000a6;
+  z-index: 99;
 }
 
 .tooltip-holder {
@@ -104,10 +104,6 @@ onMounted(async () => {
 html {
   font-family: "Montserrat", sans-serif;
   width: 100%;
-  &.fixed {
-    // overflow: hidden;
-    width: 100%;
-  }
 }
 
 body {

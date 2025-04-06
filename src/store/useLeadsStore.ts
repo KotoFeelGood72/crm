@@ -1,21 +1,14 @@
 import { defineStore, storeToRefs } from "pinia";
 import { api } from "@/api/api";
-// import custom from "@/api/custom";
+import { statusList } from "@/api/data";
 
 export const useLeadsStore = defineStore("leads", {
   state: () => ({
     clients: [] as any[],
     leads: [] as any[],
+    lead: null as any,
     categories: [] as any[],
-    statuses: [
-      { name: "Новый", id: "Новый" },
-      { name: "Не актуально", id: "Не актуально" },
-      { name: "Перезвонить", id: "Перезвонить" },
-      { name: "Не дозвонился", id: "Не дозвонился" },
-      { name: "В обработке", id: "В обработке" },
-      { name: "В работе", id: "В работе" },
-      { name: "Клиент", id: "Клиент" },
-    ],
+    statuses: statusList as any[],
     cities: [
       { name: "Тверь", id: "Тверь" },
       { name: "Краснодар", id: "Краснодар" },
@@ -51,48 +44,24 @@ export const useLeadsStore = defineStore("leads", {
   actions: {
     async getLeads() {
       try {
-        const params: any = {
+        const params: Record<string, any> = {
           page: this.page,
           per_page: this.perPage,
+          ...(this.selectedCategory && { theme_bussines: this.selectedCategory }),
+          ...(this.selectedStatus && { statuses: this.selectedStatus }),
+          ...(this.selectedCity && { city: this.selectedCity }),
+          ...(this.hasWebsite && { has_website: this.hasWebsite }),
+          ...(this.searchQuery && { search: this.searchQuery }),
+          ...(this.searchPhone && { phone: this.searchPhone }),
+          ...(this.selectedDate ? { callback_date: this.formatDate(this.selectedDate) } : {})
         };
-
-        if (this.selectedCategory) {
-          params.theme_bussines = this.selectedCategory;
-        }
-
-        if (this.selectedStatus) {
-          params.statuses = this.selectedStatus;
-        }
-
-        if (this.selectedCity) {
-          params.city = this.selectedCity;
-        }
-
-        if (this.hasWebsite) {
-          params.has_website = this.hasWebsite;
-        }
-
-        if (this.searchQuery) {
-          params.search = this.searchQuery;
-        }
-
-        if (this.searchPhone) {
-          params.phone = this.searchPhone;
-        }
-
-        if (this.selectedDate) {
-          params.callback_date = this.formatDate(this.selectedDate);
-        }
-
+    
         const response = await api.get("/wp-json/wp/v2/client_new", { params });
+    
         this.leads = response.data;
-        this.totalPages = Math.ceil(
-          response.headers["x-wp-total"] / this.perPage
-        );
+        this.totalPages = Math.ceil(response.headers["x-wp-total"] / this.perPage);
       } catch (error) {
-        console.error(error);
-      } finally {
-        // this.isLoading = false;
+        console.error("Ошибка при получении лидов:", error);
       }
     },
     async getClients() {
@@ -140,6 +109,16 @@ export const useLeadsStore = defineStore("leads", {
         console.error(error);
       } finally {
         this.isLoading = false;
+      }
+    },
+
+    async getLeadById(id: any): Promise<any> {
+      try {
+        const response = await api.get(`/wp-json/wp/v2/client_new/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error(`❌ Ошибка при получении лида #${id}:`, error);
+        throw error;
       }
     },
 
@@ -212,77 +191,59 @@ export const useLeadsStore = defineStore("leads", {
       }
     },
 
-    async addComment(updatedClient: any) {
+    async updateLead(id: number, fields: Record<string, any>) {
       try {
-        // Отправляем ТОЛЬКО поле history
-        await api.post(`/wp-json/custom/v1/update-client/${updatedClient.id}`, {
-          history: updatedClient.history,
-        });
-
-        // Обновляем локального клиента (если найден)
-        const index = this.clients.findIndex(
-          (item) => item.id === updatedClient.id
-        );
-
-        if (index !== -1) {
-          this.clients[index].acf = {
-            ...this.clients[index].acf,
-            history: updatedClient.history,
-          };
+        const index = this.leads.findIndex((item) => item.id === id);
+        if (index === -1) throw new Error(`Lead #${id} not found`);
+    
+        const current = this.leads[index];
+        const changes: Record<string, any> = {};
+    
+        // Обычные поля, если они есть (например, email)
+        if (fields.email && fields.email !== current.email) {
+          changes.email = fields.email;
         }
-
-        console.log("✅ Комментарий обновлён", updatedClient.history);
-      } catch (error) {
-        console.error(`❌ Ошибка при обновлении комментария:`, error);
-      }
-    },
-
-    async updateClient(updatedClient: any) {
-      try {
-        // Отправляем запрос на сервер с обновленными полями
-        await api.post(`/wp-json/custom/v1/update-client/${updatedClient.id}`, {
-          name: updatedClient.acf.name,
-          city: updatedClient.acf.city,
-          phones: updatedClient.acf.phones,
-          websites: updatedClient.acf.websites,
-          category: updatedClient.acf.category,
-          status: updatedClient.acf.status,
-          callback: updatedClient.acf.callback,
-          email: updatedClient.email,
-          status_kp: updatedClient.acf.status_kp,
+    
+        // ACF-поля
+        Object.entries(fields).forEach(([key, value]) => {
+          if (key === "email") return; // уже обработали
+          const currentValue = current.acf?.[key];
+    
+          if (JSON.stringify(value) !== JSON.stringify(currentValue)) {
+            changes[key] = value;
+          }
         });
-
-        // Ищем клиента в локальном хранилище
-        const index = this.clients.findIndex(
-          (item) => item.id === updatedClient.id
-        );
-
-        if (index !== -1) {
-          this.clients[index] = {
-            ...this.clients[index], // сохраняем все существующие данные
-            acf: {
-              ...this.clients[index].acf, // сохраняем все существующие поля acf
-              name: updatedClient.acf.name,
-              city: updatedClient.acf.city,
-              phones: updatedClient.acf.phones,
-              websites: updatedClient.acf.websites,
-              category: updatedClient.acf.category,
-              status: updatedClient.acf.status,
-              callback: updatedClient.acf.callback,
-              status_kp: updatedClient.acf.status_kp,
-            },
-            email: updatedClient.email, // обновляем email
-          };
-          this.getClients();
-          console.log("updatedClient", updatedClient);
+    
+        if (!Object.keys(changes).length) {
+          console.log("🟡 Нет изменений для обновления");
+          return;
         }
+    
+        await api.post(`/wp-json/custom/v1/update-client/${id}`, changes);
+    
+        // Обновляем локально
+        this.leads[index] = {
+          ...current,
+          email: changes.email ?? current.email,
+          acf: {
+            ...current.acf,
+            ...changes,
+          },
+        };
+    
+        if (this.lead?.id === id) {
+          this.lead = this.leads[index];
+        }
+    
+        console.log("✅ Лид обновлён:", changes);
       } catch (error) {
-        console.error(`Failed to update client ${updatedClient.id}:`, error);
+        console.error(`❌ Ошибка при обновлении лида #${id}:`, error);
+        throw error;
       }
     },
     async deleteLead(leadId: number) {
       try {
-        await api.delete(`/wp-json/wp/v2/delete-client/${leadId}`);
+        await api.delete(`/wp-json/custom/v1/delete-client/${leadId}`);
         this.leads = this.leads.filter((lead) => lead.id !== leadId);
       } catch (error) {
         console.error(`Failed to delete client ${leadId}:`, error);

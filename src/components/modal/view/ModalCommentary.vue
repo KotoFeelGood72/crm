@@ -23,7 +23,7 @@
         class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
         :class="{ 'opacity-0': isLoading }"
       >
-        Сменить статус
+        Обратная связь по лиду
       </p>
     </div>
     <div class="relative">
@@ -35,24 +35,17 @@
       <span
         class="mt-4 mb-8 text-base text-gray-700 dark:text-gray-300 block"
         :class="{ 'opacity-0': isLoading }"
-        >Выбрать подходящий статус из списка</span
+        >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки
+        алгоритма подбора контактов</span
       >
     </div>
-    <div class="flex items-center gap-2 flex-wrap">
-      <div v-for="(item, i) in statusList" class="relative">
-        <Skeletor
-          width="100%"
-          class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-          v-if="isLoading"
-        />
-        <btn
-          :label="item.name"
-          :key="'status-item' + i"
-          :variant="selectedStatus === item.name ? 'primary' : 'outline'"
-          @click="selectedStatus = item.name"
-          :class="{ 'opacity-0': isLoading }"
-        />
-      </div>
+    <div class="relative">
+      <Skeletor
+        width="100%"
+        class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+        v-if="isLoading"
+      />
+      <Textareas :class="{ 'opacity-0': isLoading }" v-model="newComment" />
     </div>
     <div class="flex items-center mt-6 gap-4 justify-end">
       <div class="relative">
@@ -63,7 +56,7 @@
         />
         <btn
           label="Применить"
-          @click="applyStatus"
+          @click="applyComment"
           :class="{ 'opacity-0': isLoading }"
         />
       </div>
@@ -85,38 +78,56 @@
 </template>
 
 <script setup lang="ts">
-import { useModalStore } from "@/store/useModalStore";
-import btn from "@/components/ui/buttons/btn.vue";
-import { statusList } from "@/api/data";
-import { useRouter, useRoute } from "vue-router";
 import { ref, watchEffect } from "vue";
+import { useModalStore } from "@/store/useModalStore";
 import { useLeadsStore } from "@/store/useLeadsStore";
+import { useRouter, useRoute } from "vue-router";
 import { Skeletor } from "vue-skeletor";
+import btn from "@/components/ui/buttons/btn.vue";
+import Textareas from "@/components/ui/inputs/Textareas.vue";
 import IconBtn from "@/components/ui/buttons/IconBtn.vue";
 
 const { getLeadById, updateLead } = useLeadsStore();
+const { closeAllModals } = useModalStore();
+
 const lead = ref<any>(null);
-const selectedStatus = ref<string | null>(null);
-const isLoading = ref<boolean>(true);
+const newComment = ref("");
+const isLoading = ref(true);
+
 const route = useRoute();
 const router = useRouter();
 
-const { closeAllModals } = useModalStore();
+const applyComment = async () => {
+  const text = newComment.value.trim();
+  if (!text || !lead.value?.id) return;
 
-const applyStatus = async () => {
-  if (selectedStatus.value && lead.value?.id) {
-    try {
-      await updateLead(lead.value.id, { status: selectedStatus.value });
-      console.log("✅ Статус обновлён:", selectedStatus.value);
-    } catch (error) {
-      console.error("❌ Ошибка при обновлении статуса:", error);
-    }
+  const now = new Date();
+  const time = now.toLocaleString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
+  const history = Array.isArray(lead.value.acf?.history)
+    ? [...lead.value.acf.history]
+    : [];
+
+  history.push({ txt: text, time });
+
+  try {
+    await updateLead(lead.value.id, { history });
+    newComment.value = "";
     closeAllModals(router, route);
+    console.log("✅ Комментарий сохранён");
+  } catch (err) {
+    console.error("❌ Ошибка при сохранении комментария:", err);
   }
 };
+
 watchEffect(async () => {
-  const leadIdRaw = route.query.status;
+  const leadIdRaw = route.query.commentary;
 
   if (!leadIdRaw || Array.isArray(leadIdRaw)) {
     console.warn("Некорректный leadId:", leadIdRaw);
@@ -129,10 +140,6 @@ watchEffect(async () => {
   try {
     const leadData = await getLeadById(leadId);
     lead.value = leadData;
-
-    if (leadData?.acf?.status) {
-      selectedStatus.value = leadData.acf.status;
-    }
   } catch (error) {
     console.error(`❌ Ошибка при получении лида #${leadId}:`, error);
   } finally {

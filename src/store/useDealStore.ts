@@ -4,6 +4,7 @@ import { api } from "@/api/api";
 export const useDealStore = defineStore("deals", {
   state: () => ({
     deals: [] as any[],
+    deal: null as any,
     categories: [] as any[],
     currentDeal: null as any,
     statuses: [
@@ -109,12 +110,8 @@ export const useDealStore = defineStore("deals", {
 
     async updateDeal(id: number, fields: Record<string, any>) {
       try {
-        const response = await api.post(
-          `/wp-json/custom/v1/update-deal/${id}`,
-          fields
-        );
+        const response = await api.post(`/wp-json/custom/v1/update-deal/${id}`, fields);
     
-        // Обновляем локально в сторе
         const index = this.deals.findIndex((deal) => deal.id === id);
         if (index !== -1) {
           this.deals[index] = {
@@ -207,7 +204,7 @@ export const useDealStore = defineStore("deals", {
     async getDealById(id: any) {
       try {
         const response = await api.get(`/wp-json/custom/v1/deal/${id}`);
-        this.currentDeal = response.data;
+        this.deal = response.data;
       } catch (error) {
         console.error(`Failed to fetch deal with id ${id}:`, error);
         return null;

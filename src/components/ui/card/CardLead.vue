@@ -21,11 +21,15 @@
       </li>
       <li class="flex items-center gap-3">
         <p>What`s App:</p>
-        <span v-for="item in lead.acf.whatsapps_list" :key="item">{{ item.item }}</span>
+        <span v-for="item in lead.acf.whatsapps_list" :key="item">{{
+          item.item
+        }}</span>
       </li>
       <li class="flex items-center gap-3">
         <p>Telegram:</p>
-        <span v-for="item in lead.acf.telegrams_list" :key="item">{{ item.item }}</span>
+        <span v-for="item in lead.acf.telegrams_list" :key="item">{{
+          item.item
+        }}</span>
       </li>
     </ul>
     <div class="flex items-center justify-between">
@@ -42,12 +46,16 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <IconBtn icon="hugeicons:comment-01" class="dark:text-gray-400" />
+        <IconBtn
+          icon="hugeicons:comment-01"
+          class="dark:text-gray-400"
+          @click="openModal('commentary', {}, { commentary: lead.id }, router)"
+        />
         <IconBtn
           icon="material-symbols-light:delete-outline"
           class="dark:text-red-600 w-7 h-7 flex items-center justify-center"
           iconSize="30"
-          @click="deleteLead(lead.id)"
+          @click="emit('deleteLead', lead.id)"
         />
       </div>
     </div>
@@ -58,17 +66,20 @@
 import IconBtn from "../buttons/IconBtn.vue";
 import btn from "../buttons/btn.vue";
 import StatusChip from "../other/StatusChip.vue";
-import { useLeadsStore } from "@/store/useLeadsStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter, useRoute } from "vue-router";
+import { defineEmits } from "vue";
 defineProps<{
   lead: any;
+}>();
+
+const emit = defineEmits<{
+  (e: "deleteLead", id: number): void;
 }>();
 
 const router = useRouter();
 const route = useRoute();
 const { openModal } = useModalStore();
-const { deleteLead } = useLeadsStore();
 
 function formatPhone(raw: string): string {
   const digits = raw.replace(/\D/g, "");

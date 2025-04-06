@@ -11,6 +11,7 @@ interface ModalsState {
   comment: boolean;
   standart: boolean;
   status: boolean;
+  commentary: boolean;
 }
 
 export const useModalStore = defineStore("modal", {
@@ -30,6 +31,7 @@ export const useModalStore = defineStore("modal", {
       comment: false,
       standart: false,
       status: false,
+      commentary: false,
     },
     queryCache: {},
     current: null,

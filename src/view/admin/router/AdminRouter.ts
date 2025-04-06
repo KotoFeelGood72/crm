@@ -10,9 +10,18 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/deal/",
+    name: "deal",
+    component: () => import("../deals/DealsPage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
 ];
 
-export const LeadsRouter = createRouter({
+export const AdminRouter = createRouter({
   history: createMemoryHistory(),
   routes,
 });

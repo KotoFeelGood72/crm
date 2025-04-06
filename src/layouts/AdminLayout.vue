@@ -27,9 +27,6 @@ import adminSidebar from "@/components/sidebars/admin-sidebar.vue";
 .admin {
   @include flex-start;
   align-items: flex-start;
-  // &.fixed {
-  //   overflow: hidden;
-  // }
 }
 .content {
   min-height: calc(100vh - 70px);
