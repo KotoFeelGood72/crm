@@ -75,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { useModalStore, useModalStoreRefs } from "@/store/useModalStore";
+import { useModalStore } from "@/store/useModalStore";
 
 const { closeAllModals } = useModalStore();
 </script>
