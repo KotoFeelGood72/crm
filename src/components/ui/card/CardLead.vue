@@ -63,7 +63,7 @@ import IconBtn from "../buttons/IconBtn.vue";
 import btn from "../buttons/btn.vue";
 import StatusChip from "../other/StatusChip.vue";
 import { useModalStore } from "@/store/useModalStore";
-import { useRouter, useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { defineEmits } from "vue";
 defineProps<{
   lead: any;

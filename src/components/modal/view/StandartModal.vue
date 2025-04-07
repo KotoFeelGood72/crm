@@ -78,5 +78,4 @@
 import { useModalStore, useModalStoreRefs } from "@/store/useModalStore";
 
 const { closeAllModals } = useModalStore();
-const { current } = useModalStoreRefs();
 </script>
