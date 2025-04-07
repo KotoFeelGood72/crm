@@ -1,7 +1,7 @@
 <template>
   <div
     id="sidebar"
-    class="w-64 h-full bg-gray-50 min-h-[100dvh] py-4 dark:bg-gray-800 sticky top-0 left-00"
+    class="w-64 h-full bg-gray-50 min-h-[100dvh] py-4 dark:bg-gray-800 sticky top-0 left-0"
   >
     <div id="logo" class="ml-6 text-lg font-bold dark:text-white">Gleede CRM</div>
     <Navigation :nav="nav" class="mt-6" />

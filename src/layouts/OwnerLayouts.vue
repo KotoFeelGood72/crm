@@ -1,9 +1,9 @@
 <template>
   <div id="owner" class="flex items-start justify-between h-full w-full">
-    <AdminSidebar />
-    <div class="flex items-center justify-between w-full flex-col">
+    <AdminSidebar class="w-[12%] shadow-xl" />
+    <div class="flex items-center justify-between flex-col w-[88%]">
       <OwnerHeader class="light:bg-white dark:bg-gray-800" />
-      <div id="content" class="light:bg-white dark:bg-gray-900 w-full">
+      <div id="content" class="light:bg-white dark:bg-gray-900 w-full min-h-[100dvh]">
         <slot />
       </div>
     </div>

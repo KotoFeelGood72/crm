@@ -61,11 +61,7 @@
           class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
           v-if="isLoading"
         />
-        <btn
-          label="Применить"
-          @click="applyStatus"
-          :class="{ 'opacity-0': isLoading }"
-        />
+        <btn label="Применить" @click="applyStatus" :class="{ 'opacity-0': isLoading }" />
       </div>
       <div class="relative">
         <Skeletor
@@ -138,7 +134,7 @@ watchEffect(async () => {
   } finally {
     setTimeout(() => {
       isLoading.value = false;
-    }, 200);
+    }, 100);
   }
 });
 </script>

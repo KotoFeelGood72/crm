@@ -42,11 +42,19 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <IconBtn
-          icon="hugeicons:comment-01"
-          class="dark:text-gray-400"
-          @click="openModal('commentary', {}, { commentary: lead.id }, router)"
-        />
+        <div class="relative">
+          <div
+            v-if="lead.acf.history && lead.acf.history.length > 0"
+            class="absolute -top-1.5 -right-1.5 text-[10px] font-bold bg-red-500 rounded-full w-4 h-4 flex items-center justify-center"
+          >
+            {{ lead.acf.history.length }}
+          </div>
+          <IconBtn
+            icon="hugeicons:comment-01"
+            class="dark:text-gray-400"
+            @click="openModal('commentary', {}, { commentary: lead.id }, router)"
+          />
+        </div>
         <IconBtn
           icon="material-symbols-light:delete-outline"
           class="dark:text-red-600 w-7 h-7 flex items-center justify-center"

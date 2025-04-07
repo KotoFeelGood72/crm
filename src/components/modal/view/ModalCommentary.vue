@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-xl"
+    class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-3xl"
     role="dialog"
   >
     <div class="absolute top-2 right-2">
@@ -13,69 +13,105 @@
       />
     </div>
 
-    <div class="relative">
-      <Skeletor
-        width="100%"
-        class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-        v-if="isLoading"
-      />
-      <p
-        class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
-        :class="{ 'opacity-0': isLoading }"
-      >
-        Обратная связь по лиду
-      </p>
-    </div>
-    <div class="relative">
-      <Skeletor
-        width="100%"
-        class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-        v-if="isLoading"
-      />
-      <span
-        class="mt-4 mb-8 text-base text-gray-700 dark:text-gray-300 block"
-        :class="{ 'opacity-0': isLoading }"
-        >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки алгоритма
-        подбора контактов</span
-      >
-    </div>
-    <div class="relative">
-      <Skeletor
-        width="100%"
-        class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-        v-if="isLoading"
-      />
-      <Textareas
-        :class="{ 'opacity-0': isLoading }"
-        v-model="newComment"
-        placeholder="Введите коментарий"
-      />
-    </div>
-    <div class="flex items-center mt-6 gap-4 justify-end">
-      <div class="relative">
-        <Skeletor
-          width="100%"
-          class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-          v-if="isLoading"
-        />
-        <btn
-          label="Применить"
-          @click="applyComment"
-          :class="{ 'opacity-0': isLoading }"
-        />
+    <div class="grid grid-cols-2 gap-5">
+      <div>
+        <div
+          class="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scroll"
+          v-if="lead && lead.acf && lead.acf.history"
+        >
+          <div
+            v-for="comment in lead.acf.history"
+            :key="comment.id"
+            :class="[
+              'flex',
+              comment.id_user === userId ? 'justify-end' : 'justify-start',
+            ]"
+          >
+            <div
+              :class="[
+                'max-w-xs px-4 py-2 rounded-md text-sm',
+                comment.id_user === userId
+                  ? 'bg-violet-600 text-white rounded-br-none'
+                  : 'bg-gray-700 text-white rounded-bl-none',
+              ]"
+            >
+              <p>{{ comment.txt }}</p>
+              <div class="text-xs mt-1 opacity-70 text-right">
+                {{ comment.time }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div v-else class="bg-gray-700 rounded-md p-4 text-gray-400 h-full">
+          Комментариев нет
+        </div>
       </div>
-      <div class="relative">
-        <Skeletor
-          width="100%"
-          class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-          v-if="isLoading"
-        />
-        <btn
-          label="Закрыть"
-          variant="outline"
-          @click="closeAllModals(router, route)"
-          :class="{ 'opacity-0': isLoading }"
-        />
+      <div>
+        <div class="relative">
+          <Skeletor
+            width="100%"
+            class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+            v-if="isLoading"
+          />
+          <p
+            class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
+            :class="{ 'opacity-0': isLoading }"
+          >
+            Обратная связь по лиду
+          </p>
+        </div>
+        <div class="relative">
+          <Skeletor
+            width="100%"
+            class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+            v-if="isLoading"
+          />
+          <span
+            class="mt-2 mb-8 text-sm text-gray-700 dark:text-gray-400 block"
+            :class="{ 'opacity-0': isLoading }"
+            >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки
+            алгоритма подбора контактов</span
+          >
+        </div>
+        <div class="relative">
+          <Skeletor
+            width="100%"
+            class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+            v-if="isLoading"
+          />
+          <Textareas
+            :class="{ 'opacity-0': isLoading }"
+            v-model="newComment"
+            placeholder="Введите коментарий"
+          />
+        </div>
+        <div class="flex items-center mt-6 gap-4 justify-end">
+          <div class="relative">
+            <Skeletor
+              width="100%"
+              class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+              v-if="isLoading"
+            />
+            <btn
+              label="Применить"
+              @click="applyComment"
+              :class="{ 'opacity-0': isLoading }"
+            />
+          </div>
+          <div class="relative">
+            <Skeletor
+              width="100%"
+              class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+              v-if="isLoading"
+            />
+            <btn
+              label="Закрыть"
+              variant="outline"
+              @click="closeAllModals(router, route)"
+              :class="{ 'opacity-0': isLoading }"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -90,14 +126,16 @@ import { Skeletor } from "vue-skeletor";
 import btn from "@/components/ui/buttons/btn.vue";
 import Textareas from "@/components/ui/inputs/Textareas.vue";
 import IconBtn from "@/components/ui/buttons/IconBtn.vue";
+import { useUsersStoreRefs } from "@/store/useUserStore";
 
+const { users } = useUsersStoreRefs();
 const { getLeadById, updateLead } = useLeadsStore();
 const { closeAllModals } = useModalStore();
 
 const lead = ref<any>(null);
 const newComment = ref("");
 const isLoading = ref(true);
-
+const userId = users.value.userInfo?.id; // ← user ID из стора
 const route = useRoute();
 const router = useRouter();
 
@@ -118,7 +156,7 @@ const applyComment = async () => {
     ? [...lead.value.acf.history]
     : [];
 
-  history.push({ txt: text, time });
+  history.push({ txt: text, time, id_user: userId });
 
   try {
     await updateLead(lead.value.id, { history });
