@@ -35,8 +35,8 @@
       <span
         class="mt-4 mb-8 text-base text-gray-700 dark:text-gray-300 block"
         :class="{ 'opacity-0': isLoading }"
-        >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки
-        алгоритма подбора контактов</span
+        >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки алгоритма
+        подбора контактов</span
       >
     </div>
     <div class="relative">
@@ -45,7 +45,11 @@
         class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
         v-if="isLoading"
       />
-      <Textareas :class="{ 'opacity-0': isLoading }" v-model="newComment" />
+      <Textareas
+        :class="{ 'opacity-0': isLoading }"
+        v-model="newComment"
+        placeholder="Введите коментарий"
+      />
     </div>
     <div class="flex items-center mt-6 gap-4 justify-end">
       <div class="relative">
