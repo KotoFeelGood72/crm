@@ -21,15 +21,11 @@
       </li>
       <li class="flex items-center gap-3">
         <p>What`s App:</p>
-        <span v-for="item in lead.acf.whatsapps_list" :key="item">{{
-          item.item
-        }}</span>
+        <span v-for="item in lead.acf.whatsapps_list" :key="item">{{ item.item }}</span>
       </li>
       <li class="flex items-center gap-3">
         <p>Telegram:</p>
-        <span v-for="item in lead.acf.telegrams_list" :key="item">{{
-          item.item
-        }}</span>
+        <span v-for="item in lead.acf.telegrams_list" :key="item">{{ item.item }}</span>
       </li>
     </ul>
     <div class="flex items-center justify-between">
@@ -78,7 +74,6 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
-const route = useRoute();
 const { openModal } = useModalStore();
 
 function formatPhone(raw: string): string {
