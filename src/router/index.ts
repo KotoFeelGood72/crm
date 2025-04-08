@@ -80,29 +80,29 @@ export const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, _from, next) => {
-//   // Получаем данные из localStorage
-//   const userData = localStorage.getItem("user");
-//   let isAuthenticated = false; // По умолчанию пользователь не авторизован
+router.beforeEach((to, _from, next) => {
+  // Получаем данные из localStorage
+  const userData = localStorage.getItem("user");
+  let isAuthenticated = false; // По умолчанию пользователь не авторизован
 
-//   if (userData) {
-//     try {
-//       const parsedUser = JSON.parse(userData); // Парсим данные
-//       isAuthenticated = !!parsedUser?.auth.jwt_token;
-//     } catch (error) {
-//       console.error("Ошибка при парсинге данных пользователя:", error);
-//     }
-//   }
+  if (userData) {
+    try {
+      const parsedUser = JSON.parse(userData); // Парсим данные
+      isAuthenticated = !!parsedUser?.auth.token;
+    } catch (error) {
+      console.error("Ошибка при парсинге данных пользователя:", error);
+    }
+  }
 
-//   // Проверяем, требуется ли авторизация
-//   if (
-//     to.matched.some((record) => record.meta.requiresAuth) &&
-//     !isAuthenticated
-//   ) {
-//     next({ path: "/login" }); // Перенаправляем на страницу входа
-//   } else if (to.path === "/login" && isAuthenticated) {
-//     next({ path: "/dashboard" }); // Перенаправляем на дашборд
-//   } else {
-//     next(); // Разрешаем доступ
-//   }
-// });
+  // Проверяем, требуется ли авторизация
+  if (
+    to.matched.some((record) => record.meta.requiresAuth) &&
+    !isAuthenticated
+  ) {
+    next({ path: "/login" }); // Перенаправляем на страницу входа
+  } else if (to.path === "/login" && isAuthenticated) {
+    next({ path: "/dashboard" }); // Перенаправляем на дашборд
+  } else {
+    next(); // Разрешаем доступ
+  }
+});

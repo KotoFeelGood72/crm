@@ -18,11 +18,17 @@
           <KanbanCard
             :name="status.name"
             :count="groupedDeals[status.name]?.length || 0"
-            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
+            @end="
+              (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
+            "
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">
-              <CardDeal :card="card" class="cursor-pointer" />
+              <CardDeal
+                :card="card"
+                class="cursor-pointer"
+                @click="openModal('deal', '', { deal: card.id }, router)"
+              />
             </template>
           </KanbanCard>
         </div>
@@ -37,12 +43,16 @@ import SectionHeader from "@/components/ui/header/SectionHeader.vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
+import { useModalStore } from "@/store/useModalStore";
+import { useRouter } from "vue-router";
 // @ts-ignore
 import draggable from "vuedraggable";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const groupedDeals = ref<Record<string, any[]>>({});
 
+const { openModal } = useModalStore();
+const router = useRouter();
 const { updateDeal, getDeals } = useDealStore();
 const { deals, statuses } = useDealStoreRefs();
 

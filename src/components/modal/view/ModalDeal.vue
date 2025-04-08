@@ -1,15 +1,20 @@
 <template>
-  <div class="deal" v-if="currentDeal && currentDeal.acf">
+  <div class="deal" v-if="deal && deal.acf">
     <div class="deal__w">
       <div class="deal__head">
         <div class="deal__preview">
-          <div class="deal_preview__img" v-if="currentDeal.acf.img?.link">
-            <img :src="currentDeal.acf.img.link" alt="" />
+          <div class="deal_preview__img" v-if="deal.acf.img?.link">
+            <img :src="deal.acf.img.link" alt="" />
           </div>
-          <h3>{{ currentDeal.title }}</h3>
+          <h3>{{ deal.title }}</h3>
         </div>
         <div class="right">
-          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
+          <Button
+            name="Сохранить"
+            theme="primary"
+            @click="saveDeal"
+            v-if="isEditing"
+          />
           <p :class="{ active: isEditing }" @click="isEditing = !isEditing">
             {{ isEditing ? "Просмотреть" : "Редактировать" }}
           </p>
@@ -19,10 +24,16 @@
       <div class="deal__body">
         <div class="deal__tabs">
           <ul class="tabs">
-            <li :class="{ active: activeTab === 'deal' }" @click="activeTab = 'deal'">
+            <li
+              :class="{ active: activeTab === 'deal' }"
+              @click="activeTab = 'deal'"
+            >
               Сделка
             </li>
-            <li :class="{ active: activeTab === 'tasks' }" @click="activeTab = 'tasks'">
+            <li
+              :class="{ active: activeTab === 'tasks' }"
+              @click="activeTab = 'tasks'"
+            >
               Дела
             </li>
           </ul>
@@ -34,7 +45,7 @@
               <li>
                 <singleItem
                   label="Наименование:"
-                  v-model="currentDeal.acf.name"
+                  v-model="deal.acf.name"
                   place="Введите название"
                   :edit="isEditing"
                 />
@@ -43,7 +54,7 @@
               <li>
                 <listItem
                   label="Номера телефонов:"
-                  v-model="currentDeal.acf.phone_list"
+                  v-model="deal.acf.phone_list"
                   place="Введите номер телефона"
                   :edit="isEditing"
                 />
@@ -52,7 +63,7 @@
               <li>
                 <listItem
                   label="Сайты:"
-                  v-model="currentDeal.acf.websites_list"
+                  v-model="deal.acf.websites_list"
                   place="Введите адрес сайта"
                   :edit="isEditing"
                 />
@@ -61,7 +72,7 @@
               <li>
                 <listItem
                   label="Whats App:"
-                  v-model="currentDeal.acf.whatsapps_list"
+                  v-model="deal.acf.whatsapps_list"
                   place="Введите номер WhatsApp"
                   :edit="isEditing"
                 />
@@ -70,7 +81,7 @@
               <li>
                 <listItem
                   label="E-Mail:"
-                  v-model="currentDeal.acf.emails_list"
+                  v-model="deal.acf.emails_list"
                   place="Введите e-mail"
                   :edit="isEditing"
                 />
@@ -83,7 +94,7 @@
               <li>
                 <listItem
                   label="Telegram:"
-                  v-model="currentDeal.acf.telegrams_list"
+                  v-model="deal.acf.telegrams_list"
                   place="Введите Telegram"
                   :edit="isEditing"
                 />
@@ -92,13 +103,13 @@
               <li class="row">
                 <singleItem
                   label="Youtube:"
-                  v-model="currentDeal.acf.youtube"
+                  v-model="deal.acf.youtube"
                   place="Введите Youtube"
                   :edit="isEditing"
                 />
                 <singleItem
                   label="ВКонтакте:"
-                  v-model="currentDeal.acf.vk"
+                  v-model="deal.acf.vk"
                   place="Введите ВКонтакте"
                   :edit="isEditing"
                 />
@@ -111,13 +122,13 @@
               <li class="row">
                 <singleItem
                   label="Адрес:"
-                  v-model="currentDeal.acf.address"
+                  v-model="deal.acf.address"
                   place="Введите Адрес"
                   :edit="isEditing"
                 />
                 <singleItem
                   label="Город:"
-                  v-model="currentDeal.acf.city"
+                  v-model="deal.acf.city"
                   place="Введите Адрес"
                   :edit="isEditing"
                 />
@@ -126,18 +137,18 @@
               <li class="row">
                 <div class="flex-row">
                   <p>Есть ли реклама?</p>
-                  <Switcher v-model="currentDeal.acf.is_ads" />
+                  <Switcher v-model="deal.acf.is_ads" />
                 </div>
                 <div class="reviews__count">
                   <singleItem
                     label="Кол-во отзывов:"
-                    v-model="currentDeal.acf.reviews_count"
+                    v-model="deal.acf.reviews_count"
                     place="кол-во отзывов"
                     :edit="isEditing"
                   />
                   <ul class="reviews__stars">
                     <li
-                      v-for="n in Number(currentDeal.acf.stars)"
+                      v-for="n in Number(deal.acf.stars)"
                       :key="'stars-item' + n"
                     >
                       <Icons icon="fluent-emoji-flat:star" :size="16" />
@@ -149,19 +160,19 @@
               <li class="row-3">
                 <singleItem
                   label="График работы:"
-                  v-model="currentDeal.acf.schedule"
+                  v-model="deal.acf.schedule"
                   place="Введите график работы"
                   :edit="isEditing"
                 />
                 <singleItem
                   label="Источник:"
-                  v-model="currentDeal.acf.spring"
+                  v-model="deal.acf.spring"
                   place="Введите источник"
                   :edit="isEditing"
                 />
                 <singleItem
                   label="Цена:"
-                  v-model="currentDeal.acf.price"
+                  v-model="deal.acf.price"
                   place="Введите стоимость"
                   :edit="isEditing"
                 />
@@ -170,7 +181,7 @@
                 <ul class="contacts__list">
                   <li
                     class="contacts__item"
-                    v-for="(item, index) in currentDeal.acf.contacts_list"
+                    v-for="(item, index) in deal.acf.contacts_list"
                   >
                     <singleItem
                       label="ФИО:"
@@ -210,12 +221,15 @@
             </ul>
           </div>
 
-          <div class="deal__blocks history-chat" v-if="currentDeal.acf.history?.length">
+          <div
+            class="deal__blocks history-chat"
+            v-if="deal.acf.history?.length"
+          >
             <h4>История комментариев:</h4>
             <div class="chat-wrapper">
               <div
                 class="message"
-                v-for="(entry, index) in currentDeal.acf.history"
+                v-for="(entry, index) in deal.acf.history"
                 :key="index"
                 :class="{ self: entry.role === 'me' }"
               >
@@ -227,7 +241,7 @@
             </div>
           </div>
           <div class="textarea__w">
-            <Textarea v-model="newComment" placeholder="Введите дело"/>
+            <Textarea v-model="newComment" placeholder="Введите дело" />
             <Button name="Отправить" @click="handleComment" />
           </div>
         </div>
@@ -280,7 +294,7 @@ const selectedContactIndex = ref<number | null>(null);
 const { getDealById, updateDeal } = useDealStore();
 const { getTasks, updateTask, createTask } = useTaskStore();
 const { tasks } = useTaskStoreRefs();
-const { currentDeal } = useDealStoreRefs();
+const { deal } = useDealStoreRefs();
 const activeTab = ref<"deal" | "tasks">("deal");
 
 const newTaskTitle = ref("");
@@ -292,7 +306,7 @@ const addTask = async () => {
   const [date, time] = newTaskDateTime.value.split("T");
 
   await createTask({
-    deal_id: currentDeal.value.id,
+    deal_id: deal.value.id,
     title: newTaskTitle.value,
     date,
     time,
@@ -313,16 +327,18 @@ const formatTaskDate = (date: string, time: string) =>
   })}`;
 
 watch(selectedContactIndex, (newIndex: any) => {
-  currentDeal.value.acf.contacts_list.forEach((contact: any, i: any) => {
+  deal.value.acf.contacts_list.forEach((contact: any, i: any) => {
     contact.priority = i === newIndex;
   });
 });
 
 watchEffect(() => {
-  const deal = currentDeal.value;
-  if (!deal || !deal.acf || !Array.isArray(deal.acf.contacts_list)) return;
+  const deals = deal.value;
+  if (!deals || !deals.acf || !Array.isArray(deals.acf.contacts_list)) return;
 
-  const index = deal.acf.contacts_list.findIndex((c: any) => c.priority === true);
+  const index = deals.acf.contacts_list.findIndex(
+    (c: any) => c.priority === true
+  );
   if (index !== -1) {
     selectedContactIndex.value = index;
   }
@@ -338,19 +354,19 @@ const addHistory = (text: string) => {
     minute: "2-digit",
   });
 
-  if (!Array.isArray(currentDeal.value.acf.history)) {
-    currentDeal.value.acf.history = [];
+  if (!Array.isArray(deal.value.acf.history)) {
+    deal.value.acf.history = [];
   }
 
-  currentDeal.value.acf.history.push({ txt: text, time });
+  deal.value.acf.history.push({ txt: text, time });
 };
 
 const addContact = () => {
-  if (!Array.isArray(currentDeal.value.acf.contacts_list)) {
-    currentDeal.value.acf.contacts_list = [];
+  if (!Array.isArray(deal.value.acf.contacts_list)) {
+    deal.value.acf.contacts_list = [];
   }
 
-  currentDeal.value.acf.contacts_list.push({
+  deal.value.acf.contacts_list.push({
     fio: "",
     phone: "",
     prof: "",
@@ -367,7 +383,7 @@ const handleComment = async () => {
   newComment.value = "";
 
   try {
-    await updateDeal(currentDeal.value.id, currentDeal.value.acf);
+    await updateDeal(deal.value.id, deal.value.acf);
   } catch (err) {
     console.error("Ошибка при сохранении комментария:", err);
   }
@@ -375,7 +391,7 @@ const handleComment = async () => {
 
 const saveDeal = async () => {
   try {
-    await updateDeal(currentDeal.value.id, currentDeal.value.acf);
+    await updateDeal(deal.value.id, deal.value.acf);
     isEditing.value = false;
   } catch (error) {
     console.error("Ошибка при обновлении:", error);
