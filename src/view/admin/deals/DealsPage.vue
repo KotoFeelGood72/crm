@@ -8,42 +8,26 @@
       class="text-white"
     />
 
-    <div
-      class="flex overflow-x-auto touch-pan-x scroll-smooth gap-4 pl-6"
-      v-if="!dealStore.isLoading"
-    >
+    <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-4 pl-6">
       <div
-        class="kanban__column bg-gray-800 rounded-2xl p-4 w-80 flex-shrink-0 min-w-[320px]"
+        class="kanban__column bg-gray-800 rounded-md w-80 flex-shrink-0 min-w-[320px]"
         v-for="status in statuses"
         :key="status.id"
       >
-        <div class="kanban__header mb-4 flex justify-between items-center">
-          <h4 class="text-white text-lg font-semibold">{{ status.name }}</h4>
-          <span class="count text-gray-400 text-sm">{{
-            groupedDeals[status.name]?.length || 0
-          }}</span>
-        </div>
-
-        <draggable
+        <KanbanCard
+          :name="status.name"
+          :count="groupedDeals[status.name]?.length || 0"
+          @end="
+            (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
+          "
           v-model="groupedDeals[status.name]"
-          group="deals"
-          item-key="id"
-          :emptyInsert="true"
-          @end="(e: any) => onCardDrop(e)"
-          class="kanban__cards flex flex-col gap-4"
         >
-          <template #item="{ element }">
-            <deal
-              :card="element"
-              @click="openModal('deal', { deal: element.id }, router)"
-              class="cursor-pointer transition hover:scale-[1.02] max-w-80"
-            />
+          <template #card="{ card }">
+            <CardDeal :card="card" />
           </template>
-        </draggable>
+        </KanbanCard>
       </div>
     </div>
-
-    <Loader v-else class="bg-transparent" />
   </div>
 </template>
 
@@ -51,36 +35,37 @@
 import { onMounted, ref } from "vue";
 import SectionHeader from "@/components/ui/header/SectionHeader.vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
-import deal from "@/components/ui/card/deal.vue";
-import { useModalStore } from "@/store/useModalStore";
-import { useRouter } from "vue-router";
+import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
 // @ts-ignore
 import draggable from "vuedraggable";
 import "@vuepic/vue-datepicker/dist/main.css";
 
-const { openModal } = useModalStore();
-const router = useRouter();
-
 const groupedDeals = ref<Record<string, any[]>>({});
 
-const dealStore = useDealStore();
+const { updateDeal, getDeals } = useDealStore();
 const { deals, statuses } = useDealStoreRefs();
 
-const onCardDrop = async (event: any) => {
+const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
   const movedCard = event.item.__draggable_context.element;
-  const columnEl = event.to.closest(".kanban__column");
-  const headerEl = columnEl?.querySelector("h4");
-  const newStatus = headerEl?.textContent?.trim();
+
+  console.log("oldStatus", oldStatus);
+  console.log("newStatus", newStatus);
 
   if (!newStatus || !movedCard) return;
+  if (oldStatus === newStatus) return;
 
-  if (movedCard.acf.status === newStatus) return;
+  await updateDeal(movedCard.id, { status: newStatus });
 
-  await dealStore.updateDealStatus(movedCard.id, newStatus);
   movedCard.acf.status = newStatus;
-};
 
+  groupedDeals.value[oldStatus] = groupedDeals.value[oldStatus].filter(
+    (deal) => deal.id !== movedCard.id
+  );
+  groupedDeals.value[newStatus].push(movedCard);
+
+  groupedDeals.value = { ...groupedDeals.value };
+};
 const initGroupedDeals = () => {
   const result: Record<string, any[]> = {};
   statuses.value.forEach((status) => {
@@ -97,7 +82,7 @@ const initGroupedDeals = () => {
 };
 
 onMounted(async () => {
-  await dealStore.getDeals();
+  await getDeals();
   initGroupedDeals();
 });
 </script>

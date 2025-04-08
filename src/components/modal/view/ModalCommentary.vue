@@ -29,14 +29,14 @@
           >
             <div
               :class="[
-                'max-w-xs px-4 py-2 rounded-md text-sm',
+                'max-w-xs px-2 py-1 rounded-md text-xs',
                 comment.id_user === userId
                   ? 'bg-violet-600 text-white rounded-br-none'
                   : 'bg-gray-700 text-white rounded-bl-none',
               ]"
             >
               <p>{{ comment.txt }}</p>
-              <div class="text-xs mt-1 opacity-70 text-right">
+              <div class="text-[10px] opacity-70 text-right">
                 {{ comment.time }}
               </div>
             </div>
@@ -69,8 +69,8 @@
           <span
             class="mt-2 mb-8 text-sm text-gray-700 dark:text-gray-400 block"
             :class="{ 'opacity-0': isLoading }"
-            >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки
-            алгоритма подбора контактов</span
+            >Оставьте обратную связь по лиду, с целью сбора статистики, и
+            отладки алгоритма подбора контактов</span
           >
         </div>
         <div class="relative">
