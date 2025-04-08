@@ -19,6 +19,15 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/history/",
+    name: "history",
+    component: () => import("../history/HistoryPage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
 ];
 
 export const AdminRouter = createRouter({

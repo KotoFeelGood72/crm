@@ -17,13 +17,11 @@
         <KanbanCard
           :name="status.name"
           :count="groupedDeals[status.name]?.length || 0"
-          @end="
-            (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
-          "
+          @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
           v-model="groupedDeals[status.name]"
         >
           <template #card="{ card }">
-            <CardDeal :card="card" />
+            <CardDeal :card="card" class="cursor-pointer" />
           </template>
         </KanbanCard>
       </div>
@@ -53,19 +51,28 @@ const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
   console.log("newStatus", newStatus);
 
   if (!newStatus || !movedCard) return;
+
+  // Если статус не поменялся — это просто сортировка, ничего делать не нужно
   if (oldStatus === newStatus) return;
 
+  // Если поменялся — обновляем статус на сервере
   await updateDeal(movedCard.id, { status: newStatus });
 
+  // Обновляем статус локально
   movedCard.acf.status = newStatus;
 
+  // Удаляем из старого списка
   groupedDeals.value[oldStatus] = groupedDeals.value[oldStatus].filter(
     (deal) => deal.id !== movedCard.id
   );
+
+  // Добавляем в новый список
   groupedDeals.value[newStatus].push(movedCard);
 
+  // Триггерим реактивность
   groupedDeals.value = { ...groupedDeals.value };
 };
+
 const initGroupedDeals = () => {
   const result: Record<string, any[]> = {};
   statuses.value.forEach((status) => {

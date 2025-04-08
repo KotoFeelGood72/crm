@@ -43,5 +43,10 @@ const nav = ref<any>([
     to: "/settings",
     icon: "material-symbols:settings-rounded",
   },
+  {
+    name: "История",
+    to: "/history",
+    icon: "solar:history-bold",
+  },
 ]);
 </script>

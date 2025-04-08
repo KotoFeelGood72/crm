@@ -1,19 +1,26 @@
 <template>
   <div class="p-4">
-    <CardHead
-      :name="name"
-      :count="count"
-      @click="$emit('click')"
-      class="mb-4"
-    />
+    <CardHead :name="name" :count="count" @click="$emit('click')" class="mb-4" />
     <draggable
       :list="localValue"
+      :animation="200"
       group="deals"
       item-key="id"
       :emptyInsert="true"
       class="kanban__cards flex flex-col gap-4"
-      @start="(e) => (e.item.dataset.oldStatus = name)"
-      @end="(e) => $emit('end', e, name, e.item.dataset.oldStatus)"
+      :data-status="name"
+      @start="
+        (e) => {
+          e.item._oldStatus = e.from.dataset.status;
+        }
+      "
+      @end="
+        (e) => {
+          const newStatus = e.to.dataset.status;
+          const oldStatus = e.item._oldStatus;
+          $emit('end', e, newStatus, oldStatus);
+        }
+      "
     >
       <template #item="{ element }">
         <div>
