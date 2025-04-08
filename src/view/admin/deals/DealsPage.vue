@@ -8,22 +8,24 @@
       class="text-white"
     />
 
-    <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-4 pl-6">
-      <div
-        class="kanban__column bg-gray-800 rounded-md w-80 flex-shrink-0 min-w-[320px]"
-        v-for="status in statuses"
-        :key="status.id"
-      >
-        <KanbanCard
-          :name="status.name"
-          :count="groupedDeals[status.name]?.length || 0"
-          @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
-          v-model="groupedDeals[status.name]"
+    <div class="container mx-auto rounded-lg overflow-hidden">
+      <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-4 px-6">
+        <div
+          class="kanban__column bg-gray-800 rounded-md w-80 flex-shrink-0 min-w-[320px]"
+          v-for="status in statuses"
+          :key="status.id"
         >
-          <template #card="{ card }">
-            <CardDeal :card="card" class="cursor-pointer" />
-          </template>
-        </KanbanCard>
+          <KanbanCard
+            :name="status.name"
+            :count="groupedDeals[status.name]?.length || 0"
+            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
+            v-model="groupedDeals[status.name]"
+          >
+            <template #card="{ card }">
+              <CardDeal :card="card" class="cursor-pointer" />
+            </template>
+          </KanbanCard>
+        </div>
       </div>
     </div>
   </div>
