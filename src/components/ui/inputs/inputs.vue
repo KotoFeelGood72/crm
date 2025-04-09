@@ -3,7 +3,7 @@
     <div class="label" v-if="label">{{ label }}</div>
     <div class="input__w">
       <div class="input-icon" v-if="icon">
-        <SvgIcon :name="icon" />
+        <Icons :icon="icon" color="inherit" />
       </div>
       <input
         :type="type"
@@ -51,29 +51,29 @@ const localValue = computed({
 </script>
 
 <style scoped lang="scss">
-.input {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-  .label {
-    font-size: 12px;
-    font-weight: 600;
-  }
-  input {
-    -webkit-appearance: none;
-    appearance: none;
-    -moz-appearance: none;
-    border: 1px solid #cccccc4a;
-    padding: 5px 20px;
-    font-size: 14px;
-    width: 100%;
-    background-color: $white;
+// .input {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 4px;
+//   width: 100%;
+//   .label {
+//     font-size: 12px;
+//     font-weight: 600;
+//   }
+//   input {
+//     -webkit-appearance: none;
+//     appearance: none;
+//     -moz-appearance: none;
+//     border: 1px solid #cccccc4a;
+//     padding: 5px 20px;
+//     font-size: 14px;
+//     width: 100%;
+//     background-color: $white;
 
-    &:disabled {
-      background-color: #f1f1f1;
-      // cursor: not-allowed;
-    }
-  }
-}
+//     &:disabled {
+//       background-color: #f1f1f1;
+//       // cursor: not-allowed;
+//     }
+//   }
+// }
 </style>

@@ -1,6 +1,9 @@
 <template>
-  <div class="deal" v-if="deal && deal.acf">
-    <div class="deal__w">
+  <div
+    class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-3xl"
+    v-if="deal && deal.acf"
+  >
+    <div class="max-h-[70dvh] overflow-y-auto">
       <div class="deal__head">
         <div class="deal__preview">
           <div class="deal_preview__img" v-if="deal.acf.img?.link">
@@ -22,7 +25,107 @@
         </div>
       </div>
       <div class="deal__body">
-        <div class="deal__tabs">
+        <Tabs :tabs="['Основное', 'Контакты', 'Дела']">
+          <template #Основное>
+            <div>
+              <div class="grid grid-cols-3 gap-4 mb-3">
+                <InputsEdit
+                  label="Наименование:"
+                  v-model="deal.acf.name"
+                  place="Введите название"
+                  :edit="isEditing"
+                />
+                <InputsEdit
+                  label="Город:"
+                  v-model="deal.acf.name"
+                  place="Введите  город"
+                  :edit="isEditing"
+                />
+                <InputsEdit
+                  label="Адрес:"
+                  v-model="deal.acf.name"
+                  place="Введите адрес"
+                  :edit="isEditing"
+                />
+              </div>
+              <div class="grid grid-cols-3 gap-4">
+                <InputsEdit
+                  label="Youtube:"
+                  v-model="deal.acf.name"
+                  place="Введите название"
+                  :edit="isEditing"
+                />
+                <InputsEdit
+                  label="ВКонтакте:"
+                  v-model="deal.acf.name"
+                  place="Введите название"
+                  :edit="isEditing"
+                />
+                <InputsEdit
+                  label="График работы:"
+                  v-model="deal.acf.name"
+                  place="Введите график работы"
+                  :edit="isEditing"
+                />
+              </div>
+            </div>
+          </template>
+
+          <template #Контакты>
+            <div>
+              <InputsGroupEdit
+                label="Номера телефонов:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите номер телефона"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="Whats App:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите номер WhatsApp"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="Веб-сайты:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите url сайта"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="E-Mail:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите e-mail"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="Telegrams:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите telegram"
+                :edit="isEditing"
+              />
+            </div>
+          </template>
+          <template #Дела>
+            <div>
+              <div>
+                <InputArea
+                  v-model="newComment"
+                  placeholder="Введите название дела"
+                  @keydown.enter=""
+                />
+                <div class="input-footer">
+                  <div class="date">
+                    <CalendarTimePicker v-model="newTaskDateTime" />
+                  </div>
+                  <div class="submit">
+                    <Icons icon="formkit:submit" color="inherit" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </Tabs>
+        <!-- <div class="deal__tabs">
           <ul class="tabs">
             <li
               :class="{ active: activeTab === 'deal' }"
@@ -37,54 +140,54 @@
               Дела
             </li>
           </ul>
-        </div>
+        </div> -->
         <div v-if="activeTab === 'deal'">
           <!-- вся текущая информация о сделке -->
           <div class="deal__blocks">
             <ul class="deal__info">
               <li>
-                <singleItem
+                <!-- <InputsEdit
                   label="Наименование:"
                   v-model="deal.acf.name"
                   place="Введите название"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
 
               <li>
-                <listItem
+                <!-- <listItem
                   label="Номера телефонов:"
                   v-model="deal.acf.phone_list"
                   place="Введите номер телефона"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
 
               <li>
-                <listItem
+                <!-- <listItem
                   label="Сайты:"
                   v-model="deal.acf.websites_list"
                   place="Введите адрес сайта"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
 
               <li>
-                <listItem
+                <!-- <listItem
                   label="Whats App:"
                   v-model="deal.acf.whatsapps_list"
                   place="Введите номер WhatsApp"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
 
               <li>
-                <listItem
+                <!-- <listItem
                   label="E-Mail:"
                   v-model="deal.acf.emails_list"
                   place="Введите e-mail"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
             </ul>
           </div>
@@ -92,16 +195,16 @@
           <div class="deal__blocks">
             <ul class="deal__info">
               <li>
-                <listItem
+                <!-- <listItem
                   label="Telegram:"
                   v-model="deal.acf.telegrams_list"
                   place="Введите Telegram"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
 
               <li class="row">
-                <singleItem
+                <!-- <singleItem
                   label="Youtube:"
                   v-model="deal.acf.youtube"
                   place="Введите Youtube"
@@ -112,7 +215,7 @@
                   v-model="deal.acf.vk"
                   place="Введите ВКонтакте"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
             </ul>
           </div>
@@ -120,7 +223,7 @@
           <div class="deal__blocks">
             <ul class="deal__info">
               <li class="row">
-                <singleItem
+                <!-- <singleItem
                   label="Адрес:"
                   v-model="deal.acf.address"
                   place="Введите Адрес"
@@ -131,7 +234,7 @@
                   v-model="deal.acf.city"
                   place="Введите Адрес"
                   :edit="isEditing"
-                />
+                /> -->
               </li>
 
               <li class="row">
@@ -277,6 +380,7 @@
 </template>
 
 <script setup lang="ts">
+import Tabs from "@/components/ui/other/Tabs.vue";
 import CloseModal from "@/components/ui/buttons/CloseModal.vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
@@ -285,8 +389,12 @@ import Textarea from "@/components/ui/inputs/Textarea.vue";
 import { ref, watch, watchEffect } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
 import listItem from "@/components/ui/row/list-item.vue";
+import CalendarTimePicker from "@/components/ui/inputs/CalendarTimePicker.vue";
 import Switcher from "@/components/ui/inputs/Switcher.vue";
+import InputsEdit from "@/components/ui/inputs/InputsEdit.vue";
+import InputsGroupEdit from "@/components/ui/inputs/InputsGroupEdit.vue";
 import { useRoute } from "vue-router";
+import InputArea from "@/components/ui/inputs/InputArea.vue";
 
 const route = useRoute();
 const isEditing = ref(false);
@@ -408,291 +516,291 @@ watchEffect(async () => {
 </script>
 
 <style scoped lang="scss">
-.deal {
-  overflow: hidden;
-  width: 1100px;
-  // padding: 20px;
-  border-radius: 20px;
-  background-color: #f8f7f7;
+// .deal {
+//   overflow: hidden;
+//   width: 1100px;
+//   // padding: 20px;
+//   border-radius: 20px;
+//   background-color: #f8f7f7;
 
-  ul {
-    list-style: none;
-  }
-}
+//   ul {
+//     list-style: none;
+//   }
+// }
 
-.modal_block__list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+// .modal_block__list {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 20px;
+// }
 
-.deal__head {
-  @include flex-space;
-  padding: 20px;
-  background-color: $white;
-}
+// .deal__head {
+//   @include flex-space;
+//   padding: 20px;
+//   background-color: $white;
+// }
 
-.bottom {
-  @include flex-start;
-  gap: 10px;
-  background-color: $white;
-}
+// .bottom {
+//   @include flex-start;
+//   gap: 10px;
+//   background-color: $white;
+// }
 
-.deal__body {
-  padding: 20px;
-  border-bottom: 1px solid #e1e0e0;
-  border-top: 1px solid #e1e0e0;
-  max-height: 70dvh;
-  overflow-y: auto;
-}
+// .deal__body {
+//   padding: 20px;
+//   border-bottom: 1px solid #e1e0e0;
+//   border-top: 1px solid #e1e0e0;
+//   max-height: 70dvh;
+//   overflow-y: auto;
+// }
 
-.modal_block {
-  h5 {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-}
+// .modal_block {
+//   h5 {
+//     font-size: 16px;
+//     margin-bottom: 20px;
+//   }
+// }
 
-.is_ads {
-  @include flex-start;
-  font-size: 12px;
-  gap: 10px;
-  font-weight: 600;
-}
+// .is_ads {
+//   @include flex-start;
+//   font-size: 12px;
+//   gap: 10px;
+//   font-weight: 600;
+// }
 
-.bottom {
-  padding: 20px;
-  :deep(.default-btn) {
-    width: auto;
-  }
-}
+// .bottom {
+//   padding: 20px;
+//   :deep(.default-btn) {
+//     width: auto;
+//   }
+// }
 
-.right {
-  @include flex-end;
-  gap: 20px;
-  p {
-    background-color: #e1e0e0a7;
-    padding: 5px 20px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
+// .right {
+//   @include flex-end;
+//   gap: 20px;
+//   p {
+//     background-color: #e1e0e0a7;
+//     padding: 5px 20px;
+//     border-radius: 4px;
+//     font-size: 12px;
+//     font-weight: 500;
+//     cursor: pointer;
 
-    &.active {
-      background-color: #f0a02919;
-      color: #f0a129;
-    }
-  }
-}
+//     &.active {
+//       background-color: #f0a02919;
+//       color: #f0a129;
+//     }
+//   }
+// }
 
-.reviews__count {
-  @include flex-start;
-  gap: 10px;
-  position: relative;
-}
+// .reviews__count {
+//   @include flex-start;
+//   gap: 10px;
+//   position: relative;
+// }
 
-.reviews__stars {
-  @include flex-start;
-  position: absolute;
-  top: 70%;
-  transform: translateY(-50%);
-  right: 20px;
-  li {
-    @include flex-center;
-  }
-}
+// .reviews__stars {
+//   @include flex-start;
+//   position: absolute;
+//   top: 70%;
+//   transform: translateY(-50%);
+//   right: 20px;
+//   li {
+//     @include flex-center;
+//   }
+// }
 
-.history {
-  margin-top: 10px;
-  li {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
+// .history {
+//   margin-top: 10px;
+//   li {
+//     margin-bottom: 10px;
+//     padding-bottom: 10px;
+//     border-bottom: 1px solid #ddd;
 
-    .time {
-      font-size: 12px;
-      color: #999;
-    }
+//     .time {
+//       font-size: 12px;
+//       color: #999;
+//     }
 
-    .txt {
-      font-size: 14px;
-      font-weight: 500;
-    }
-  }
-}
+//     .txt {
+//       font-size: 14px;
+//       font-weight: 500;
+//     }
+//   }
+// }
 
-.row {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
-  grid-gap: 10px;
-}
+// .row {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+//   grid-gap: 10px;
+// }
 
-.row-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
-  grid-gap: 10px;
-}
+// .row-3 {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+//   grid-gap: 10px;
+// }
 
-.flex-row {
-  @include flex-start;
-  gap: 10px;
-  font-size: 12px;
-  font-weight: 500;
-}
+// .flex-row {
+//   @include flex-start;
+//   gap: 10px;
+//   font-size: 12px;
+//   font-weight: 500;
+// }
 
-.history-chat {
-  margin-bottom: 20px;
-  h4 {
-    margin-bottom: 15px;
-    font-size: 12px;
-    font-weight: 600;
-  }
+// .history-chat {
+//   margin-bottom: 20px;
+//   h4 {
+//     margin-bottom: 15px;
+//     font-size: 12px;
+//     font-weight: 600;
+//   }
 
-  .chat-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-  }
+//   .chat-wrapper {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 10px;
+//     max-height: 300px;
+//     overflow-y: auto;
+//     padding: 10px;
+//     background: #ffffff;
+//     border: 1px solid #ddd;
+//     border-radius: 10px;
+//   }
 
-  .message {
-    display: flex;
-    justify-content: flex-start;
-  }
+//   .message {
+//     display: flex;
+//     justify-content: flex-start;
+//   }
 
-  .bubble {
-    max-width: 70%;
-    min-width: 100px;
-    background-color: #f0a02912;
-    border: 1px solid #f0a0294e;
-    padding: 10px 12px;
-    border-radius: 6px;
-    position: relative;
-    font-size: 12px;
-    line-height: 1.4;
+//   .bubble {
+//     max-width: 70%;
+//     min-width: 100px;
+//     background-color: #f0a02912;
+//     border: 1px solid #f0a0294e;
+//     padding: 10px 12px;
+//     border-radius: 6px;
+//     position: relative;
+//     font-size: 12px;
+//     line-height: 1.4;
 
-    .txt {
-      margin-bottom: 6px;
-    }
+//     .txt {
+//       margin-bottom: 6px;
+//     }
 
-    .time {
-      font-size: 8px;
-      color: #888;
-      position: absolute;
-      bottom: 6px;
-      right: 10px;
-    }
-  }
-}
+//     .time {
+//       font-size: 8px;
+//       color: #888;
+//       position: absolute;
+//       bottom: 6px;
+//       right: 10px;
+//     }
+//   }
+// }
 
-.message.self {
-  justify-content: flex-end;
+// .message.self {
+//   justify-content: flex-end;
 
-  .bubble {
-    background-color: #e6f9e8;
-    border-color: #b7e6bd;
-  }
-}
+//   .bubble {
+//     background-color: #e6f9e8;
+//     border-color: #b7e6bd;
+//   }
+// }
 
-.add {
-  @include flex-center;
-  gap: 5px;
-  background-color: #f0a02912;
-  padding: 5px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px dashed #f0a0296b;
-  color: #f0a029e9;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  &:hover {
-    background-color: #f0a02935;
-  }
-}
+// .add {
+//   @include flex-center;
+//   gap: 5px;
+//   background-color: #f0a02912;
+//   padding: 5px;
+//   font-size: 12px;
+//   font-weight: 500;
+//   border: 1px dashed #f0a0296b;
+//   color: #f0a029e9;
+//   cursor: pointer;
+//   transition: all 0.3s ease-in-out;
+//   &:hover {
+//     background-color: #f0a02935;
+//   }
+// }
 
-.add-icon {
-  @include flex-center;
-}
+// .add-icon {
+//   @include flex-center;
+// }
 
-.contacts__item {
-  @include flex-center;
-  gap: 10px;
-}
+// .contacts__item {
+//   @include flex-center;
+//   gap: 10px;
+// }
 
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  li {
-    padding: 8px 16px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    &.active {
-      background-color: #f0a02919;
-      border-color: #f0a029;
-      color: #f0a029;
-    }
-  }
-}
+// .tabs {
+//   display: flex;
+//   gap: 10px;
+//   margin-bottom: 20px;
+//   li {
+//     padding: 8px 16px;
+//     background-color: #fff;
+//     border: 1px solid #ccc;
+//     border-radius: 8px;
+//     cursor: pointer;
+//     font-size: 13px;
+//     font-weight: 500;
+//     &.active {
+//       background-color: #f0a02919;
+//       border-color: #f0a029;
+//       color: #f0a029;
+//     }
+//   }
+// }
 
-.tasks_tab {
-  .task_input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-  }
+// .tasks_tab {
+//   .task_input {
+//     display: flex;
+//     gap: 10px;
+//     margin-bottom: 20px;
+//     input {
+//       padding: 8px;
+//       border: 1px solid #ccc;
+//       border-radius: 6px;
+//       font-size: 14px;
+//     }
+//   }
 
-  .task_list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+//   .task_list {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 10px;
+//   }
 
-  .task_item {
-    background-color: #fff8e5;
-    border: 1px solid #f0a0293b;
-    padding: 12px;
-    border-radius: 10px;
+//   .task_item {
+//     background-color: #fff8e5;
+//     border: 1px solid #f0a0293b;
+//     padding: 12px;
+//     border-radius: 10px;
 
-    &.done {
-      opacity: 0.6;
-      text-decoration: line-through;
-    }
+//     &.done {
+//       opacity: 0.6;
+//       text-decoration: line-through;
+//     }
 
-    .task_top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: space-between;
+//     .task_top {
+//       display: flex;
+//       align-items: center;
+//       gap: 10px;
+//       justify-content: space-between;
 
-      strong {
-        font-size: 14px;
-      }
+//       strong {
+//         font-size: 14px;
+//       }
 
-      small {
-        font-size: 12px;
-        color: #888;
-      }
-    }
+//       small {
+//         font-size: 12px;
+//         color: #888;
+//       }
+//     }
 
-    .task_actions {
-      margin-top: 8px;
-    }
-  }
-}
+//     .task_actions {
+//       margin-top: 8px;
+//     }
+//   }
+// }
 </style>
