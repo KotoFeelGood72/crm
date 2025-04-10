@@ -4,12 +4,8 @@
       {{ label }}
     </div>
 
-    <div class="flex flex-wrap items-center gap-1 mb-1">
-      <div
-        v-for="(entry, index) in modelValue"
-        :key="index"
-        class="relative flex-grow"
-      >
+    <div class="flex flex-wrap items-center gap-4 mb-1">
+      <div v-for="(entry, index) in modelValue" :key="index" class="relative flex-grow">
         <input
           class="block w-full text-xs dark:text-gray-400 form-textarea focus:outline-none focus:border-purple-400 dark:focus:border-gray-600 dark:bg-gray-700 dark:focus:shadow-outline-gray focus:shadow-outline-purple py-2 px-2 border dark:border-gray-600 rounded-md"
           type="text"

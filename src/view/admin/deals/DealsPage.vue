@@ -18,9 +18,7 @@
           <KanbanCard
             :name="status.name"
             :count="groupedDeals[status.name]?.length || 0"
-            @end="
-              (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
-            "
+            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">

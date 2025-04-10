@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full px-6 py-10 light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg md:w-[80vw] max-w-4xl relative"
+    class="w-full px-6 py-10 light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg md:min-w-[20vw] md:max-w-3xl relative h-dvh mr-0 ml-auto"
     v-if="deal && deal.acf"
   >
     <div class="absolute top-2 right-2">
@@ -11,187 +11,189 @@
         :icon-size="18"
       />
     </div>
-    <div class="max-h-[70dvh] overflow-y-auto custom-scroll pr-2">
+    <div class="max-h-[90dvh] h-full overflow-y-auto custom-scroll pr-2">
       <div class="deal__head">
         <div class="deal__preview">
-          <h3
-            class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
-          >
+          <h3 class="mb-6 text-lg font-semibold text-gray-700 dark:text-gray-300">
             {{ deal.title }}
           </h3>
         </div>
         <div class="right">
-          <Button
-            name="Сохранить"
-            theme="primary"
-            @click="saveDeal"
-            v-if="isEditing"
-          />
+          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
         </div>
       </div>
-      <div class="deal__body">
-        <Tabs :tabs="['Основное', 'Контакты', 'Коментарии', 'Дела']">
-          <template #Основное>
-            <div>
-              <div class="grid grid-cols-3 gap-4 mb-3">
-                <InputsEdit
-                  label="Наименование:"
-                  v-model="deal.acf.name"
-                  place="Введите название"
-                  :edit="isEditing"
-                />
-                <InputsEdit
-                  label="Город:"
-                  v-model="deal.acf.name"
-                  place="Введите  город"
-                  :edit="isEditing"
-                />
-                <InputsEdit
-                  label="Адрес:"
-                  v-model="deal.acf.name"
-                  place="Введите адрес"
-                  :edit="isEditing"
-                />
-              </div>
-              <div class="grid grid-cols-3 gap-4">
-                <InputsEdit
-                  label="Youtube:"
-                  v-model="deal.acf.name"
-                  place="Введите название"
-                  :edit="isEditing"
-                />
-                <InputsEdit
-                  label="ВКонтакте:"
-                  v-model="deal.acf.name"
-                  place="Введите название"
-                  :edit="isEditing"
-                />
-                <InputsEdit
-                  label="График работы:"
-                  v-model="deal.acf.name"
-                  place="Введите график работы"
-                  :edit="isEditing"
-                />
-              </div>
+      <Tabs :tabs="['Основное', 'Контакты', 'Коментарии', 'Дела']">
+        <template #Основное>
+          <div>
+            <Selects
+              v-model="techStack"
+              :options="techOptions"
+              placeholder="Выберите технологии"
+            />
+            <div class="grid grid-cols-3 gap-4 mb-3">
+              <InputsEdit
+                label="Наименование:"
+                v-model="deal.acf.name"
+                place="Введите название"
+                :edit="isEditing"
+              />
+              <InputsEdit
+                label="Город:"
+                v-model="deal.acf.name"
+                place="Введите  город"
+                :edit="isEditing"
+              />
+              <InputsEdit
+                label="Адрес:"
+                v-model="deal.acf.name"
+                place="Введите адрес"
+                :edit="isEditing"
+              />
             </div>
-          </template>
+            <div class="grid grid-cols-3 gap-4">
+              <InputsEdit
+                label="Youtube:"
+                v-model="deal.acf.name"
+                place="Введите название"
+                :edit="isEditing"
+              />
+              <InputsEdit
+                label="ВКонтакте:"
+                v-model="deal.acf.name"
+                place="Введите название"
+                :edit="isEditing"
+              />
+              <InputsEdit
+                label="График работы:"
+                v-model="deal.acf.name"
+                place="Введите график работы"
+                :edit="isEditing"
+              />
+            </div>
+          </div>
+        </template>
 
-          <template #Контакты>
-            <div>
-              <li class="row-flex">
-                <ul class="contacts__list">
-                  <li
-                    class="contacts__item"
-                    v-for="(item, index) in deal.acf.contacts_list"
-                  >
-                    <singleItem
-                      label="ФИО:"
-                      v-model="item.fio"
-                      place="Введите ФИо"
-                      :edit="isEditing"
-                    />
-                    <singleItem
-                      label="Номер телефона:"
-                      v-model="item.phone"
-                      place="Введите номер телефона"
-                      :edit="isEditing"
-                    />
-                    <singleItem
-                      label="Должность:"
-                      v-model="item.prof"
-                      place="Введите должность"
-                      :edit="isEditing"
-                    />
-                    <div class="toggle__contacts">
-                      <input
-                        type="radio"
-                        name="contacts"
-                        :value="index"
-                        v-model="selectedContactIndex"
-                      />
-                    </div>
-                  </li>
-                </ul>
-                <div class="add" @click="addContact" v-if="isEditing">
-                  <div class="add-icon">
-                    <Icons icon="ic:round-plus" :size="14" color=" #f0a029e9" />
-                  </div>
-                  <p>Добавить</p>
+        <template #Контакты>
+          <div>
+            <ul class="contacts__list">
+              <li class="contacts__item" v-for="(item, index) in deal.acf.contacts_list">
+                <singleItem
+                  label="ФИО:"
+                  v-model="item.fio"
+                  place="Введите ФИо"
+                  :edit="isEditing"
+                />
+                <singleItem
+                  label="Номер телефона:"
+                  v-model="item.phone"
+                  place="Введите номер телефона"
+                  :edit="isEditing"
+                />
+                <singleItem
+                  label="Должность:"
+                  v-model="item.prof"
+                  place="Введите должность"
+                  :edit="isEditing"
+                />
+                <div class="toggle__contacts">
+                  <input
+                    type="radio"
+                    name="contacts"
+                    :value="index"
+                    v-model="selectedContactIndex"
+                  />
                 </div>
               </li>
-              <InputsGroupEdit
-                label="Номера телефонов:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите номер телефона"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="Whats App:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите номер WhatsApp"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="Веб-сайты:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите url сайта"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="E-Mail:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите e-mail"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="Telegrams:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите telegram"
-                :edit="isEditing"
-              />
+            </ul>
+            <div class="add" @click="addContact" v-if="isEditing">
+              <div class="add-icon">
+                <Icons icon="ic:round-plus" :size="14" color=" #f0a029e9" />
+              </div>
+              <p>Добавить</p>
             </div>
-          </template>
-          <template #Коментарии>
-            <Textarea v-model="newComment" placeholder="Введите коментарий" />
-            <Button name="Отправить" @click="handleComment" />
-          </template>
-          <template #Дела>
-            <div>
-              <div class="relative">
-                <InputArea
-                  v-model="newComment"
-                  placeholder="Введите название дела"
-                  @keydown.enter=""
-                  :rows="6"
-                />
+            <InputsGroupEdit
+              label="Номера телефонов:"
+              v-model="deal.acf.whatsapps_list"
+              place="Введите номер телефона"
+              :edit="isEditing"
+              class="mb-4"
+            />
+            <InputsGroupEdit
+              label="Whats App:"
+              v-model="deal.acf.whatsapps_list"
+              place="Введите номер WhatsApp"
+              :edit="isEditing"
+              class="mb-4"
+            />
+            <InputsGroupEdit
+              label="Веб-сайты:"
+              v-model="deal.acf.whatsapps_list"
+              place="Введите url сайта"
+              :edit="isEditing"
+              class="mb-4"
+            />
+            <InputsGroupEdit
+              label="E-Mail:"
+              v-model="deal.acf.whatsapps_list"
+              place="Введите e-mail"
+              :edit="isEditing"
+              class="mb-4"
+            />
+            <InputsGroupEdit
+              label="Telegrams:"
+              v-model="deal.acf.whatsapps_list"
+              place="Введите telegram"
+              :edit="isEditing"
+            />
+          </div>
+        </template>
+        <template #Коментарии>
+          <div class="relative">
+            <Textareas v-model="newComment" placeholder="Введите коментарий" />
+            <div
+              class="submit text-gray-400 cursor-pointer absolute bottom-2 right-2"
+              @click="handleComment"
+            >
+              <Icons icon="formkit:submit" color="inherit" />
+            </div>
+          </div>
+        </template>
+        <template #Дела>
+          <div>
+            <div class="relative">
+              <Textareas
+                v-model="newComment"
+                placeholder="Введите название дела"
+                @keydown.enter=""
+                :rows="6"
+              />
+              <div
+                class="input-footer absolute bottom-2 flex justify-between items-center w-full px-2"
+              >
+                <div class="date">
+                  <CalendarTimePicker v-model="newTaskDateTime" />
+                </div>
                 <div
-                  class="input-footer absolute bottom-4 flex justify-between items-center w-full px-2"
+                  class="submit text-gray-400 cursor-pointer flex items-center justify-center"
                 >
-                  <div class="date">
-                    <CalendarTimePicker v-model="newTaskDateTime" />
-                  </div>
-                  <div
-                    class="submit text-gray-400 cursor-pointer flex items-center justify-center"
-                  >
-                    <Icons icon="formkit:submit" color="inherit" />
-                  </div>
+                  <Icons icon="formkit:submit" color="inherit" />
                 </div>
               </div>
             </div>
-          </template>
-        </Tabs>
-      </div>
+          </div>
+        </template>
+      </Tabs>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import Textareas from "@/components/ui/inputs/Textareas.vue";
 import Tabs from "@/components/ui/other/Tabs.vue";
 import { useModalStore } from "@/store/useModalStore";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
 import Button from "@/components/ui/buttons/Button.vue";
-import Textarea from "@/components/ui/inputs/Textarea.vue";
 import { ref, watch, watchEffect } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
 import IconBtn from "@/components/ui/buttons/IconBtn.vue";
@@ -199,8 +201,9 @@ import CalendarTimePicker from "@/components/ui/inputs/CalendarTimePicker.vue";
 import InputsEdit from "@/components/ui/inputs/InputsEdit.vue";
 import InputsGroupEdit from "@/components/ui/inputs/InputsGroupEdit.vue";
 import { useRoute, useRouter } from "vue-router";
-import InputArea from "@/components/ui/inputs/InputArea.vue";
-
+import Selects from "@/components/ui/inputs/Selects.vue";
+const techStack = ref<any>();
+const techOptions = ref<any>(["Vue", "React", "Svelte", "Angular"]);
 const { closeAllModals } = useModalStore();
 
 const route = useRoute();
@@ -252,9 +255,7 @@ watchEffect(() => {
   const deals = deal.value;
   if (!deals || !deals.acf || !Array.isArray(deals.acf.contacts_list)) return;
 
-  const index = deals.acf.contacts_list.findIndex(
-    (c: any) => c.priority === true
-  );
+  const index = deals.acf.contacts_list.findIndex((c: any) => c.priority === true);
   if (index !== -1) {
     selectedContactIndex.value = index;
   }

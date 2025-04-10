@@ -2,12 +2,12 @@
   <Transition name="fade-modal">
     <div class="modal fixed top-0 left-0 z-50" v-if="activeModalComponent">
       <!-- <div class="modal__bg" @click="closeCurrentModal"></div> -->
-      <div class="modal_main__w">
-        <div class="modal_main">
-          <CloseModal v-if="isCloseModalBtn" @click="closeCurrentModal()" />
-          <component :is="activeModalComponent" />
-        </div>
-      </div>
+      <!-- <div class="modal_main__w"> -->
+      <!-- <div class="modal_main"> -->
+      <CloseModal v-if="isCloseModalBtn" @click="closeCurrentModal()" />
+      <component :is="activeModalComponent" />
+      <!-- </div> -->
+      <!-- </div> -->
     </div>
   </Transition>
 </template>
@@ -20,34 +20,16 @@ import { useRouter } from "vue-router";
 const AsyncModalSingleData = defineAsyncComponent(
   () => import("./view/ModalSingleData.vue")
 );
-const AsyncModalDeal = defineAsyncComponent(
-  () => import("./view/ModalDeal.vue")
-);
+const AsyncModalDeal = defineAsyncComponent(() => import("./view/ModalDeal.vue"));
 
-const AsyncModalSingleQR = defineAsyncComponent(
-  () => import("./view/SingleQR.vue")
-);
-const AsyncModalUser = defineAsyncComponent(
-  () => import("./view/UserModal.vue")
-);
-const AsyncModalCreate = defineAsyncComponent(
-  () => import("./view/ModalCreate.vue")
-);
-const AsyncModalFilter = defineAsyncComponent(
-  () => import("./view/ModalFilter.vue")
-);
-const AsyncModalNote = defineAsyncComponent(
-  () => import("./view/NotificationModal.vue")
-);
-const AsyncModalComment = defineAsyncComponent(
-  () => import("./view/ModalComment.vue")
-);
-const AsyncModalStandart = defineAsyncComponent(
-  () => import("./view/StandartModal.vue")
-);
-const AsyncModalStatus = defineAsyncComponent(
-  () => import("./view/ModalStatus.vue")
-);
+const AsyncModalSingleQR = defineAsyncComponent(() => import("./view/SingleQR.vue"));
+const AsyncModalUser = defineAsyncComponent(() => import("./view/UserModal.vue"));
+const AsyncModalCreate = defineAsyncComponent(() => import("./view/ModalCreate.vue"));
+const AsyncModalFilter = defineAsyncComponent(() => import("./view/ModalFilter.vue"));
+const AsyncModalNote = defineAsyncComponent(() => import("./view/NotificationModal.vue"));
+const AsyncModalComment = defineAsyncComponent(() => import("./view/ModalComment.vue"));
+const AsyncModalStandart = defineAsyncComponent(() => import("./view/StandartModal.vue"));
+const AsyncModalStatus = defineAsyncComponent(() => import("./view/ModalStatus.vue"));
 const AsyncModalCommentary = defineAsyncComponent(
   () => import("./view/ModalCommentary.vue")
 );
@@ -145,49 +127,49 @@ const closeCurrentModal = () => {
   height: 100%;
   z-index: 101;
 
-  .modal_postionY__center {
-    @include flex-center;
-  }
-  .modal_postionX__center {
-    @include flex-center;
-  }
+  // .modal_postionY__center {
+  //   @include flex-center;
+  // }
+  // .modal_postionX__center {
+  //   @include flex-center;
+  // }
 
-  &.modal_postionX__right {
-    .modal_main__w {
-      @include flex-end;
-    }
-    .close-modal {
-      right: auto;
-      left: -60px;
-      transform: translateY(-50%);
-      top: 50%;
-      @include bp($point_4) {
-        left: 20px;
-        top: 20px;
-        transform: translateY(0);
-        z-index: 99;
+  // &.modal_postionX__right {
+  //   .modal_main__w {
+  //     @include flex-end;
+  //   }
+  //   .close-modal {
+  //     right: auto;
+  //     left: -60px;
+  //     transform: translateY(-50%);
+  //     top: 50%;
+  //     @include bp($point_4) {
+  //       left: 20px;
+  //       top: 20px;
+  //       transform: translateY(0);
+  //       z-index: 99;
 
-        background-color: $bg-color-secondary;
-      }
-    }
-  }
+  //       background-color: $bg-color-secondary;
+  //     }
+  //   }
+  // }
 }
 
-.modal_main__w {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  @include flex-center;
-  pointer-events: none;
-}
+// .modal_main__w {
+//   position: relative;
+//   width: 100%;
+//   height: 100%;
+//   @include flex-center;
+//   pointer-events: none;
+// }
 
-.modal_main {
-  position: relative;
-  pointer-events: all;
-  @include bp($point_4) {
-    width: 100%;
-  }
-}
+// .modal_main {
+//   position: relative;
+//   pointer-events: all;
+//   @include bp($point_4) {
+//     width: 100%;
+//   }
+// }
 
 .close-modal {
   position: absolute;

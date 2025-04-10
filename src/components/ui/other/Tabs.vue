@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex gap-4 mb-4">
+    <div class="flex gap-4 mb-10">
       <btn
         :label="tab"
         v-for="tab in tabs"

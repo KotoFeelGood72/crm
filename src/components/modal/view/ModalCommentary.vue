@@ -1,102 +1,65 @@
 <template>
-  <div
-    class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-3xl"
-    role="dialog"
-  >
-    <div class="absolute top-2 right-2">
-      <IconBtn
-        icon="material-symbols:close-rounded"
-        @click="closeAllModals(router, route)"
-        class="inline-flex items-center justify-center w-6 h-6 text-gray-400 rounded dark:hover:text-gray-200 hover:text-gray-700"
-        :icon-size="18"
-        :class="{ 'opacity-0': isLoading }"
-      />
-    </div>
+  <div class="w-full h-full flex items-center justify-center">
+    <div
+      class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-3xl relative"
+      role="dialog"
+    >
+      <div class="absolute top-2 right-2">
+        <IconBtn
+          icon="material-symbols:close-rounded"
+          @click="closeAllModals(router, route)"
+          class="inline-flex items-center justify-center w-6 h-6 text-gray-400 rounded dark:hover:text-gray-200 hover:text-gray-700"
+          :icon-size="18"
+          :class="{ 'opacity-0': isLoading }"
+        />
+      </div>
 
-    <div class="grid grid-cols-2 gap-5">
-      <div>
-        <div
-          class="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scroll"
-          v-if="lead && lead.acf && lead.acf.history"
-        >
+      <div class="grid grid-cols-2 gap-5">
+        <div>
           <div
-            v-for="comment in lead.acf.history"
-            :key="comment.id"
-            :class="[
-              'flex',
-              comment.id_user === userId ? 'justify-end' : 'justify-start',
-            ]"
+            class="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scroll bg-gray-900 h-full p-2 rounded-md"
+            v-if="lead && lead.acf && lead.acf.history"
           >
             <div
+              v-for="comment in lead.acf.history"
+              :key="comment.id"
               :class="[
-                'max-w-xs px-2 py-1 rounded-md text-xs',
-                comment.id_user === userId
-                  ? 'bg-violet-600 text-white rounded-br-none'
-                  : 'bg-gray-700 text-white rounded-bl-none',
+                'flex',
+                comment.id_user === userId ? 'justify-end' : 'justify-start',
               ]"
             >
-              <p>{{ comment.txt }}</p>
-              <div class="text-[10px] opacity-70 text-right">
-                {{ comment.time }}
+              <div
+                :class="[
+                  'max-w-xs px-2 py-1 rounded-md text-xs',
+                  comment.id_user === userId
+                    ? 'bg-violet-600 text-white rounded-br-none'
+                    : 'bg-gray-700 text-white rounded-bl-none',
+                ]"
+              >
+                <p>{{ comment.txt }}</p>
+                <div class="text-[10px] opacity-70 text-right">
+                  {{ comment.time }}
+                </div>
               </div>
             </div>
           </div>
+          <div v-else class="bg-gray-700 rounded-md p-4 text-gray-400 h-full">
+            Комментариев нет
+          </div>
         </div>
-        <div v-else class="bg-gray-700 rounded-md p-4 text-gray-400 h-full">
-          Комментариев нет
-        </div>
-      </div>
-      <div>
-        <div class="relative">
-          <Skeletor
-            width="100%"
-            class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-            v-if="isLoading"
-          />
-          <p
-            class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
-            :class="{ 'opacity-0': isLoading }"
-          >
-            Обратная связь по лиду
-          </p>
-        </div>
-        <div class="relative">
-          <Skeletor
-            width="100%"
-            class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-            v-if="isLoading"
-          />
-          <span
-            class="mt-2 mb-8 text-sm text-gray-700 dark:text-gray-400 block"
-            :class="{ 'opacity-0': isLoading }"
-            >Оставьте обратную связь по лиду, с целью сбора статистики, и
-            отладки алгоритма подбора контактов</span
-          >
-        </div>
-        <div class="relative">
-          <Skeletor
-            width="100%"
-            class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
-            v-if="isLoading"
-          />
-          <Textareas
-            :class="{ 'opacity-0': isLoading }"
-            v-model="newComment"
-            placeholder="Введите коментарий"
-          />
-        </div>
-        <div class="flex items-center mt-6 gap-4 justify-end">
+        <div>
           <div class="relative">
             <Skeletor
               width="100%"
               class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
               v-if="isLoading"
             />
-            <btn
-              label="Применить"
-              @click="applyComment"
+            <p
+              class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
               :class="{ 'opacity-0': isLoading }"
-            />
+            >
+              Обратная связь по лиду
+            </p>
           </div>
           <div class="relative">
             <Skeletor
@@ -104,12 +67,51 @@
               class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
               v-if="isLoading"
             />
-            <btn
-              label="Закрыть"
-              variant="outline"
-              @click="closeAllModals(router, route)"
+            <span
+              class="mt-2 mb-8 text-sm text-gray-700 dark:text-gray-400 block"
               :class="{ 'opacity-0': isLoading }"
+              >Оставьте обратную связь по лиду, с целью сбора статистики, и отладки
+              алгоритма подбора контактов</span
+            >
+          </div>
+          <div class="relative">
+            <Skeletor
+              width="100%"
+              class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+              v-if="isLoading"
             />
+            <Textareas
+              :class="{ 'opacity-0': isLoading }"
+              v-model="newComment"
+              placeholder="Введите коментарий"
+            />
+          </div>
+          <div class="flex items-center mt-6 gap-4 justify-end">
+            <div class="relative">
+              <Skeletor
+                width="100%"
+                class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+                v-if="isLoading"
+              />
+              <btn
+                label="Применить"
+                @click="applyComment"
+                :class="{ 'opacity-0': isLoading }"
+              />
+            </div>
+            <div class="relative">
+              <Skeletor
+                width="100%"
+                class="h-full rounded-md w-full flex-grow flex absolute top-0 left-0"
+                v-if="isLoading"
+              />
+              <btn
+                label="Закрыть"
+                variant="outline"
+                @click="closeAllModals(router, route)"
+                :class="{ 'opacity-0': isLoading }"
+              />
+            </div>
           </div>
         </div>
       </div>

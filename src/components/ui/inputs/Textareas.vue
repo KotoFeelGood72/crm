@@ -4,7 +4,7 @@
     ><textarea
       v-model="localValue"
       class="block w-full text-sm dark:text-gray-400 form-textarea focus:outline-none focus:border-purple-400 dark:focus:border-gray-600 dark:bg-gray-700 dark:focus:shadow-outline-gray focus:shadow-outline-purple mt-1 py-3 px-4 border dark:border-gray-600 rounded-md resize-none"
-      rows="3"
+      :rows="rows"
       :placeholder="placeholder"
     ></textarea>
   </label>
@@ -18,8 +18,10 @@ const props = withDefaults(
     modelValue: string;
     placeholder: string;
     label?: string;
+    rows?: number;
   }>(),
   {
+    rows: 3,
     label: "",
     modelValue: "",
     placeholder: "Введите комментарий",
