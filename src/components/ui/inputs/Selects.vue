@@ -3,22 +3,22 @@
     <!-- Поле ввода -->
     <div
       @click="toggleDropdown"
-      class="flex flex-wrap items-center gap-1 min-h-[2.5rem] px-2 py-1 dark:border dark:border-gray-400 rounded cursor-pointer relative"
+      class="flex flex-wrap items-center gap-1 min-h-[34px] px-2 py-1 dark:border dark:border-gray-400 rounded cursor-pointer relative bg-gray-700"
     >
       <div
         v-for="item in selectedItems"
         :key="item"
-        class="flex items-center bg-gray-800 px-2 py-0.5 rounded text-white relative z-10"
+        class="flex items-center bg-gray-800 px-2 py-0.5 rounded text-gray-300 relative z-10 text-xs gap-1"
       >
         <span class="pointer-events-none">{{ item }}</span>
         <button @click.stop="removeItem(item)" class="ml-1 text-white hover:text-red-500">
-          ×
+          <Icons icon="zondicons:close-solid" :size="12" color="inherit" />
         </button>
       </div>
       <input
         v-model="searchQuery"
         @keydown.enter.prevent="addItem"
-        class="flex-grow outline-none bg-transparent text-gray-400 absolute top-0 left-0 w-full h-full"
+        class="flex-grow outline-none bg-transparent absolute top-0 left-0 w-full h-full px-2 text-gray-400"
         :placeholder="
           selectedItems.length === 0 ? placeholder || 'Выберите или введите...' : ''
         "
