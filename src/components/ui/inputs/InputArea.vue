@@ -1,9 +1,11 @@
 <template>
   <div class="input-area">
     <textarea
+      class="text-gray-400"
       v-model="localValue"
       :placeholder="placeholder"
       ref="textarea"
+      :rows="rows"
       @input="adjustHeight"
     ></textarea>
   </div>
@@ -16,8 +18,10 @@ const props = withDefaults(
   defineProps<{
     modelValue: string;
     placeholder: string;
+    rows?: number;
   }>(),
   {
+    rows: 3,
     modelValue: "",
     placeholder: "Введите комментарий",
   }

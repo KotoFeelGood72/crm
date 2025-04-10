@@ -1,16 +1,19 @@
 <template>
-  <div class="relative w-full max-w-xs text-sm">
+  <div class="relative w-full max-w-xs text-xs">
     <!-- Инпут -->
     <div
       @click="toggleDropdown"
-      class="flex items-center justify-between border rounded-md px-3 py-2 cursor-pointer hover:border-blue-400 transition"
+      class="flex items-center justify-between dark:border dark:border-gray-400 rounded-md px-2 py-1 cursor-pointer hover:border-blue-400 transition"
       :class="{ 'border-blue-500 ring ring-blue-200': showPicker }"
     >
-      <div class="flex items-center gap-2 text-gray-700">
-        <Icons icon="material-symbols:calendar-today-outline" />
+      <div class="flex items-center gap-2 text-gray-400">
+        <Icons
+          icon="lets-icons:date-range-duotone"
+          color="inherit"
+          :size="16"
+        />
         <span>{{ formattedDate }}</span>
       </div>
-      <Icons icon="mdi:bell-outline" class="text-gray-400" />
     </div>
 
     <!-- Календарь -->
@@ -19,10 +22,10 @@
       class="absolute z-50 mt-2 w-[280px] bg-white border border-gray-300 shadow-xl rounded-lg p-4"
     >
       <div class="flex justify-between items-center mb-2">
-        <select v-model="selectedMonth" class="text-sm">
+        <select v-model="selectedMonth" class="text-xs">
           <option v-for="(m, i) in months" :key="i" :value="i">{{ m }}</option>
         </select>
-        <select v-model="selectedYear" class="text-sm">
+        <select v-model="selectedYear" class="text-xs">
           <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
         </select>
       </div>
@@ -31,7 +34,7 @@
         <div v-for="day in weekdays" :key="day">{{ day }}</div>
       </div>
 
-      <div class="grid grid-cols-7 text-center text-sm">
+      <div class="grid grid-cols-7 text-center text-xs">
         <div
           v-for="(day, i) in calendarDays"
           :key="i"

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <div class="text-xs font-medium mb-1 text-gray-500 dark:text-gray-400">
+    <div class="label dark:text-gray-400 text-xs mb-1">
       {{ label }}
     </div>
 
@@ -11,11 +11,10 @@
         class="relative flex-grow"
       >
         <input
-          class="block w-full text-xs dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md py-2 px-2 focus:outline-none focus:border-purple-400 dark:focus:border-gray-500 focus:shadow-outline-purple dark:focus:shadow-outline-gray"
+          class="block w-full text-xs dark:text-gray-400 form-textarea focus:outline-none focus:border-purple-400 dark:focus:border-gray-600 dark:bg-gray-700 dark:focus:shadow-outline-gray focus:shadow-outline-purple py-2 px-2 border dark:border-gray-600 rounded-md"
           type="text"
           v-model="entry.item"
           :placeholder="place"
-          :disabled="!edit"
         />
         <div
           v-if="edit"

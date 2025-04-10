@@ -1,15 +1,24 @@
 <template>
   <div
-    class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-3xl"
+    class="w-full px-6 py-10 light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg md:w-[80vw] max-w-4xl relative"
     v-if="deal && deal.acf"
   >
-    <div class="max-h-[70dvh] overflow-y-auto">
+    <div class="absolute top-2 right-2">
+      <IconBtn
+        icon="material-symbols:close-rounded"
+        @click="closeAllModals(router, route)"
+        class="inline-flex items-center justify-center w-6 h-6 text-gray-400 rounded dark:hover:text-gray-200 hover:text-gray-700"
+        :icon-size="18"
+      />
+    </div>
+    <div class="max-h-[70dvh] overflow-y-auto custom-scroll pr-2">
       <div class="deal__head">
         <div class="deal__preview">
-          <div class="deal_preview__img" v-if="deal.acf.img?.link">
-            <img :src="deal.acf.img.link" alt="" />
-          </div>
-          <h3>{{ deal.title }}</h3>
+          <h3
+            class="mb-2 text-lg font-semibold text-gray-700 dark:text-gray-300"
+          >
+            {{ deal.title }}
+          </h3>
         </div>
         <div class="right">
           <Button
@@ -18,14 +27,10 @@
             @click="saveDeal"
             v-if="isEditing"
           />
-          <p :class="{ active: isEditing }" @click="isEditing = !isEditing">
-            {{ isEditing ? "Просмотреть" : "Редактировать" }}
-          </p>
-          <CloseModal />
         </div>
       </div>
       <div class="deal__body">
-        <Tabs :tabs="['Основное', 'Контакты', 'Дела']">
+        <Tabs :tabs="['Основное', 'Контакты', 'Коментарии', 'Дела']">
           <template #Основное>
             <div>
               <div class="grid grid-cols-3 gap-4 mb-3">
@@ -73,213 +78,6 @@
 
           <template #Контакты>
             <div>
-              <InputsGroupEdit
-                label="Номера телефонов:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите номер телефона"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="Whats App:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите номер WhatsApp"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="Веб-сайты:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите url сайта"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="E-Mail:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите e-mail"
-                :edit="isEditing"
-              />
-              <InputsGroupEdit
-                label="Telegrams:"
-                v-model="deal.acf.whatsapps_list"
-                place="Введите telegram"
-                :edit="isEditing"
-              />
-            </div>
-          </template>
-          <template #Дела>
-            <div>
-              <div>
-                <InputArea
-                  v-model="newComment"
-                  placeholder="Введите название дела"
-                  @keydown.enter=""
-                />
-                <div class="input-footer">
-                  <div class="date">
-                    <CalendarTimePicker v-model="newTaskDateTime" />
-                  </div>
-                  <div class="submit">
-                    <Icons icon="formkit:submit" color="inherit" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </template>
-        </Tabs>
-        <!-- <div class="deal__tabs">
-          <ul class="tabs">
-            <li
-              :class="{ active: activeTab === 'deal' }"
-              @click="activeTab = 'deal'"
-            >
-              Сделка
-            </li>
-            <li
-              :class="{ active: activeTab === 'tasks' }"
-              @click="activeTab = 'tasks'"
-            >
-              Дела
-            </li>
-          </ul>
-        </div> -->
-        <div v-if="activeTab === 'deal'">
-          <!-- вся текущая информация о сделке -->
-          <div class="deal__blocks">
-            <ul class="deal__info">
-              <li>
-                <!-- <InputsEdit
-                  label="Наименование:"
-                  v-model="deal.acf.name"
-                  place="Введите название"
-                  :edit="isEditing"
-                /> -->
-              </li>
-
-              <li>
-                <!-- <listItem
-                  label="Номера телефонов:"
-                  v-model="deal.acf.phone_list"
-                  place="Введите номер телефона"
-                  :edit="isEditing"
-                /> -->
-              </li>
-
-              <li>
-                <!-- <listItem
-                  label="Сайты:"
-                  v-model="deal.acf.websites_list"
-                  place="Введите адрес сайта"
-                  :edit="isEditing"
-                /> -->
-              </li>
-
-              <li>
-                <!-- <listItem
-                  label="Whats App:"
-                  v-model="deal.acf.whatsapps_list"
-                  place="Введите номер WhatsApp"
-                  :edit="isEditing"
-                /> -->
-              </li>
-
-              <li>
-                <!-- <listItem
-                  label="E-Mail:"
-                  v-model="deal.acf.emails_list"
-                  place="Введите e-mail"
-                  :edit="isEditing"
-                /> -->
-              </li>
-            </ul>
-          </div>
-
-          <div class="deal__blocks">
-            <ul class="deal__info">
-              <li>
-                <!-- <listItem
-                  label="Telegram:"
-                  v-model="deal.acf.telegrams_list"
-                  place="Введите Telegram"
-                  :edit="isEditing"
-                /> -->
-              </li>
-
-              <li class="row">
-                <!-- <singleItem
-                  label="Youtube:"
-                  v-model="deal.acf.youtube"
-                  place="Введите Youtube"
-                  :edit="isEditing"
-                />
-                <singleItem
-                  label="ВКонтакте:"
-                  v-model="deal.acf.vk"
-                  place="Введите ВКонтакте"
-                  :edit="isEditing"
-                /> -->
-              </li>
-            </ul>
-          </div>
-
-          <div class="deal__blocks">
-            <ul class="deal__info">
-              <li class="row">
-                <!-- <singleItem
-                  label="Адрес:"
-                  v-model="deal.acf.address"
-                  place="Введите Адрес"
-                  :edit="isEditing"
-                />
-                <singleItem
-                  label="Город:"
-                  v-model="deal.acf.city"
-                  place="Введите Адрес"
-                  :edit="isEditing"
-                /> -->
-              </li>
-
-              <li class="row">
-                <div class="flex-row">
-                  <p>Есть ли реклама?</p>
-                  <Switcher v-model="deal.acf.is_ads" />
-                </div>
-                <div class="reviews__count">
-                  <singleItem
-                    label="Кол-во отзывов:"
-                    v-model="deal.acf.reviews_count"
-                    place="кол-во отзывов"
-                    :edit="isEditing"
-                  />
-                  <ul class="reviews__stars">
-                    <li
-                      v-for="n in Number(deal.acf.stars)"
-                      :key="'stars-item' + n"
-                    >
-                      <Icons icon="fluent-emoji-flat:star" :size="16" />
-                    </li>
-                  </ul>
-                </div>
-              </li>
-
-              <li class="row-3">
-                <singleItem
-                  label="График работы:"
-                  v-model="deal.acf.schedule"
-                  place="Введите график работы"
-                  :edit="isEditing"
-                />
-                <singleItem
-                  label="Источник:"
-                  v-model="deal.acf.spring"
-                  place="Введите источник"
-                  :edit="isEditing"
-                />
-                <singleItem
-                  label="Цена:"
-                  v-model="deal.acf.price"
-                  place="Введите стоимость"
-                  :edit="isEditing"
-                />
-              </li>
               <li class="row-flex">
                 <ul class="contacts__list">
                   <li
@@ -321,59 +119,67 @@
                   <p>Добавить</p>
                 </div>
               </li>
-            </ul>
-          </div>
-
-          <div
-            class="deal__blocks history-chat"
-            v-if="deal.acf.history?.length"
-          >
-            <h4>История комментариев:</h4>
-            <div class="chat-wrapper">
-              <div
-                class="message"
-                v-for="(entry, index) in deal.acf.history"
-                :key="index"
-                :class="{ self: entry.role === 'me' }"
-              >
-                <div class="bubble">
-                  <p class="txt">{{ entry.txt }}</p>
-                  <span class="time">{{ entry.time }}</span>
+              <InputsGroupEdit
+                label="Номера телефонов:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите номер телефона"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="Whats App:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите номер WhatsApp"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="Веб-сайты:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите url сайта"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="E-Mail:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите e-mail"
+                :edit="isEditing"
+              />
+              <InputsGroupEdit
+                label="Telegrams:"
+                v-model="deal.acf.whatsapps_list"
+                place="Введите telegram"
+                :edit="isEditing"
+              />
+            </div>
+          </template>
+          <template #Коментарии>
+            <Textarea v-model="newComment" placeholder="Введите коментарий" />
+            <Button name="Отправить" @click="handleComment" />
+          </template>
+          <template #Дела>
+            <div>
+              <div class="relative">
+                <InputArea
+                  v-model="newComment"
+                  placeholder="Введите название дела"
+                  @keydown.enter=""
+                  :rows="6"
+                />
+                <div
+                  class="input-footer absolute bottom-4 flex justify-between items-center w-full px-2"
+                >
+                  <div class="date">
+                    <CalendarTimePicker v-model="newTaskDateTime" />
+                  </div>
+                  <div
+                    class="submit text-gray-400 cursor-pointer flex items-center justify-center"
+                  >
+                    <Icons icon="formkit:submit" color="inherit" />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="textarea__w">
-            <Textarea v-model="newComment" placeholder="Введите дело" />
-            <Button name="Отправить" @click="handleComment" />
-          </div>
-        </div>
-        <div v-if="activeTab === 'tasks'" class="tasks_tab">
-          <div class="task_input">
-            <input v-model="newTaskTitle" placeholder="Что нужно сделать" />
-            <input type="datetime-local" v-model="newTaskDateTime" />
-            <Button name="Добавить" @click="addTask" />
-          </div>
-
-          <div class="task_list">
-            <div
-              v-for="task in tasks"
-              :key="task.id"
-              class="task_item"
-              :class="{ done: task.done }"
-            >
-              <div class="task_top">
-                <input
-                  type="checkbox"
-                  v-model="task.done"
-                  @change="updateTask(task.id!, { done: task.done })"
-                />
-                <strong>{{ task.title }}</strong>
-                <small>{{ formatTaskDate(task.date, task.time) }}</small>
-              </div>
-            </div>
-          </div>
-        </div>
+          </template>
+        </Tabs>
       </div>
     </div>
   </div>
@@ -381,22 +187,24 @@
 
 <script setup lang="ts">
 import Tabs from "@/components/ui/other/Tabs.vue";
-import CloseModal from "@/components/ui/buttons/CloseModal.vue";
+import { useModalStore } from "@/store/useModalStore";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
 import Button from "@/components/ui/buttons/Button.vue";
 import Textarea from "@/components/ui/inputs/Textarea.vue";
 import { ref, watch, watchEffect } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
-import listItem from "@/components/ui/row/list-item.vue";
+import IconBtn from "@/components/ui/buttons/IconBtn.vue";
 import CalendarTimePicker from "@/components/ui/inputs/CalendarTimePicker.vue";
-import Switcher from "@/components/ui/inputs/Switcher.vue";
 import InputsEdit from "@/components/ui/inputs/InputsEdit.vue";
 import InputsGroupEdit from "@/components/ui/inputs/InputsGroupEdit.vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import InputArea from "@/components/ui/inputs/InputArea.vue";
 
+const { closeAllModals } = useModalStore();
+
 const route = useRoute();
+const router = useRouter();
 const isEditing = ref(false);
 const selectedContactIndex = ref<number | null>(null);
 const { getDealById, updateDeal } = useDealStore();
@@ -514,293 +322,3 @@ watchEffect(async () => {
   }
 });
 </script>
-
-<style scoped lang="scss">
-// .deal {
-//   overflow: hidden;
-//   width: 1100px;
-//   // padding: 20px;
-//   border-radius: 20px;
-//   background-color: #f8f7f7;
-
-//   ul {
-//     list-style: none;
-//   }
-// }
-
-// .modal_block__list {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 20px;
-// }
-
-// .deal__head {
-//   @include flex-space;
-//   padding: 20px;
-//   background-color: $white;
-// }
-
-// .bottom {
-//   @include flex-start;
-//   gap: 10px;
-//   background-color: $white;
-// }
-
-// .deal__body {
-//   padding: 20px;
-//   border-bottom: 1px solid #e1e0e0;
-//   border-top: 1px solid #e1e0e0;
-//   max-height: 70dvh;
-//   overflow-y: auto;
-// }
-
-// .modal_block {
-//   h5 {
-//     font-size: 16px;
-//     margin-bottom: 20px;
-//   }
-// }
-
-// .is_ads {
-//   @include flex-start;
-//   font-size: 12px;
-//   gap: 10px;
-//   font-weight: 600;
-// }
-
-// .bottom {
-//   padding: 20px;
-//   :deep(.default-btn) {
-//     width: auto;
-//   }
-// }
-
-// .right {
-//   @include flex-end;
-//   gap: 20px;
-//   p {
-//     background-color: #e1e0e0a7;
-//     padding: 5px 20px;
-//     border-radius: 4px;
-//     font-size: 12px;
-//     font-weight: 500;
-//     cursor: pointer;
-
-//     &.active {
-//       background-color: #f0a02919;
-//       color: #f0a129;
-//     }
-//   }
-// }
-
-// .reviews__count {
-//   @include flex-start;
-//   gap: 10px;
-//   position: relative;
-// }
-
-// .reviews__stars {
-//   @include flex-start;
-//   position: absolute;
-//   top: 70%;
-//   transform: translateY(-50%);
-//   right: 20px;
-//   li {
-//     @include flex-center;
-//   }
-// }
-
-// .history {
-//   margin-top: 10px;
-//   li {
-//     margin-bottom: 10px;
-//     padding-bottom: 10px;
-//     border-bottom: 1px solid #ddd;
-
-//     .time {
-//       font-size: 12px;
-//       color: #999;
-//     }
-
-//     .txt {
-//       font-size: 14px;
-//       font-weight: 500;
-//     }
-//   }
-// }
-
-// .row {
-//   display: grid;
-//   grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
-//   grid-gap: 10px;
-// }
-
-// .row-3 {
-//   display: grid;
-//   grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
-//   grid-gap: 10px;
-// }
-
-// .flex-row {
-//   @include flex-start;
-//   gap: 10px;
-//   font-size: 12px;
-//   font-weight: 500;
-// }
-
-// .history-chat {
-//   margin-bottom: 20px;
-//   h4 {
-//     margin-bottom: 15px;
-//     font-size: 12px;
-//     font-weight: 600;
-//   }
-
-//   .chat-wrapper {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 10px;
-//     max-height: 300px;
-//     overflow-y: auto;
-//     padding: 10px;
-//     background: #ffffff;
-//     border: 1px solid #ddd;
-//     border-radius: 10px;
-//   }
-
-//   .message {
-//     display: flex;
-//     justify-content: flex-start;
-//   }
-
-//   .bubble {
-//     max-width: 70%;
-//     min-width: 100px;
-//     background-color: #f0a02912;
-//     border: 1px solid #f0a0294e;
-//     padding: 10px 12px;
-//     border-radius: 6px;
-//     position: relative;
-//     font-size: 12px;
-//     line-height: 1.4;
-
-//     .txt {
-//       margin-bottom: 6px;
-//     }
-
-//     .time {
-//       font-size: 8px;
-//       color: #888;
-//       position: absolute;
-//       bottom: 6px;
-//       right: 10px;
-//     }
-//   }
-// }
-
-// .message.self {
-//   justify-content: flex-end;
-
-//   .bubble {
-//     background-color: #e6f9e8;
-//     border-color: #b7e6bd;
-//   }
-// }
-
-// .add {
-//   @include flex-center;
-//   gap: 5px;
-//   background-color: #f0a02912;
-//   padding: 5px;
-//   font-size: 12px;
-//   font-weight: 500;
-//   border: 1px dashed #f0a0296b;
-//   color: #f0a029e9;
-//   cursor: pointer;
-//   transition: all 0.3s ease-in-out;
-//   &:hover {
-//     background-color: #f0a02935;
-//   }
-// }
-
-// .add-icon {
-//   @include flex-center;
-// }
-
-// .contacts__item {
-//   @include flex-center;
-//   gap: 10px;
-// }
-
-// .tabs {
-//   display: flex;
-//   gap: 10px;
-//   margin-bottom: 20px;
-//   li {
-//     padding: 8px 16px;
-//     background-color: #fff;
-//     border: 1px solid #ccc;
-//     border-radius: 8px;
-//     cursor: pointer;
-//     font-size: 13px;
-//     font-weight: 500;
-//     &.active {
-//       background-color: #f0a02919;
-//       border-color: #f0a029;
-//       color: #f0a029;
-//     }
-//   }
-// }
-
-// .tasks_tab {
-//   .task_input {
-//     display: flex;
-//     gap: 10px;
-//     margin-bottom: 20px;
-//     input {
-//       padding: 8px;
-//       border: 1px solid #ccc;
-//       border-radius: 6px;
-//       font-size: 14px;
-//     }
-//   }
-
-//   .task_list {
-//     display: flex;
-//     flex-direction: column;
-//     gap: 10px;
-//   }
-
-//   .task_item {
-//     background-color: #fff8e5;
-//     border: 1px solid #f0a0293b;
-//     padding: 12px;
-//     border-radius: 10px;
-
-//     &.done {
-//       opacity: 0.6;
-//       text-decoration: line-through;
-//     }
-
-//     .task_top {
-//       display: flex;
-//       align-items: center;
-//       gap: 10px;
-//       justify-content: space-between;
-
-//       strong {
-//         font-size: 14px;
-//       }
-
-//       small {
-//         font-size: 12px;
-//         color: #888;
-//       }
-//     }
-
-//     .task_actions {
-//       margin-top: 8px;
-//     }
-//   }
-// }
-</style>
