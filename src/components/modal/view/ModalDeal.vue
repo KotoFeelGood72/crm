@@ -168,7 +168,7 @@
             />
           </div>
         </template>
-        <template #Коментарии>
+        <template #Комментарии>
           <div class="relative">
             <Textareas v-model="newComment" placeholder="Введите коментарий" />
             <div

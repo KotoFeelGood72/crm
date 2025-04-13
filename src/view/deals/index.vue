@@ -8,7 +8,9 @@
       <div class="kanban__column" v-for="status in statuses" :key="status.id">
         <div class="kanban__header">
           <h4>{{ status.name }}</h4>
-          <span class="count">{{ groupedDeals[status.name]?.length || 0 }}</span>
+          <span class="count">{{
+            groupedDeals[status.name]?.length || 0
+          }}</span>
         </div>
 
         <draggable

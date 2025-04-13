@@ -1,5 +1,6 @@
 <template>
   <div class="pb-16">
+    <ModalLead />
     <n-page-header subtitle="История действий" class="mb-6">
       <n-grid :cols="5">
         <n-gi>
@@ -65,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-// import SectionHeader from "@/components/ui/header/SectionHeader.vue";
+import ModalLead from "@/components/nModal/ModalLead.vue";
 import CardLead from "@/components/ui/card/CardLead.vue";
 import { useLeadsStore, useLeadsStoreRefs } from "@/store/useLeadsStore";
 import Pagination from "@/components/ui/list/Pagination.vue";

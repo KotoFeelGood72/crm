@@ -122,6 +122,7 @@ export const useLeadsStore = defineStore("leads", {
       }
     },
 
+
     async createClient(newClient: any) {
       try {
         const response = await api.post("/wp-json/custom/v1/create-client", {

@@ -1,6 +1,11 @@
 <template>
-  <div class="p-4">
-    <CardHead :name="name" :count="count" @click="$emit('click')" class="mb-4" />
+  <div>
+    <CardHead
+      :name="name"
+      :count="count"
+      @click="$emit('click')"
+      class="mb-4"
+    />
     <draggable
       :list="localValue"
       :animation="200"

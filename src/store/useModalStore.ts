@@ -12,6 +12,8 @@ interface ModalsState {
   standart: boolean;
   status: boolean;
   commentary: boolean;
+  nDeal: boolean
+  nLead: boolean
 }
 
 export const useModalStore = defineStore("modal", {
@@ -32,6 +34,8 @@ export const useModalStore = defineStore("modal", {
       standart: false,
       status: false,
       commentary: false,
+      nDeal: false,
+      nLead: false,
     },
     queryCache: {},
     current: null,
@@ -46,6 +50,7 @@ export const useModalStore = defineStore("modal", {
     ) {
       this.modals[modalName] = true;
       this.current = content || null;
+      
 
       if (query && router) {
         this.queryCache[modalName] = query;

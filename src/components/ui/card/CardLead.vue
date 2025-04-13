@@ -1,12 +1,7 @@
 <template>
   <n-card :title="lead.acf.name" hoverable>
     <div id="card-lead" class="relative">
-      <!-- <StatusChip :status="lead.acf.status" /> -->
       <ul class="dark:text-gray-400 grid grid-cols-2 gap-2 text-xs mb-4">
-        <!-- <li class="flex items-center gap-3">
-          <p>Организация:</p>
-          <span>{{ lead.acf.name }}</span>
-        </li> -->
         <li class="flex items-center gap-3">
           <p>Город:</p>
           <span>{{ lead.acf.city }}</span>
@@ -32,15 +27,6 @@
       </ul>
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <!-- <btn
-            label="Сменить статус"
-            icon="pajamas:status-health"
-            iconPosition="left"
-            variant="primary"
-            size="sm"
-            iconColor="text-white"
-            @click="openModal('status', {}, { status: lead.id }, router)"
-          /> -->
           <n-dropdown :options="statusList" @select="handleStatusChange">
             <n-button>{{ lead.acf.status }}</n-button>
           </n-dropdown>
@@ -48,38 +34,77 @@
 
         <div class="flex items-center gap-3">
           <div class="relative">
-            <n-float-button position="relative" menu-trigger="hover">
-              <n-badge :value="lead.acf.history.length" :offset="[6, -8]">
-                <Icons icon="hugeicons:comment-01" :size="16" />
-              </n-badge>
-              <template #menu>
-                <n-float-button shape="square" type="primary">
-                  <n-icon>
+            <n-button-group size="small">
+              <n-button
+                ghost
+                @click="openModal('nLead', null, { lead: lead.id }, router)"
+              >
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <Icons icon="fluent:open-20-regular" color="inherit" />
+                  </template>
+                  Открыть
+                </n-tooltip>
+              </n-button>
+              <n-button ghost @click.stop="showModal = true">
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <Icons
+                      icon="material-symbols-light:comment-outline"
+                      color="inherit"
+                    />
+                  </template>
+                  Оставить коментарий
+                </n-tooltip>
+              </n-button>
+              <n-button ghost @click="showModalComment = true">
+                <n-tooltip trigger="hover">
+                  <template #trigger>
                     <Icons
                       icon="material-symbols-light:history"
-                      :size="20"
-                      @click="showModalComment = true"
+                      color="inherit"
                     />
-                  </n-icon>
-                </n-float-button>
-                <n-float-button @click="showModal = true">
-                  <n-icon>
-                    <Icons icon="hugeicons:comment-01" :size="16" />
-                  </n-icon>
-                </n-float-button>
-              </template>
-            </n-float-button>
+                  </template>
+                  Просмотреть комментарии
+                </n-tooltip>
+              </n-button>
+              <n-button>
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <n-popconfirm
+                      @positive-click="handlePositiveClick"
+                      @negative-click="handleNegativeClick"
+                      negative-text="Нет"
+                      positive-text="ДА"
+                    >
+                      <template #trigger>
+                        <!-- <n-button>Quote</n-button> -->
+
+                        <IconBtn
+                          icon="material-symbols-light:delete-outline"
+                          class="dark:text-red-600 w-7 h-7 flex items-center justify-center"
+                          iconSize="30"
+                          @click="emit('deleteLead', lead.id)"
+                        />
+                      </template>
+                      Подтвердить удаление?
+                    </n-popconfirm></template
+                  >
+                  Удалить
+                </n-tooltip>
+              </n-button>
+            </n-button-group>
             <n-drawer
               v-model:show="showModalComment"
               :width="502"
-              :placement="'left'"
+              :placement="'right'"
             >
-              <n-drawer-content title="Коментарии">
+              <n-drawer-content title="Комментарии">
                 <!-- @load="handleLoad" -->
                 <n-infinite-scroll :distance="10">
                   <div class="flex flex-col gap-2">
                     <div v-for="(comment, i) in lead.acf.history" :key="i">
-                      <n-card>
+                      <n-card size="small">
                         <p>{{ comment.txt }}</p>
                         <div class="text-[10px] opacity-70 text-right">
                           {{ comment.time }}
@@ -120,25 +145,6 @@
               </template>
             </n-modal>
           </div>
-
-          <n-popconfirm
-            @positive-click="handlePositiveClick"
-            @negative-click="handleNegativeClick"
-            negative-text="Нет"
-            positive-text="ДА"
-          >
-            <template #trigger>
-              <!-- <n-button>Quote</n-button> -->
-
-              <IconBtn
-                icon="material-symbols-light:delete-outline"
-                class="dark:text-red-600 w-7 h-7 flex items-center justify-center"
-                iconSize="30"
-                @click="emit('deleteLead', lead.id)"
-              />
-            </template>
-            Подтвердить удаление?
-          </n-popconfirm>
         </div>
       </div>
     </div>

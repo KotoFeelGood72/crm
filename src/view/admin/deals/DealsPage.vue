@@ -1,21 +1,58 @@
 <template>
   <div class="deals min-h-screen">
-    <SectionHeader
-      title="Сделки"
-      subtitle="Раздел для работы с сделками"
-      button="фильтры"
-      icon="solar:sun-bold"
-      class="text-white"
-    />
+    <n-page-header subtitle="Текущие сделки" class="mb-6">
+      <n-grid :cols="5">
+        <n-gi>
+          <n-statistic label="Кол-во" value="125" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Удалений" value="22" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Количество" value="36" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Topics" value="83" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Reference Links" value="2,346" />
+        </n-gi>
+      </n-grid>
+      <template #title>
+        <a
+          href="https://anyway.fm/"
+          style="text-decoration: none; color: inherit"
+        >
+          Сделки
+        </a>
+      </template>
+      <template #header>
+        <n-breadcrumb>
+          <n-breadcrumb-item>Рабочий стол</n-breadcrumb-item>
+          <n-breadcrumb-item>История</n-breadcrumb-item>
+        </n-breadcrumb>
+      </template>
+      <template #avatar>
+        <n-avatar
+          src="https://cdnimg103.lizhi.fm/user/2017/02/04/2583325032200238082_160x160.jpg"
+        />
+      </template>
+      <template #extra>
+        <n-space>
+          <n-button>Refresh</n-button>
+          <!-- <n-dropdown :options="options" placement="bottom-start">
+            <n-button :bordered="false" style="padding: 0 4px"> ··· </n-button>
+          </n-dropdown> -->
+        </n-space>
+      </template>
+      <template #footer> As of April 3, 2021 </template>
+    </n-page-header>
 
     <div class="container mx-auto rounded-lg overflow-hidden">
-      <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-4 px-6">
-        <div
-          class="kanban__column bg-gray-800 rounded-md w-80 flex-shrink-0 min-w-[320px]"
-          v-for="status in statuses"
-          :key="status.id"
-        >
+      <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-2">
+        <div v-for="status in statuses" :key="status.id">
           <KanbanCard
+            class="min-w-64 max-w-64"
             :name="status.name"
             :count="groupedDeals[status.name]?.length || 0"
             @end="
@@ -24,11 +61,8 @@
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">
-              <CardDeal
-                :card="card"
-                class="cursor-pointer"
-                @click="openModal('deal', '', { deal: card.id }, router)"
-              />
+              <CardDeal :card="card" class="cursor-pointer" />
+              <!-- @click="openModal('deal', '', { deal: card.id }, router)" -->
             </template>
           </KanbanCard>
         </div>
@@ -39,7 +73,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import SectionHeader from "@/components/ui/header/SectionHeader.vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
