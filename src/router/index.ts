@@ -42,16 +42,16 @@ const routes = [
       title: "Dashboard",
     },
   },
-  {
-    path: "/deals",
-    name: "Deals",
-    component: () => import("../view/deals/index.vue"),
-    meta: {
-      layout: "Admin",
-      // requiresAuth: true,
-      title: "Сделки",
-    },
-  },
+  // {
+  //   path: "/deals",
+  //   name: "Deals",
+  //   component: () => import("../view/deals/index.vue"),
+  //   meta: {
+  //     layout: "Admin",
+  //     // requiresAuth: true,
+  //     title: "Сделки",
+  //   },
+  // },
   {
     path: "/leads",
     name: "Лиды",

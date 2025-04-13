@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full px-6 py-10 light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg md:min-w-[20vw] md:max-w-3xl relative h-dvh mr-0 ml-auto"
+    class="w-full px-6 py-10 light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg md:min-w-[20vw] max-w-[85%] relative h-dvh mr-0 ml-auto"
     v-if="deal && deal.acf"
   >
     <div class="absolute top-2 right-2">
@@ -14,12 +14,30 @@
     <div class="max-h-[90dvh] h-full overflow-y-auto custom-scroll pr-2">
       <div class="deal__head">
         <div class="deal__preview">
-          <h3 class="mb-6 text-lg font-semibold text-gray-700 dark:text-gray-300">
+          <h3
+            class="mb-6 text-lg font-semibold text-gray-700 dark:text-gray-300"
+          >
             {{ deal.title }}
           </h3>
         </div>
         <div class="right">
-          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
+          <Button
+            name="Сохранить"
+            theme="primary"
+            @click="saveDeal"
+            v-if="isEditing"
+          />
+        </div>
+        <div>
+          <ul class="flex items-center gap-2">
+            <li
+              v-for="(item, i) in statusList"
+              :key="'status-item' + i"
+              class="px-4 py-2 text-sm font-medium cursor-pointer"
+            >
+              {{ item.name }}
+            </li>
+          </ul>
         </div>
       </div>
       <Tabs :tabs="['Основное', 'Контакты', 'Коментарии', 'Дела']">
@@ -76,7 +94,10 @@
         <template #Контакты>
           <div>
             <ul class="contacts__list">
-              <li class="contacts__item" v-for="(item, index) in deal.acf.contacts_list">
+              <li
+                class="contacts__item"
+                v-for="(item, index) in deal.acf.contacts_list"
+              >
                 <singleItem
                   label="ФИО:"
                   v-model="item.fio"
@@ -202,6 +223,7 @@ import InputsEdit from "@/components/ui/inputs/InputsEdit.vue";
 import InputsGroupEdit from "@/components/ui/inputs/InputsGroupEdit.vue";
 import { useRoute, useRouter } from "vue-router";
 import Selects from "@/components/ui/inputs/Selects.vue";
+import { statusList } from "@/api/data";
 const techStack = ref<any>();
 const techOptions = ref<any>(["Vue", "React", "Svelte", "Angular"]);
 const { closeAllModals } = useModalStore();
@@ -214,6 +236,7 @@ const { getDealById, updateDeal } = useDealStore();
 const { getTasks, updateTask, createTask } = useTaskStore();
 const { tasks } = useTaskStoreRefs();
 const { deal } = useDealStoreRefs();
+const selectedStatus = ref<string | null>("Новый");
 const activeTab = ref<"deal" | "tasks">("deal");
 
 const newTaskTitle = ref("");
@@ -255,7 +278,9 @@ watchEffect(() => {
   const deals = deal.value;
   if (!deals || !deals.acf || !Array.isArray(deals.acf.contacts_list)) return;
 
-  const index = deals.acf.contacts_list.findIndex((c: any) => c.priority === true);
+  const index = deals.acf.contacts_list.findIndex(
+    (c: any) => c.priority === true
+  );
   if (index !== -1) {
     selectedContactIndex.value = index;
   }

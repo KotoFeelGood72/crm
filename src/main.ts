@@ -10,6 +10,7 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import Icons from "./components/ui/Icons.vue";
 import { Skeletor } from "vue-skeletor";
 import "vuetify/styles";
+import naive from 'naive-ui'
 // import { createVuetify } from "vuetify";
 // import * as components from "vuetify/components";
 // import * as directives from "vuetify/directives";
@@ -46,6 +47,7 @@ app.component("v-text", text);
 app.component(Skeletor.name, Skeletor);
 app.use(pinia);
 // app.use(vuetify);
+app.use(naive);
 app.use(router);
 app.mount("#app");
 app.use(Tooltip);

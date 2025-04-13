@@ -1,13 +1,19 @@
 <template>
-  <div id="owner" class="flex items-start justify-between h-full w-full">
-    <AdminSidebar class="w-[15%]" />
-    <div class="flex items-center justify-between flex-col w-[85%]">
-      <OwnerHeader class="light:bg-white dark:bg-gray-800" />
-      <div id="content" class="light:bg-white dark:bg-gray-900 w-full min-h-[100dvh]">
-        <slot />
-      </div>
-    </div>
-  </div>
+  <n-layout style="height: 100vh">
+    <n-layout-header bordered class="z-10 relative">
+      <OwnerHeader class="" />
+    </n-layout-header>
+    <n-layout has-sider position="absolute" class="pt-[64px]">
+      <AdminSidebar />
+      <n-layout has-sider>
+        <n-scrollbar>
+          <n-layout-content content-style="padding: 24px 32px;">
+            <slot />
+          </n-layout-content>
+        </n-scrollbar>
+      </n-layout>
+    </n-layout>
+  </n-layout>
 </template>
 
 <script setup lang="ts">

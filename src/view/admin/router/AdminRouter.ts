@@ -11,9 +11,18 @@ const routes = [
     },
   },
   {
-    path: "/deal/",
-    name: "deal",
+    path: "/deals/",
+    name: "deals",
     component: () => import("../deals/DealsPage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/managment/",
+    name: "Календарь",
+    component: () => import("../managment/ManagmentPage.vue"),
     meta: {
       layout: "owner",
       requiresAuth: true,

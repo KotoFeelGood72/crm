@@ -1,5 +1,5 @@
 <template>
-  <div class="deals bg-gray-900 min-h-screen p-6">
+  <div class="deals min-h-screen">
     <SectionHeader
       title="Сделки"
       subtitle="Раздел для работы с сделками"
@@ -18,7 +18,9 @@
           <KanbanCard
             :name="status.name"
             :count="groupedDeals[status.name]?.length || 0"
-            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
+            @end="
+              (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
+            "
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">
@@ -57,30 +59,16 @@ const { deals, statuses } = useDealStoreRefs();
 const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
   const movedCard = event.item.__draggable_context.element;
 
-  console.log("oldStatus", oldStatus);
-  console.log("newStatus", newStatus);
-
   if (!newStatus || !movedCard) return;
 
-  // Если статус не поменялся — это просто сортировка, ничего делать не нужно
+  // Если статус не поменялся — просто сортировка
   if (oldStatus === newStatus) return;
 
-  // Если поменялся — обновляем статус на сервере
+  // Обновляем статус на сервере
   await updateDeal(movedCard.id, { status: newStatus });
 
-  // Обновляем статус локально
+  // Обновляем статус локально — draggable уже переместил карточку
   movedCard.acf.status = newStatus;
-
-  // Удаляем из старого списка
-  groupedDeals.value[oldStatus] = groupedDeals.value[oldStatus].filter(
-    (deal) => deal.id !== movedCard.id
-  );
-
-  // Добавляем в новый список
-  groupedDeals.value[newStatus].push(movedCard);
-
-  // Триггерим реактивность
-  groupedDeals.value = { ...groupedDeals.value };
 };
 
 const initGroupedDeals = () => {

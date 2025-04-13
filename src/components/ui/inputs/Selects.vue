@@ -11,7 +11,10 @@
         class="flex items-center bg-gray-800 px-2 py-0.5 rounded text-gray-300 relative z-10 text-xs gap-1"
       >
         <span class="pointer-events-none">{{ item }}</span>
-        <button @click.stop="removeItem(item)" class="ml-1 text-white hover:text-red-500">
+        <button
+          @click.stop="removeItem(item)"
+          class="ml-1 text-white hover:text-red-500"
+        >
           <Icons icon="zondicons:close-solid" :size="12" color="inherit" />
         </button>
       </div>
@@ -20,7 +23,9 @@
         @keydown.enter.prevent="addItem"
         class="flex-grow outline-none bg-transparent absolute top-0 left-0 w-full h-full px-2 text-gray-400"
         :placeholder="
-          selectedItems.length === 0 ? placeholder || 'Выберите или введите...' : ''
+          selectedItems.length === 0
+            ? placeholder || 'Выберите или введите...'
+            : ''
         "
       />
     </div>
@@ -58,7 +63,9 @@ const emit = defineEmits<{
 const dropdownRef = ref<HTMLElement | null>(null);
 const searchQuery = ref("");
 const isOpen = ref(false);
-const selectedItems = ref([...props.modelValue]);
+const selectedItems = ref(
+  Array.isArray(props.modelValue) ? [...props.modelValue] : []
+);
 
 watch(
   () => props.modelValue,
@@ -100,7 +107,9 @@ const filteredOptions = computed(() =>
 const showAddOption = computed(
   () =>
     searchQuery.value &&
-    !props.options.map((o) => o.toLowerCase()).includes(searchQuery.value.toLowerCase())
+    !props.options
+      .map((o) => o.toLowerCase())
+      .includes(searchQuery.value.toLowerCase())
 );
 
 const addItem = () => {

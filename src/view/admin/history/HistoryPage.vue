@@ -1,50 +1,67 @@
 <template>
   <div class="pb-16">
-    <SectionHeader
-      title="История"
-      subtitle="Последние действия пользователей"
-      icon="solar:history-bold"
-      class="text-white"
-      button="фильтры"
-    />
+    <n-page-header subtitle="История действий" class="mb-6">
+      <n-grid :cols="5">
+        <n-gi>
+          <n-statistic label="Обновлений" value="125" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Удалений" value="22" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Количество" value="36" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Topics" value="83" />
+        </n-gi>
+        <n-gi>
+          <n-statistic label="Reference Links" value="2,346" />
+        </n-gi>
+      </n-grid>
+      <template #title>
+        <a
+          href="https://anyway.fm/"
+          style="text-decoration: none; color: inherit"
+        >
+          История
+        </a>
+      </template>
+      <template #header>
+        <n-breadcrumb>
+          <n-breadcrumb-item>Рабочий стол</n-breadcrumb-item>
+          <n-breadcrumb-item>История</n-breadcrumb-item>
+        </n-breadcrumb>
+      </template>
+      <template #avatar>
+        <n-avatar
+          src="https://cdnimg103.lizhi.fm/user/2017/02/04/2583325032200238082_160x160.jpg"
+        />
+      </template>
+      <template #extra>
+        <n-space>
+          <n-button>Refresh</n-button>
+          <!-- <n-dropdown :options="options" placement="bottom-start">
+            <n-button :bordered="false" style="padding: 0 4px"> ··· </n-button>
+          </n-dropdown> -->
+        </n-space>
+      </template>
+      <template #footer> As of April 3, 2021 </template>
+    </n-page-header>
 
-    <div class="container px-6 mx-auto text-white">
-      <div class="overflow-x-auto rounded-lg shadow border border-gray-700">
-        <table class="min-w-full divide-y divide-gray-700 bg-gray-800 text-sm text-left">
-          <thead class="bg-gray-700 text-xs uppercase text-gray-300">
-            <tr>
-              <th class="px-4 py-3">Дата</th>
-              <th class="px-4 py-3">Действие</th>
-              <th class="px-4 py-3">Сообщение</th>
-              <th class="px-4 py-3">Пользователь</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-700">
-            <tr
-              v-for="(log, index) in history"
-              :key="'log-' + index"
-              class="hover:bg-gray-700"
-            >
-              <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                {{ formatDate(log.date) }}
-              </td>
-              <td class="px-4 py-3 font-semibold text-white">{{ log.title }}</td>
-              <td class="px-4 py-3 text-gray-300">{{ log.message }}</td>
-              <td class="px-4 py-3 text-gray-400">
-                {{ log.meta.user_id?.[0] || "—" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <n-data-table
+      :columns="columns"
+      :data="history"
+      :pagination="{ pageSize: 10 }"
+      :bordered="false"
+      :scroll-x="1000"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import SectionHeader from "@/components/ui/header/SectionHeader.vue";
 import { useHistoryStore, useHistoryStoreRefs } from "@/store/useHistoryStore";
 import { onMounted } from "vue";
+import { DataTableColumns } from "naive-ui";
 
 // Стор
 const { fetchMyHistory } = useHistoryStore();
@@ -54,11 +71,37 @@ onMounted(() => {
   fetchMyHistory();
 });
 
-// Хелпер для даты
-const formatDate = (dateStr: string) => {
+// Хелпер для форматирования даты
+const formatDate = (dateStr: any) => {
   return new Date(dateStr).toLocaleString("ru-RU", {
     dateStyle: "short",
     timeStyle: "short",
   });
 };
+
+// Колонки для n-data-table
+const columns: DataTableColumns = [
+  {
+    title: "Дата",
+    key: "date",
+    render(row) {
+      return formatDate(row.date);
+    },
+  },
+  {
+    title: "Действие",
+    key: "title",
+  },
+  {
+    title: "Сообщение",
+    key: "message",
+  },
+  {
+    title: "Пользователь",
+    key: "meta",
+    render(row: any) {
+      return row.meta?.user_id?.[0] ?? "—";
+    },
+  },
+];
 </script>

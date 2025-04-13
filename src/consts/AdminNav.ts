@@ -20,6 +20,11 @@ export const AdminNav = [
     icon: "archive-minimalistic-bold",
   },
   {
+    name: "Календарь",
+    url: "/managment",
+    icon: "archive-minimalistic-bold",
+  },
+  {
     name: "Статистика",
     url: "/statistic",
     icon: "align-bottom-bold",

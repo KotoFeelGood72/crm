@@ -1,16 +1,23 @@
 <template>
-  <component :is="layoutComponent">
-    <router-view />
-    <Modal :positionX="modalPositionX" />
-    <Transition name="fade-bg">
-      <div v-if="isAnyModalActive" class="bg"></div>
-    </Transition>
-  </component>
+  <n-config-provider :theme="theme" :locale="ruRU" :date-locale="dateRu">
+    <n-global-style />
+    <n-message-provider>
+      <component :is="layoutComponent">
+        <router-view />
+        <Modal :positionX="modalPositionX" />
+        <Transition name="fade-bg">
+          <div v-if="isAnyModalActive" class="bg"></div>
+        </Transition>
+      </component>
+    </n-message-provider>
+  </n-config-provider>
 </template>
 
 <script setup lang="ts">
+import { ruRU } from "naive-ui";
+import { ru as dateRu } from "date-fns/locale";
 import "vue3-toastify/dist/index.css";
-import { computed, watch, onMounted } from "vue";
+import { computed, watch, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
@@ -22,6 +29,13 @@ import { useUsersStore } from "./store/useUserStore";
 import "vue-skeletor/dist/vue-skeletor.css";
 import { useNotifications } from "@/composables/useNotifications";
 import { useScrollLock } from "@/composables/useLockScreen";
+
+// import type { GlobalTheme } from "naive-ui";
+// import { darkTheme } from "naive-ui";
+
+import { useTheme } from "@/composables/useTheme";
+
+const { theme } = useTheme();
 const { lockScroll, unlockScroll } = useScrollLock();
 
 const { requestPermission } = useNotifications();
