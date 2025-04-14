@@ -14,29 +14,22 @@
     <div class="max-h-[90dvh] h-full overflow-y-auto custom-scroll pr-2">
       <div class="deal__head">
         <div class="deal__preview">
-          <h3
-            class="mb-6 text-lg font-semibold text-gray-700 dark:text-gray-300"
-          >
+          <h3 class="mb-6 text-lg font-semibold text-gray-700 dark:text-gray-300">
             {{ deal.title }}
           </h3>
         </div>
         <div class="right">
-          <Button
-            name="Сохранить"
-            theme="primary"
-            @click="saveDeal"
-            v-if="isEditing"
-          />
+          <Button name="Сохранить" theme="primary" @click="saveDeal" v-if="isEditing" />
         </div>
         <div>
           <ul class="flex items-center gap-2">
-            <li
+            <!-- <li
               v-for="(item, i) in statusList"
               :key="'status-item' + i"
               class="px-4 py-2 text-sm font-medium cursor-pointer"
             >
               {{ item.name }}
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -94,10 +87,7 @@
         <template #Контакты>
           <div>
             <ul class="contacts__list">
-              <li
-                class="contacts__item"
-                v-for="(item, index) in deal.acf.contacts_list"
-              >
+              <li class="contacts__item" v-for="(item, index) in deal.acf.contacts_list">
                 <singleItem
                   label="ФИО:"
                   v-model="item.fio"
@@ -213,7 +203,8 @@ import Textareas from "@/components/ui/inputs/Textareas.vue";
 import Tabs from "@/components/ui/other/Tabs.vue";
 import { useModalStore } from "@/store/useModalStore";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
-import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
+import { useTaskStore } from "@/store/useTaskStore";
+// import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
 import Button from "@/components/ui/buttons/Button.vue";
 import { ref, watch, watchEffect } from "vue";
 import singleItem from "@/components/ui/row/single-item.vue";
@@ -223,7 +214,7 @@ import InputsEdit from "@/components/ui/inputs/InputsEdit.vue";
 import InputsGroupEdit from "@/components/ui/inputs/InputsGroupEdit.vue";
 import { useRoute, useRouter } from "vue-router";
 import Selects from "@/components/ui/inputs/Selects.vue";
-import { statusList } from "@/api/data";
+// import { statusList } from "@/api/data";
 const techStack = ref<any>();
 const techOptions = ref<any>(["Vue", "React", "Svelte", "Angular"]);
 const { closeAllModals } = useModalStore();
@@ -233,40 +224,41 @@ const router = useRouter();
 const isEditing = ref(false);
 const selectedContactIndex = ref<number | null>(null);
 const { getDealById, updateDeal } = useDealStore();
-const { getTasks, updateTask, createTask } = useTaskStore();
-const { tasks } = useTaskStoreRefs();
+const { getTasks } = useTaskStore();
+// const { getTasks, updateTask, createTask } = useTaskStore();
+// const { tasks } = useTaskStoreRefs();
 const { deal } = useDealStoreRefs();
-const selectedStatus = ref<string | null>("Новый");
-const activeTab = ref<"deal" | "tasks">("deal");
+// const selectedStatus = ref<string | null>("Новый");
+// const activeTab = ref<"deal" | "tasks">("deal");
 
-const newTaskTitle = ref("");
+// const newTaskTitle = ref("");
 const newTaskDateTime = ref("");
 
-const addTask = async () => {
-  if (!newTaskTitle.value || !newTaskDateTime.value) return;
+// const addTask = async () => {
+//   if (!newTaskTitle.value || !newTaskDateTime.value) return;
 
-  const [date, time] = newTaskDateTime.value.split("T");
+//   const [date, time] = newTaskDateTime.value.split("T");
 
-  await createTask({
-    deal_id: deal.value.id,
-    title: newTaskTitle.value,
-    date,
-    time,
-    done: false,
-  });
+//   await createTask({
+//     deal_id: deal.value.id,
+//     title: newTaskTitle.value,
+//     date,
+//     time,
+//     done: false,
+//   });
 
-  newTaskTitle.value = "";
-  newTaskDateTime.value = "";
-};
+//   newTaskTitle.value = "";
+//   newTaskDateTime.value = "";
+// };
 
-const formatTaskDate = (date: string, time: string) =>
-  `Сделать до ${new Date(`${date}T${time}`).toLocaleString("ru-RU", {
-    weekday: "short",
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-  })}`;
+// const formatTaskDate = (date: string, time: string) =>
+//   `Сделать до ${new Date(`${date}T${time}`).toLocaleString("ru-RU", {
+//     weekday: "short",
+//     day: "numeric",
+//     month: "long",
+//     hour: "2-digit",
+//     minute: "2-digit",
+//   })}`;
 
 watch(selectedContactIndex, (newIndex: any) => {
   deal.value.acf.contacts_list.forEach((contact: any, i: any) => {
@@ -278,9 +270,7 @@ watchEffect(() => {
   const deals = deal.value;
   if (!deals || !deals.acf || !Array.isArray(deals.acf.contacts_list)) return;
 
-  const index = deals.acf.contacts_list.findIndex(
-    (c: any) => c.priority === true
-  );
+  const index = deals.acf.contacts_list.findIndex((c: any) => c.priority === true);
   if (index !== -1) {
     selectedContactIndex.value = index;
   }
