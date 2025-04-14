@@ -10,10 +10,14 @@
         <div v-if="lead && lead.acf" class="flex flex-col gap-2">
           <n-card title="Компания" size="small">
             <n-row class="flex flex-col gap-2">
-              <n-row class="flex flex-col gap-2">
-                <n-rate readonly :default-value="3" />
-                <p>{{ lead.acf.reviews_count }}</p>
-              </n-row>
+              <n-badge
+                :value="lead.acf.reviews_count + 'отзывов'"
+                show-zero
+                class="max-w-44"
+              >
+                <n-rate readonly :default-value="lead.acf.stars" />
+              </n-badge>
+              <n-row class="flex flex-col gap-2"> </n-row>
               <n-input v-model:value="lead.acf.city" placeholder="Город" />
               <n-input v-model:value="lead.acf.spring" placeholder="Источник" />
               <n-input v-model:value="lead.acf.vk" placeholder="ВКонтакте" />
