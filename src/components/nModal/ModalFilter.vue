@@ -126,7 +126,7 @@
 import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
 import { useLeadsStoreRefs, useLeadsStore } from "@/store/useLeadsStore";
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { mapToSelectOptions } from "@/utils/mapToSelectOptions";
 const { modals } = useModalStoreRefs();
 const { closeAllModals } = useModalStore();
