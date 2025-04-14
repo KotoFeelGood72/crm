@@ -25,7 +25,7 @@ const AsyncModalDeal = defineAsyncComponent(() => import("./view/ModalDeal.vue")
 const AsyncModalSingleQR = defineAsyncComponent(() => import("./view/SingleQR.vue"));
 const AsyncModalUser = defineAsyncComponent(() => import("./view/UserModal.vue"));
 const AsyncModalCreate = defineAsyncComponent(() => import("./view/ModalCreate.vue"));
-const AsyncModalFilter = defineAsyncComponent(() => import("./view/ModalFilter.vue"));
+// const AsyncModalFilter = defineAsyncComponent(() => import("./view/ModalFilter.vue"));
 const AsyncModalNote = defineAsyncComponent(() => import("./view/NotificationModal.vue"));
 const AsyncModalComment = defineAsyncComponent(() => import("./view/ModalComment.vue"));
 const AsyncModalStandart = defineAsyncComponent(() => import("./view/StandartModal.vue"));
@@ -64,8 +64,8 @@ const activeModalComponent = computed(() => {
           return AsyncModalUser;
         case "create":
           return AsyncModalCreate;
-        case "filter":
-          return AsyncModalFilter;
+        // case "filter":
+        //   return AsyncModalFilter;
         case "comment":
           return AsyncModalComment;
         case "deal":
@@ -94,8 +94,8 @@ const isCloseModalBtn = computed(() => {
       return true;
     case "user":
       return true;
-    case "filter":
-      return true;
+    // case "filter":
+    //   return true;
     default:
       return false;
   }

@@ -1,6 +1,7 @@
 <template>
   <div>
     <ModalLead />
+    <ModalFilter />
     <n-page-header subtitle="История действий" class="mb-6">
       <n-grid :cols="5">
         <n-gi>
@@ -37,7 +38,7 @@
       </template>
       <template #extra>
         <n-space>
-          <n-button>Refresh</n-button>
+          <n-button @click="openModal('filter')">Фильтры</n-button>
           <!-- <n-dropdown :options="options" placement="bottom-start">
             <n-button :bordered="false" style="padding: 0 4px"> ··· </n-button>
           </n-dropdown> -->
@@ -62,6 +63,8 @@
 import ModalLead from "@/components/nModal/ModalLead.vue";
 import CardLead from "@/components/ui/card/CardLead.vue";
 import { useLeadsStore, useLeadsStoreRefs } from "@/store/useLeadsStore";
+import { useModalStore } from "@/store/useModalStore";
+import ModalFilter from "@/components/nModal/ModalFilter.vue";
 // import Pagination from "@/components/ui/list/Pagination.vue";
 // import Alert from "@/components/ui/other/Alert.vue";
 import { onMounted } from "vue";
@@ -69,7 +72,8 @@ import { onMounted } from "vue";
 // const leadIdToDelete = ref<number | null>(null);
 // const showAlert = ref<any>(false);
 
-const { getLeads, updatePage } = useLeadsStore();
+const { openModal } = useModalStore();
+const { getLeads, updatePage, getCategories } = useLeadsStore();
 const { leads, page, totalPages } = useLeadsStoreRefs();
 
 const goToPage = (newPage: number) => {
@@ -94,6 +98,7 @@ const goToPage = (newPage: number) => {
 
 onMounted(() => {
   getLeads();
+  getCategories();
 });
 </script>
 
