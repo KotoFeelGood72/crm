@@ -47,19 +47,25 @@ export const useLeadsStore = defineStore("leads", {
         const params: Record<string, any> = {
           page: this.page,
           per_page: this.perPage,
-          ...(this.selectedCategory && { theme_bussines: this.selectedCategory }),
+          ...(this.selectedCategory && {
+            theme_bussines: this.selectedCategory,
+          }),
           ...(this.selectedStatus && { statuses: this.selectedStatus }),
           ...(this.selectedCity && { city: this.selectedCity }),
           ...(this.hasWebsite && { has_website: this.hasWebsite }),
           ...(this.searchQuery && { search: this.searchQuery }),
           ...(this.searchPhone && { phone: this.searchPhone }),
-          ...(this.selectedDate ? { callback_date: this.formatDate(this.selectedDate) } : {})
+          ...(this.selectedDate
+            ? { callback_date: this.formatDate(this.selectedDate) }
+            : {}),
         };
-    
+
         const response = await api.get("/wp-json/wp/v2/client_new", { params });
-    
+
         this.leads = response.data;
-        this.totalPages = Math.ceil(response.headers["x-wp-total"] / this.perPage);
+        this.totalPages = Math.ceil(
+          response.headers["x-wp-total"] / this.perPage
+        );
       } catch (error) {
         console.error("Ошибка при получении лидов:", error);
       }
@@ -121,7 +127,6 @@ export const useLeadsStore = defineStore("leads", {
         throw error;
       }
     },
-
 
     async createClient(newClient: any) {
       try {
@@ -196,32 +201,32 @@ export const useLeadsStore = defineStore("leads", {
       try {
         const index = this.leads.findIndex((item) => item.id === id);
         if (index === -1) throw new Error(`Lead #${id} not found`);
-    
+
         const current = this.leads[index];
         const changes: Record<string, any> = {};
-    
+
         // Обычные поля, если они есть (например, email)
         if (fields.email && fields.email !== current.email) {
           changes.email = fields.email;
         }
-    
+
         // ACF-поля
         Object.entries(fields).forEach(([key, value]) => {
           if (key === "email") return; // уже обработали
           const currentValue = current.acf?.[key];
-    
+
           if (JSON.stringify(value) !== JSON.stringify(currentValue)) {
             changes[key] = value;
           }
         });
-    
+
         if (!Object.keys(changes).length) {
           console.log("🟡 Нет изменений для обновления");
           return;
         }
-    
+
         await api.post(`/wp-json/custom/v1/update-client/${id}`, changes);
-    
+
         // Обновляем локально
         this.leads[index] = {
           ...current,
@@ -231,11 +236,11 @@ export const useLeadsStore = defineStore("leads", {
             ...changes,
           },
         };
-    
+
         if (this.lead?.id === id) {
           this.lead = this.leads[index];
         }
-    
+
         console.log("✅ Лид обновлён:", changes);
       } catch (error) {
         console.error(`❌ Ошибка при обновлении лида #${id}:`, error);

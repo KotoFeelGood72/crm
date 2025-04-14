@@ -19,7 +19,9 @@
           </n-card>
         </div>
         <n-row class="flex items-center gap-2">
-          <n-button tertiary type="success" class="flex-grow">Фильтр</n-button>
+          <n-button tertiary type="success" class="flex-grow" @click="applyFilter"
+            >Фильтр</n-button
+          >
           <n-button tertiary type="error" class="flex-grow" @click="closeModal"
             >Закрыть</n-button
           >
@@ -122,14 +124,19 @@
 
 <script setup lang="ts">
 import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
-import { useLeadsStoreRefs } from "@/store/useLeadsStore";
+import { useLeadsStoreRefs, useLeadsStore } from "@/store/useLeadsStore";
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { mapToSelectOptions } from "@/utils/mapToSelectOptions";
 const { modals } = useModalStoreRefs();
 const { closeAllModals } = useModalStore();
 
-// const { getLeadById } = useLeadsStore();
+const { getLeads } = useLeadsStore();
+
+const applyFilter = () => {
+  getLeads();
+  closeModal();
+};
 const {
   categories,
   selectedCategory,
@@ -140,11 +147,12 @@ const {
 } = useLeadsStoreRefs();
 const route = useRoute();
 const router = useRouter();
-const lead = ref<any>(null);
+// const lead = ref<any>(null);
 
 const closeModal = () => {
+  console.log("Good");
   closeAllModals(router, route);
-  lead.value = null;
+  //   lead.value = null;
 };
 
 const isCategories = computed(() => {
