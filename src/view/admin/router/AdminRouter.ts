@@ -2,6 +2,24 @@ import { createMemoryHistory, createRouter } from "vue-router";
 
 const routes = [
   {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: () => import("../dashboard/DashboardPage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/analytics",
+    name: "Статистика",
+    component: () => import("../analytics/AnalyticsPage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/leads/",
     name: "leads",
     component: () => import("../leads/LeadsPage.vue"),

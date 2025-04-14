@@ -32,16 +32,16 @@ const routes = [
       layout: "Empty",
     },
   },
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    component: () => import("../view/Dashboard.vue"),
-    meta: {
-      layout: "Admin",
-      // requiresAuth: true,
-      title: "Dashboard",
-    },
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Dashboard",
+  //   component: () => import("../view/Dashboard.vue"),
+  //   meta: {
+  //     layout: "Admin",
+  //     // requiresAuth: true,
+  //     title: "Dashboard",
+  //   },
+  // },
   // {
   //   path: "/deals",
   //   name: "Deals",

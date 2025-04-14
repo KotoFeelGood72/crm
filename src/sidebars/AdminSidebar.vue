@@ -44,11 +44,11 @@ const expandIcon = () =>
 
 const collapsed = ref<any>(false);
 const nav = ref<MenuOption[]>([
-  {
-    label: "Dashboard",
-    key: "/dashboard",
-    icon: () => h(Icon, { icon: "ion:home" }),
-  },
+  // {
+  //   label: "Dashboard",
+  //   key: "/dashboard",
+  //   icon: () => h(Icon, { icon: "ion:home" }),
+  // },
   {
     label: "Лиды",
     key: "/leads",
@@ -59,26 +59,26 @@ const nav = ref<MenuOption[]>([
     key: "/deals",
     icon: () => h(Icon, { icon: "mdi:deal" }),
   },
-  {
-    label: "Статистика",
-    key: "/analytics",
-    icon: () => h(Icon, { icon: "mdi:analytics" }),
-  },
-  {
-    label: "Сотрудники",
-    key: "/works",
-    icon: () => h(Icon, { icon: "raphael:people" }),
-  },
+  // {
+  //   label: "Статистика",
+  //   key: "/analytics",
+  //   icon: () => h(Icon, { icon: "mdi:analytics" }),
+  // },
+  // {
+  //   label: "Сотрудники",
+  //   key: "/works",
+  //   icon: () => h(Icon, { icon: "raphael:people" }),
+  // },
   {
     label: "Календарь",
     key: "/managment",
     icon: () => h(Icon, { icon: "clarity:date-line" }),
   },
-  {
-    label: "Настройки",
-    key: "/settings",
-    icon: () => h(Icon, { icon: "material-symbols:settings-rounded" }),
-  },
+  // {
+  //   label: "Настройки",
+  //   key: "/settings",
+  //   icon: () => h(Icon, { icon: "material-symbols:settings-rounded" }),
+  // },
   {
     label: "История",
     key: "/history",
