@@ -69,7 +69,7 @@
                 :on-create="() => ({ item: '' })"
               >
                 <template #default="{ value }">
-                  <n-input v-model:value="value.item" placeholder="Телефон" />
+                  <n-input v-model:value="value.item" placeholder="Email" />
                 </template>
               </n-dynamic-input>
             </n-row>
@@ -83,18 +83,34 @@
                 :on-create="() => ({ item: '' })"
               >
                 <template #default="{ value }">
-                  <n-input v-model:value="value.item" placeholder="Телефон" />
+                  <n-input v-model:value="value.item" placeholder="Website" />
                 </template>
               </n-dynamic-input>
             </n-row>
           </n-card>
           <n-row class="flex items-center gap-2">
-            <n-button tertiary type="primary" class="flex-grow"> Сохранить </n-button>
-            <n-button tertiary type="error" class="flex-grow" @click="closeModal">
+            <n-button
+              tertiary
+              type="primary"
+              class="flex-grow"
+              @click="saveLead"
+              :loading="isSaving"
+            >
+              Сохранить
+            </n-button>
+
+            <n-button
+              tertiary
+              type="error"
+              class="flex-grow"
+              @click="closeModal"
+              :disabled="isSaving"
+            >
               Закрыть
             </n-button>
           </n-row>
         </div>
+
         <n-space v-else class="absolute top-[50%] left-[50%] -translate-[-50%, -50%]">
           <n-spin size="large" />
         </n-space>
@@ -108,13 +124,17 @@ import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
 import { useLeadsStore } from "@/store/useLeadsStore";
 import { useRoute, useRouter } from "vue-router";
 import { ref, watchEffect } from "vue";
+
 const { modals } = useModalStoreRefs();
 const { closeAllModals } = useModalStore();
+const { getLeadById, updateLead } = useLeadsStore();
 
-const { getLeadById } = useLeadsStore();
 const route = useRoute();
 const router = useRouter();
 const lead = ref<any>(null);
+
+// Добавляем реактивную переменную для состояния загрузки
+const isSaving = ref(false);
 
 const closeModal = () => {
   closeAllModals(router, route);
@@ -129,32 +149,50 @@ const ensureArray = (value: any) =>
       )
     : [];
 
+/**
+ * Автоматически получаем lead по ID, когда открывается модал
+ */
 watchEffect(async () => {
   const leadId = route.query.lead;
   if (leadId && modals.value.nLead) {
     const result = await getLeadById(leadId);
-
-    // Гарантируем, что все списки массивы
-    result.acf.phone_list = ensureArray(result.acf.phone_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.whatsapps_list = ensureArray(result.acf.whatsapps_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.telegrams_list = ensureArray(result.acf.telegrams_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.emails_list = ensureArray(result.acf.emails_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.websites_list = ensureArray(result.acf.websites_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
+    result.acf.phone_list = ensureArray(result.acf.phone_list);
+    result.acf.whatsapps_list = ensureArray(result.acf.whatsapps_list);
+    result.acf.telegrams_list = ensureArray(result.acf.telegrams_list);
+    result.acf.emails_list = ensureArray(result.acf.emails_list);
+    result.acf.websites_list = ensureArray(result.acf.websites_list);
 
     lead.value = result;
     console.log("lead получен:", lead.value);
   }
 });
+
+/**
+ * Сохранение изменений по текущему lead
+ */
+const saveLead = async () => {
+  try {
+    if (!lead.value?.id) return;
+
+    // Ставим индикатор загрузки
+    isSaving.value = true;
+
+    // Собираем поля для обновления
+    await updateLead(lead.value.id, {
+      // Предположим, что email лежит прямо на lead (если нет - уберите эту строку)
+      email: lead.value.email,
+      ...lead.value.acf,
+    });
+
+    // Успешно обновили - при необходимости закрываем модал
+    // closeModal();
+  } catch (error) {
+    console.error("Ошибка при сохранении лида:", error);
+  } finally {
+    // Сбрасываем индикатор
+    isSaving.value = false;
+  }
+};
 </script>
 
 <style scoped></style>
