@@ -154,7 +154,7 @@
 import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
 import { useDealStore } from "@/store/useDealStore";
 import { useRoute, useRouter } from "vue-router";
-import { ref, render, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
 import { h } from "vue";
 // @ts-ignore
