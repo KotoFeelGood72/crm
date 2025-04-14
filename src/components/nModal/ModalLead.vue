@@ -88,11 +88,14 @@
               </n-dynamic-input>
             </n-row>
           </n-card>
+          <n-row class="flex items-center gap-2">
+            <n-button tertiary type="primary" class="flex-grow"> Сохранить </n-button>
+            <n-button tertiary type="error" class="flex-grow" @click="closeModal">
+              Закрыть
+            </n-button>
+          </n-row>
         </div>
-        <n-space
-          v-else
-          class="absolute top-[50%] left-[50%] -translate-[-50%, -50%]"
-        >
+        <n-space v-else class="absolute top-[50%] left-[50%] -translate-[-50%, -50%]">
           <n-spin size="large" />
         </n-space>
       </n-scrollbar>
@@ -122,10 +125,7 @@ const ensureArray = (value: any) =>
   Array.isArray(value)
     ? value.filter(
         (e) =>
-          e &&
-          typeof e === "object" &&
-          typeof e.item === "string" &&
-          e.item.trim() !== ""
+          e && typeof e === "object" && typeof e.item === "string" && e.item.trim() !== ""
       )
     : [];
 

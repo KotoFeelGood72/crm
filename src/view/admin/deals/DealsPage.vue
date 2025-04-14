@@ -19,10 +19,7 @@
         </n-gi>
       </n-grid>
       <template #title>
-        <a
-          href="https://anyway.fm/"
-          style="text-decoration: none; color: inherit"
-        >
+        <a href="https://anyway.fm/" style="text-decoration: none; color: inherit">
           Сделки
         </a>
       </template>
@@ -48,16 +45,14 @@
       <template #footer> As of April 3, 2021 </template>
     </n-page-header>
 
-    <div class="container mx-auto rounded-lg overflow-hidden">
+    <div class="overflow-hidden">
       <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-2">
         <div v-for="status in statuses" :key="status.id">
           <KanbanCard
             class="min-w-64 max-w-64"
             :name="status.name"
             :count="groupedDeals[status.name]?.length || 0"
-            @end="
-              (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
-            "
+            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">
@@ -76,16 +71,16 @@ import { onMounted, ref } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
-import { useModalStore } from "@/store/useModalStore";
-import { useRouter } from "vue-router";
+// import { useModalStore } from "@/store/useModalStore";
+// import { useRouter } from "vue-router";
 // @ts-ignore
 import draggable from "vuedraggable";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const groupedDeals = ref<Record<string, any[]>>({});
 
-const { openModal } = useModalStore();
-const router = useRouter();
+// const { openModal } = useModalStore();
+// const router = useRouter();
 const { updateDeal, getDeals } = useDealStore();
 const { deals, statuses } = useDealStoreRefs();
 
