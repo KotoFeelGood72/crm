@@ -102,7 +102,7 @@
                 <n-infinite-scroll style="max-height: 60dvh" :distance="10">
                   <n-steps vertical>
                     <n-step
-                      v-for="(item, i) in deal.acf.history"
+                      v-for="item in deal.acf.history"
                       :title="item.time"
                       :description="item.txt"
                     />
@@ -169,7 +169,7 @@ const router = useRouter();
 const deal = ref<any>(null);
 const newComment = ref("");
 const newTaskTitle = ref("");
-const newTaskDateTime = ref(null);
+const newTaskDateTime = ref<any>(null);
 import Icons from "../ui/Icons.vue";
 
 const columns = [
@@ -310,7 +310,7 @@ const addHistory = (text: string) => {
   deal.value.acf.history.push({ txt: text, time });
 };
 
-const addTask = async (id: any) => {
+const addTask = async () => {
   if (!newTaskTitle.value || !newTaskDateTime.value) return;
 
   // Раскладываем datetime формата 'YYYY-MM-DD HH:mm:ss', если необходимо
