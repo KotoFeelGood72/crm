@@ -3,15 +3,16 @@
     id="owner-header"
     class="flex items-center justify-between w-full z-40 py-4 sticky top-0"
   >
-    <div
-      class="flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300 w-full"
-    >
-      <div id="logo" class="text-lg font-bold dark:text-white max-h-[64px] px-2">
+    <div class="flex items-center justify-between h-full px-6 mx-auto w-full">
+      <div
+        id="logo"
+        class="text-lg font-bold dark:text-white max-h-[64px] px-2"
+      >
         Gleede CRM
       </div>
       <div id="search"></div>
-      <div id="owner-action" class="flex items-center gap-5 text-purple-600">
-        <IconBtn icon="f7:bell-fill" />
+      <div id="owner-action" class="flex items-center gap-5">
+        <IconBtn icon="f7:bell-fill" :iconSize="20" />
         <IconBtn
           @click="toggleTheme"
           :icon="isDark ? 'solar:sun-bold' : 'solar:moon-bold'"
