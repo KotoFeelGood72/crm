@@ -56,13 +56,17 @@
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">
-              <CardDeal :card="card" class="cursor-pointer" />
-              <!-- @click="openModal('deal', '', { deal: card.id }, router)" -->
+              <CardDeal
+                :card="card"
+                class="cursor-pointer"
+                @click="openModal('nDeal', '', { deal: card.id }, router)"
+              ></CardDeal>
             </template>
           </KanbanCard>
         </div>
       </div>
     </div>
+    <ModalDeal />
   </div>
 </template>
 
@@ -71,16 +75,17 @@ import { onMounted, ref } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
-// import { useModalStore } from "@/store/useModalStore";
-// import { useRouter } from "vue-router";
+import ModalDeal from "@/components/nModal/ModalDeal.vue";
+import { useModalStore } from "@/store/useModalStore";
+import { useRouter } from "vue-router";
 // @ts-ignore
 import draggable from "vuedraggable";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const groupedDeals = ref<Record<string, any[]>>({});
 
-// const { openModal } = useModalStore();
-// const router = useRouter();
+const { openModal } = useModalStore();
+const router = useRouter();
 const { updateDeal, getDeals } = useDealStore();
 const { deals, statuses } = useDealStoreRefs();
 

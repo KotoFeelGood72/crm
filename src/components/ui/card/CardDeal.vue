@@ -49,6 +49,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useModalStore } from "@/store/useModalStore";
 
 defineProps<{
   card?: any;
@@ -64,4 +65,6 @@ const options = ref<any>([
     key: "delete",
   },
 ]);
+
+const { openModal } = useModalStore();
 </script>
