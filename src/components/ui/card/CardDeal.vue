@@ -34,28 +34,13 @@
     </div>
     <div class="text-xs mb-4">{{ card.acf.name }}</div>
     <div class="flex items-center gap-1 mt-1 flex-wrap">
-      <n-tag
-        :bordered="false"
-        type="success"
-        size="small"
-        style="font-size: 10px"
-      >
+      <n-tag :bordered="false" type="success" size="small" style="font-size: 10px">
         Контекстная реклама
       </n-tag>
-      <n-tag
-        :bordered="false"
-        type="success"
-        size="small"
-        style="font-size: 10px"
-      >
+      <n-tag :bordered="false" type="success" size="small" style="font-size: 10px">
         150 000
       </n-tag>
-      <n-tag
-        :bordered="false"
-        type="success"
-        size="small"
-        style="font-size: 10px"
-      >
+      <n-tag :bordered="false" type="success" size="small" style="font-size: 10px">
         +7 (961) 531-13-86 - Виктор
       </n-tag>
     </div>
@@ -65,7 +50,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const props = defineProps<{
+defineProps<{
   card?: any;
 }>();
 

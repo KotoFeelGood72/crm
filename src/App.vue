@@ -3,6 +3,7 @@
     <n-global-style />
     <n-message-provider>
       <component :is="layoutComponent">
+        <!-- <p>GOOOOOOOOOOOOOOOD {{ theme }}</p> -->
         <router-view />
         <Modal :positionX="modalPositionX" />
         <Transition name="fade-bg">

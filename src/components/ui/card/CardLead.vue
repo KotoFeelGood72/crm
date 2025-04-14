@@ -14,15 +14,11 @@
         </li>
         <li class="flex items-center gap-3">
           <p>What`s App:</p>
-          <span v-for="item in lead.acf.whatsapps_list" :key="item">{{
-            item.item
-          }}</span>
+          <span v-for="item in lead.acf.whatsapps_list" :key="item">{{ item.item }}</span>
         </li>
         <li class="flex items-center gap-3">
           <p>Telegram:</p>
-          <span v-for="item in lead.acf.telegrams_list" :key="item">{{
-            item.item
-          }}</span>
+          <span v-for="item in lead.acf.telegrams_list" :key="item">{{ item.item }}</span>
         </li>
       </ul>
       <div class="flex items-center justify-between">
@@ -60,10 +56,7 @@
               <n-button ghost @click="showModalComment = true">
                 <n-tooltip trigger="hover">
                   <template #trigger>
-                    <Icons
-                      icon="material-symbols-light:history"
-                      color="inherit"
-                    />
+                    <Icons icon="material-symbols-light:history" color="inherit" />
                   </template>
                   Просмотреть комментарии
                 </n-tooltip>
@@ -94,11 +87,7 @@
                 </n-tooltip>
               </n-button>
             </n-button-group>
-            <n-drawer
-              v-model:show="showModalComment"
-              :width="502"
-              :placement="'right'"
-            >
+            <n-drawer v-model:show="showModalComment" :width="502" :placement="'right'">
               <n-drawer-content title="Комментарии">
                 <!-- @load="handleLoad" -->
                 <n-infinite-scroll :distance="10">
@@ -161,18 +150,18 @@ import { useLeadsStore } from "@/store/useLeadsStore";
 import { useRouter } from "vue-router";
 import { defineEmits, ref } from "vue";
 import { useLeadComment } from "@/composables/useLeadComment";
-import { useUsersStoreRefs } from "@/store/useUserStore";
+// import { useUsersStoreRefs } from "@/store/useUserStore";
 
-const { users } = useUsersStoreRefs();
-const active = ref<any>(false);
+// const { users } = useUsersStoreRefs();
+// const active = ref<any>(false);
 const showModal = ref<any>(false);
 const showModalComment = ref<any>(false);
-const comment = ref<any>("");
+// const comment = ref<any>("");
 const { sendLeadComment, isSending, newComment } = useLeadComment();
-const userId = users.value.userInfo?.id;
-const activate = () => {
-  active.value = true;
-};
+// const userId = users.value.userInfo?.id;
+// const activate = () => {
+//   active.value = true;
+// };
 const props = defineProps<{
   lead: any;
 }>();
@@ -204,10 +193,7 @@ const { openModal } = useModalStore();
 const applyComment = async () => {
   if (!props.lead?.id) return;
 
-  const success = await sendLeadComment(
-    props.lead.id,
-    props.lead.acf?.history || []
-  );
+  const success = await sendLeadComment(props.lead.id, props.lead.acf?.history || []);
 
   if (success) {
     newComment.value = "";

@@ -105,7 +105,7 @@
 
 <script setup lang="ts">
 import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
-import { useLeadsStore, useLeadsStoreRefs } from "@/store/useLeadsStore";
+import { useLeadsStore } from "@/store/useLeadsStore";
 import { useRoute, useRouter } from "vue-router";
 import { ref, watchEffect } from "vue";
 const { modals } = useModalStoreRefs();

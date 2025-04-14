@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex items-center justify-center">
-    <div
+    <!-- <div
       class="w-full px-6 py-10 overflow-hidden light:bg-white rounded-t-lg dark:bg-gray-800 sm:rounded-lg sm:max-w-xl"
       role="dialog"
     >
@@ -82,65 +82,65 @@
           />
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import { useModalStore } from "@/store/useModalStore";
-import btn from "@/components/ui/buttons/btn.vue";
-import { statusList } from "@/api/data";
-import { useRouter, useRoute } from "vue-router";
-import { ref, watchEffect } from "vue";
-import { useLeadsStore } from "@/store/useLeadsStore";
-import { Skeletor } from "vue-skeletor";
-import IconBtn from "@/components/ui/buttons/IconBtn.vue";
+// import { useModalStore } from "@/store/useModalStore";
+// import btn from "@/components/ui/buttons/btn.vue";
+// import { statusList } from "@/api/data";
+// import { useRouter, useRoute } from "vue-router";
+// import { ref, watchEffect } from "vue";
+// import { useLeadsStore } from "@/store/useLeadsStore";
+// import { Skeletor } from "vue-skeletor";
+// import IconBtn from "@/components/ui/buttons/IconBtn.vue";
 
-const { getLeadById, updateLead } = useLeadsStore();
-const lead = ref<any>(null);
-const selectedStatus = ref<string | null>(null);
-const isLoading = ref<boolean>(true);
-const route = useRoute();
-const router = useRouter();
+// const { getLeadById, updateLead } = useLeadsStore();
+// const lead = ref<any>(null);
+// const selectedStatus = ref<string | null>(null);
+// const isLoading = ref<boolean>(true);
+// const route = useRoute();
+// const router = useRouter();
 
-const { closeAllModals } = useModalStore();
+// const { closeAllModals } = useModalStore();
 
-const applyStatus = async () => {
-  if (selectedStatus.value && lead.value?.id) {
-    try {
-      await updateLead(lead.value.id, { status: selectedStatus.value });
-      console.log("✅ Статус обновлён:", selectedStatus.value);
-    } catch (error) {
-      console.error("❌ Ошибка при обновлении статуса:", error);
-    }
+// const applyStatus = async () => {
+//   if (selectedStatus.value && lead.value?.id) {
+//     try {
+//       await updateLead(lead.value.id, { status: selectedStatus.value });
+//       console.log("✅ Статус обновлён:", selectedStatus.value);
+//     } catch (error) {
+//       console.error("❌ Ошибка при обновлении статуса:", error);
+//     }
 
-    closeAllModals(router, route);
-  }
-};
-watchEffect(async () => {
-  const leadIdRaw = route.query.status;
+//     closeAllModals(router, route);
+//   }
+// };
+// watchEffect(async () => {
+//   const leadIdRaw = route.query.status;
 
-  if (!leadIdRaw || Array.isArray(leadIdRaw)) {
-    console.warn("Некорректный leadId:", leadIdRaw);
-    return;
-  }
+//   if (!leadIdRaw || Array.isArray(leadIdRaw)) {
+//     console.warn("Некорректный leadId:", leadIdRaw);
+//     return;
+//   }
 
-  const leadId = parseInt(leadIdRaw, 10);
-  if (isNaN(leadId)) return;
+//   const leadId = parseInt(leadIdRaw, 10);
+//   if (isNaN(leadId)) return;
 
-  try {
-    const leadData = await getLeadById(leadId);
-    lead.value = leadData;
+//   try {
+//     const leadData = await getLeadById(leadId);
+//     lead.value = leadData;
 
-    if (leadData?.acf?.status) {
-      selectedStatus.value = leadData.acf.status;
-    }
-  } catch (error) {
-    console.error(`❌ Ошибка при получении лида #${leadId}:`, error);
-  } finally {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 100);
-  }
-});
+//     if (leadData?.acf?.status) {
+//       selectedStatus.value = leadData.acf.status;
+//     }
+//   } catch (error) {
+//     console.error(`❌ Ошибка при получении лида #${leadId}:`, error);
+//   } finally {
+//     setTimeout(() => {
+//       isLoading.value = false;
+//     }, 100);
+//   }
+// });
 </script>

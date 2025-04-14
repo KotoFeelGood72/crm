@@ -6,10 +6,7 @@
     <div
       class="flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300 w-full"
     >
-      <div
-        id="logo"
-        class="text-lg font-bold dark:text-white max-h-[64px] px-2"
-      >
+      <div id="logo" class="text-lg font-bold dark:text-white max-h-[64px] px-2">
         Gleede CRM
       </div>
       <div id="search"></div>
@@ -32,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import IconBtn from "../buttons/IconBtn.vue";
 import avatar from "../user/avatar.vue";
 
