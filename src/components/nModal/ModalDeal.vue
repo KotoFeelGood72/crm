@@ -18,13 +18,12 @@
                   />
                 </n-card>
                 <n-card size="small" title="Тип услуги">
+                  {{ deal.acf.services }}
                   <n-select
                     v-model:value="deal.acf.services"
                     multiple
                     placeholder="Выберите сервисы"
-                    :options="settings.global.services"
-                    label-field="label"
-                    value-field="key"
+                    :options="isServices"
                     filterable
                   />
                 </n-card>
@@ -253,6 +252,12 @@ const newComment = ref("");
 const newTaskTitle = ref("");
 const newTaskDateTime = ref<any>(null);
 
+const isServices = computed(() => {
+  return settings.value.global.services.map((service: any) => ({
+    label: service.name,
+    value: service,
+  }));
+});
 const isStatus = computed(() => {
   return mapToSelectOptions(statuses.value, "name", "id", true);
 });
@@ -382,7 +387,9 @@ watchEffect(async () => {
     deal.value.acf.phone_list = ensureArray(deal.value.acf.phone_list).filter(
       (e) => e?.item?.trim?.() !== ""
     );
-
+    deal.value.acf.services = ensureArray(deal.value.acf.services).filter(
+      (e) => e?.item?.trim?.() !== ""
+    );
     deal.value.acf.whatsapps_list = ensureArray(
       deal.value.acf.whatsapps_list
     ).filter((e) => e?.item?.trim?.() !== "");
