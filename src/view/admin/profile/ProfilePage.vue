@@ -9,16 +9,23 @@
             <!-- Блок аватара и загрузки -->
             <n-card :bordered="false">
               <div>
-                <!-- Здесь можно вставить изображение аватара -->
-                <img src="https://via.placeholder.com/150" alt="Avatar" />
+                <!-- Используем реактивное значение avatarUrl -->
+                <img
+                  :src="avatarUrl"
+                  alt="Avatar"
+                  style="width: 150px; height: 150px; object-fit: cover"
+                />
               </div>
               <div>
                 <n-row>
                   <n-upload
-                    action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+                    action="#"
+                    :show-file-list="false"
+                    :change="handleUploadSuccess"
                   >
                     <n-button>Upload File</n-button>
                   </n-upload>
+
                   <n-button tertiary type="error" @click="clearAvatar">
                     Очистить
                   </n-button>
@@ -100,11 +107,7 @@
       <!-- Вкладка смены пароля -->
       <n-tab-pane name="Безопасность" tab="Безопасность">
         <n-card title="Сменить пароль">
-          <n-form
-            ref="passwordFormRef"
-            :model="passwordForm"
-            :rules="passwordRules"
-          >
+          <n-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules">
             <n-form-item label="Новый пароль" path="newPassword">
               <n-input
                 type="password"
@@ -132,14 +135,14 @@
         </n-card>
       </n-tab-pane>
 
-      <!-- Дополнительная вкладка (например, "Jay Chou") -->
+      <!-- Дополнительная вкладка (например, "Уведомления") -->
       <n-tab-pane name="Уведомления" tab="Уведомления"> Qilixiang </n-tab-pane>
     </n-tabs>
   </n-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch, onMounted } from "vue";
 import {
   NForm,
   NFormItem,
@@ -151,9 +154,16 @@ import {
   NUpload,
   NAutoComplete,
 } from "naive-ui";
+import { useProfileStore, useProfileStoreRefs } from "@/store/useProfileStore";
 
 const formRef = ref(null);
 const passwordFormRef = ref(null);
+
+const profileStore = useProfileStore();
+const { profile } = useProfileStoreRefs();
+
+// Задаем дефолтное изображение аватара
+const avatarUrl = ref("https://via.placeholder.com/150");
 
 const formValue = ref({
   firstName: "",
@@ -163,6 +173,9 @@ const formValue = ref({
   address: "",
   timezone: "",
 });
+
+// Если ACF поля профиля нужны, можно их сохранить в formValue.acf
+// Например, если у вас есть поле "phone", "company", итд.
 
 const rules = ref({
   firstName: {
@@ -209,7 +222,7 @@ const timezoneOptions = ref([
   { label: "UTC+3", value: "UTC+3" },
 ]);
 
-// Для смены пароля:
+// Форма смены пароля:
 const passwordForm = ref({
   newPassword: "",
   confirmPassword: "",
@@ -241,8 +254,15 @@ function handleAccountSave() {
     if (errors) {
       console.error("Валидация не прошла:", errors);
     } else {
-      // Отправьте данные formValue на сервер
-      console.log("Данные аккаунта сохранены:", formValue.value);
+      // Вызываем метод обновления профиля из ProfileStore
+      profileStore
+        .updateProfile(formValue.value)
+        .then(() => {
+          console.log("Данные аккаунта сохранены:", formValue.value);
+        })
+        .catch((err) => {
+          console.error("Ошибка сохранения профиля:", err);
+        });
     }
   });
 }
@@ -256,14 +276,20 @@ function handlePasswordChange() {
     if (errors) {
       console.error("Валидация пароля не прошла:", errors);
     } else {
-      // Отправьте данные passwordForm на сервер
-      console.log("Пароль изменен:", passwordForm.value.newPassword);
+      profileStore
+        .updateProfile({ password: passwordForm.value.newPassword })
+        .then(() => {
+          console.log("Пароль изменен:", passwordForm.value.newPassword);
+        })
+        .catch((err) => {
+          console.error("Ошибка изменения пароля:", err);
+        });
     }
   });
 }
 
 function clearAvatar() {
-  // Реализуйте очистку аватара, если это необходимо
+  avatarUrl.value = "https://via.placeholder.com/150";
   console.log("Аватар очищен");
 }
 
@@ -272,9 +298,38 @@ function deactivateAccount() {
     console.warn("Пользователь не согласился на деактивацию");
     return;
   }
-  // Отправьте запрос на деактивацию аккаунта
+  // Здесь можно вызвать метод деактивации профиля, если он реализован
   console.log("Аккаунт деактивирован");
 }
+
+// Допустим, при успешной загрузке файла сервер возвращает URL изображения в поле res.url
+function handleUploadSuccess(res: any, file: any) {
+  if (res?.url) {
+    avatarUrl.value = res.url;
+    
+  } else if (file.url) {
+    avatarUrl.value = file.url;
+  } else {
+    console.warn("Не удалось определить URL аватара");
+  }
+}
+
+// При монтировании получаем профиль
+onMounted(() => {
+  profileStore.getProfile().then(() => {
+    if (profile.value) {
+      // Заполняем поля формы данными профиля
+      formValue.value.firstName = profile.value.first_name || "";
+      formValue.value.lastName = profile.value.last_name || "";
+      formValue.value.email = profile.value.user_email || "";
+      formValue.value.position = profile.value.acf?.position || "";
+      formValue.value.address = profile.value.acf?.address || "";
+      formValue.value.timezone = profile.value.acf?.timezone || "";
+      // Если аватар передается в ACF, например, profile.value.acf.avatar
+      avatarUrl.value = profile.value.acf?.avatar || avatarUrl.value;
+    }
+  });
+});
 </script>
 
 <style scoped>
