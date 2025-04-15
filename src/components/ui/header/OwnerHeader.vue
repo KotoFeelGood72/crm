@@ -19,7 +19,11 @@
           id="change-theme"
           :class="isDark ? 'text-white' : 'text-purple-600'"
         />
-        <n-dropdown :options="userMenu" trigger="click">
+        <n-dropdown
+          :options="userMenu"
+          trigger="click"
+          @select="handleUserMenu"
+        >
           <avatar
             img="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
           />
@@ -33,10 +37,13 @@
 import { ref } from "vue";
 import IconBtn from "../buttons/IconBtn.vue";
 import avatar from "../user/avatar.vue";
-
+import { useUsersStore } from "@/store/useUserStore";
+import { useRouter } from "vue-router";
 import { useTheme } from "@/composables/useTheme";
 
 const { isDark, toggleTheme } = useTheme();
+const router = useRouter();
+const { users } = useUsersStore();
 
 const userMenu = ref<any>([
   {
@@ -60,4 +67,17 @@ const userMenu = ref<any>([
     key: "settings",
   },
 ]);
+
+function handleUserMenu(key: string) {
+  switch (key) {
+    case "profile":
+      // Переходим на /profile/123 (или любой другой роут)
+      router.push(`/profile/${users.userInfo.id}`);
+      break;
+    case "history":
+      router.push(`/history`);
+      break;
+    // и т.д.
+  }
+}
 </script>

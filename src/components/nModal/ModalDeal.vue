@@ -10,95 +10,153 @@
         <div v-if="deal && deal.acf" class="flex flex-col gap-2">
           <n-tabs type="line" animated>
             <n-tab-pane name="Сделка" tab="Сделка">
-              <n-card title="Компания" size="small">
-                <n-row class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
+                <n-card size="small" title="Статус">
+                  <n-select
+                    v-model:value="deal.acf.status"
+                    :options="isStatus"
+                  />
+                </n-card>
+                <n-card size="small" title="Тип услуги">
+                  <n-select
+                    v-model:value="deal.acf.services"
+                    multiple
+                    placeholder="Выберите сервисы"
+                    :options="settings.global.services"
+                    label-field="label"
+                    value-field="key"
+                    filterable
+                  />
+                </n-card>
+                <n-card title="Компания" size="small">
                   <n-row class="flex flex-col gap-2">
-                    <n-rate readonly :default-value="3" />
-                    <p>{{ deal.acf.reviews_count }}</p>
+                    <n-row class="flex flex-col gap-2">
+                      <n-rate readonly :default-value="4.5" allow-half />
+                      <p>{{ deal.acf.reviews_count }}</p>
+                    </n-row>
+                    <n-input
+                      v-model:value="deal.acf.city"
+                      placeholder="Город"
+                    />
+                    <n-input
+                      v-model:value="deal.acf.spring"
+                      placeholder="Источник"
+                    />
+                    <n-input
+                      v-model:value="deal.acf.vk"
+                      placeholder="ВКонтакте"
+                    />
+                    <n-input
+                      v-model:value="deal.acf.youtube"
+                      placeholder="Youtube"
+                    />
                   </n-row>
-                  <n-input v-model:value="deal.acf.city" placeholder="Город" />
-                  <n-input v-model:value="deal.acf.spring" placeholder="Источник" />
-                  <n-input v-model:value="deal.acf.vk" placeholder="ВКонтакте" />
-                  <n-input v-model:value="deal.acf.youtube" placeholder="Youtube" />
-                </n-row>
-              </n-card>
-              <n-card title="Номера телефонов" size="small">
-                <n-dynamic-input
-                  v-model:value="deal.acf.phone_list"
-                  :max="10"
-                  item-style="margin-bottom: 6px"
-                  :on-create="() => ({ item: '' })"
-                >
-                  <template #default="{ value }">
-                    <n-input v-model:value="value.item" placeholder="Телефон" />
-                  </template>
-                </n-dynamic-input>
-              </n-card>
-              <n-card title="What`s App" size="small">
-                <n-row>
+                </n-card>
+                <n-card title="Номера телефонов" size="small">
                   <n-dynamic-input
-                    v-model:value="deal.acf.whatsapps_list"
+                    v-model:value="deal.acf.phone_list"
                     :max="10"
                     item-style="margin-bottom: 6px"
                     :on-create="() => ({ item: '' })"
                   >
                     <template #default="{ value }">
-                      <n-input v-model:value="value.item" placeholder="Телефон" />
+                      <n-input
+                        v-model:value="value.item"
+                        placeholder="Телефон"
+                      />
                     </template>
                   </n-dynamic-input>
-                </n-row>
-              </n-card>
-              <n-card title="Telegram" size="small">
-                <n-row>
-                  <n-dynamic-input
-                    v-model:value="deal.acf.telegrams_list"
-                    :max="10"
-                    item-style="margin-bottom: 6px"
-                    :on-create="() => ({ item: '' })"
+                </n-card>
+                <n-card title="What`s App" size="small">
+                  <n-row>
+                    <n-dynamic-input
+                      v-model:value="deal.acf.whatsapps_list"
+                      :max="10"
+                      item-style="margin-bottom: 6px"
+                      :on-create="() => ({ item: '' })"
+                    >
+                      <template #default="{ value }">
+                        <n-input
+                          v-model:value="value.item"
+                          placeholder="Телефон"
+                        />
+                      </template>
+                    </n-dynamic-input>
+                  </n-row>
+                </n-card>
+                <n-card title="Telegram" size="small">
+                  <n-row>
+                    <n-dynamic-input
+                      v-model:value="deal.acf.telegrams_list"
+                      :max="10"
+                      item-style="margin-bottom: 6px"
+                      :on-create="() => ({ item: '' })"
+                    >
+                      <template #default="{ value }">
+                        <n-input
+                          v-model:value="value.item"
+                          placeholder="Телефон"
+                        />
+                      </template>
+                    </n-dynamic-input>
+                  </n-row>
+                </n-card>
+                <n-card title="E-Mail" size="small">
+                  <n-row>
+                    <n-dynamic-input
+                      v-model:value="deal.acf.emails_list"
+                      :max="10"
+                      item-style="margin-bottom: 6px"
+                      :on-create="() => ({ item: '' })"
+                    >
+                      <template #default="{ value }">
+                        <n-input
+                          v-model:value="value.item"
+                          placeholder="Телефон"
+                        />
+                      </template>
+                    </n-dynamic-input>
+                  </n-row>
+                </n-card>
+                <n-card title="Website" size="small">
+                  <n-row>
+                    <n-dynamic-input
+                      v-model:value="deal.acf.websites_list"
+                      :max="10"
+                      item-style="margin-bottom: 6px"
+                      :on-create="() => ({ item: '' })"
+                    >
+                      <template #default="{ value }">
+                        <n-input
+                          v-model:value="value.item"
+                          placeholder="Телефон"
+                        />
+                      </template>
+                    </n-dynamic-input>
+                  </n-row>
+                </n-card>
+                <n-row class="flex items-center gap-2">
+                  <n-button
+                    tertiary
+                    type="primary"
+                    class="flex-grow"
+                    @click="handleSave"
                   >
-                    <template #default="{ value }">
-                      <n-input v-model:value="value.item" placeholder="Телефон" />
-                    </template>
-                  </n-dynamic-input>
-                </n-row>
-              </n-card>
-              <n-card title="E-Mail" size="small">
-                <n-row>
-                  <n-dynamic-input
-                    v-model:value="deal.acf.emails_list"
-                    :max="10"
-                    item-style="margin-bottom: 6px"
-                    :on-create="() => ({ item: '' })"
+                    Сохранить
+                  </n-button>
+                  <n-button
+                    tertiary
+                    type="error"
+                    class="flex-grow"
+                    @click="closeModal"
                   >
-                    <template #default="{ value }">
-                      <n-input v-model:value="value.item" placeholder="Телефон" />
-                    </template>
-                  </n-dynamic-input>
+                    Закрыть
+                  </n-button>
                 </n-row>
-              </n-card>
-              <n-card title="Website" size="small">
-                <n-row>
-                  <n-dynamic-input
-                    v-model:value="deal.acf.websites_list"
-                    :max="10"
-                    item-style="margin-bottom: 6px"
-                    :on-create="() => ({ item: '' })"
-                  >
-                    <template #default="{ value }">
-                      <n-input v-model:value="value.item" placeholder="Телефон" />
-                    </template>
-                  </n-dynamic-input>
-                </n-row>
-              </n-card>
-              <n-row class="flex items-center gap-2">
-                <n-button tertiary type="primary" class="flex-grow"> Сохранить </n-button>
-                <n-button tertiary type="error" class="flex-grow" @click="closeModal">
-                  Закрыть
-                </n-button>
-              </n-row>
+              </div>
             </n-tab-pane>
             <n-tab-pane name="Комментарии" tab="Комментарии">
-              <n-card title="Комментарии" size="small">
+              <n-card title="Комментарии" size="small" class="mb-2">
                 <n-infinite-scroll style="max-height: 60dvh" :distance="10">
                   <n-steps vertical>
                     <n-step
@@ -109,8 +167,17 @@
                   </n-steps>
                 </n-infinite-scroll>
               </n-card>
-              <n-input v-model:value="newComment" type="textarea" class="mb-2" />
-              <n-button tertiary type="success" @click="handleComment"
+              <n-input
+                v-model:value="newComment"
+                type="textarea"
+                class="mb-2"
+                @keydown:enter="handleComment"
+              />
+              <n-button
+                class="w-full"
+                tertiary
+                type="success"
+                @click="handleComment"
                 >Отправить</n-button
               >
             </n-tab-pane>
@@ -127,7 +194,12 @@
                   </n-steps>
                 </n-infinite-scroll>
               </n-card>
-              <n-input v-model:value="newTaskTitle" type="textarea" class="mb-2" />
+              <n-input
+                v-model:value="newTaskTitle"
+                type="textarea"
+                class="mb-2"
+                @keydown:enter="addTask"
+              />
               <div class="flex items-center gap-2">
                 <n-date-picker
                   v-model:formatted-value="newTaskDateTime"
@@ -137,12 +209,17 @@
                   class="flex-grow"
                 />
 
-                <n-button tertiary type="success" @click="addTask">Отправить</n-button>
+                <n-button tertiary type="success" @click="addTask"
+                  >Отправить</n-button
+                >
               </div>
             </n-tab-pane>
           </n-tabs>
         </div>
-        <n-space v-else class="absolute top-[50%] left-[50%] -translate-[-50%, -50%]">
+        <n-space
+          v-else
+          class="absolute top-[50%] left-[50%] -translate-[-50%, -50%]"
+        >
           <n-spin size="large" />
         </n-space>
       </n-scrollbar>
@@ -152,25 +229,43 @@
 
 <script setup lang="ts">
 import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
-import { useDealStore } from "@/store/useDealStore";
+import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import { useRoute, useRouter } from "vue-router";
-import { ref, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useTaskStore, useTaskStoreRefs } from "@/store/useTaskStore";
 import { h } from "vue";
 // @ts-ignore
 import { NButton } from "naive-ui";
+import Icons from "../ui/Icons.vue";
+import { mapToSelectOptions } from "@/utils/mapToSelectOptions";
+import { useSettingsStoreRefs } from "@/store/useSettingsStore";
+
 const { modals } = useModalStoreRefs();
 const { closeAllModals } = useModalStore();
 const { getTasks, updateTask, createTask, deleteTask } = useTaskStore();
 const { tasks } = useTaskStoreRefs();
 const { getDealById, updateDeal } = useDealStore();
+const { statuses, deal } = useDealStoreRefs();
+const { settings } = useSettingsStoreRefs();
 const route = useRoute();
 const router = useRouter();
-const deal = ref<any>(null);
 const newComment = ref("");
 const newTaskTitle = ref("");
 const newTaskDateTime = ref<any>(null);
-import Icons from "../ui/Icons.vue";
+
+const isStatus = computed(() => {
+  return mapToSelectOptions(statuses.value, "name", "id", true);
+});
+
+const handleSave = async () => {
+  try {
+    // Отправляем все ACF-поля (включая статус, телефоны и т. д.) на сервер
+    await updateDeal(deal.value.id, deal.value.acf);
+    console.log("✅ Изменения сохранены:", deal.value.acf);
+  } catch (error) {
+    console.error("❌ Ошибка при сохранении сделки:", error);
+  }
+};
 
 const columns = [
   {
@@ -191,7 +286,14 @@ const columns = [
     title: "Статус",
     key: "done",
     render(rowData: any) {
-      return rowData.done ? "Завершена" : "В процессе";
+      const statusText = rowData.done ? "Завершена" : "В процессе";
+      const iconName = rowData.done
+        ? "material-symbols:check-circle-outline"
+        : "material-symbols:schedule"; // или любые ваши иконки
+
+      return h("div", [
+        h(Icons, { icon: iconName, color: "inherit", size: 18 }),
+      ]);
     },
   },
   {
@@ -201,7 +303,7 @@ const columns = [
       return h(
         "div",
         {
-          class: "flex items-center gap-2 justify-center", // Здесь указываете нужные классы
+          class: "flex items-center gap-2 ",
         },
         [
           h(
@@ -233,7 +335,10 @@ const columns = [
             },
             {
               icon: () =>
-                h(Icons, { icon: "material-symbols:close-rounded", color: "inherit" }),
+                h(Icons, {
+                  icon: "material-symbols:close-rounded",
+                  color: "inherit",
+                }),
             }
           ),
         ]
@@ -261,33 +366,36 @@ const ensureArray = (value: any) =>
   Array.isArray(value)
     ? value.filter(
         (e) =>
-          e && typeof e === "object" && typeof e.item === "string" && e.item.trim() !== ""
+          e &&
+          typeof e === "object" &&
+          typeof e.item === "string" &&
+          e.item.trim() !== ""
       )
     : [];
 
 watchEffect(async () => {
   const dealId = route.query.deal;
   if (dealId && modals.value.nDeal) {
-    const result: any = await getDealById(dealId);
+    await getDealById(dealId);
 
     // Гарантируем, что все списки массивы
-    result.acf.phone_list = ensureArray(result.acf.phone_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.whatsapps_list = ensureArray(result.acf.whatsapps_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.telegrams_list = ensureArray(result.acf.telegrams_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.emails_list = ensureArray(result.acf.emails_list).filter(
-      (e) => e?.item?.trim?.() !== ""
-    );
-    result.acf.websites_list = ensureArray(result.acf.websites_list).filter(
+    deal.value.acf.phone_list = ensureArray(deal.value.acf.phone_list).filter(
       (e) => e?.item?.trim?.() !== ""
     );
 
-    deal.value = result;
+    deal.value.acf.whatsapps_list = ensureArray(
+      deal.value.acf.whatsapps_list
+    ).filter((e) => e?.item?.trim?.() !== "");
+    deal.value.acf.telegrams_list = ensureArray(
+      deal.value.acf.telegrams_list
+    ).filter((e) => e?.item?.trim?.() !== "");
+    deal.value.acf.emails_list = ensureArray(deal.value.acf.emails_list).filter(
+      (e) => e?.item?.trim?.() !== ""
+    );
+    deal.value.acf.websites_list = ensureArray(
+      deal.value.acf.websites_list
+    ).filter((e) => e?.item?.trim?.() !== "");
+
     console.log("deal получен:", deal.value);
     await getTasks(Number(dealId));
   }

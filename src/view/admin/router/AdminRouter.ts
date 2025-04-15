@@ -29,6 +29,15 @@ const routes = [
     },
   },
   {
+    path: "/profile/:id",
+    name: "profile",
+    component: () => import("../profile/ProfilePage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/deals/",
     name: "deals",
     component: () => import("../deals/DealsPage.vue"),

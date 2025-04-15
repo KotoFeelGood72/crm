@@ -31,6 +31,7 @@ import { useUsersStore } from "./store/useUserStore";
 import "vue-skeletor/dist/vue-skeletor.css";
 import { useNotifications } from "@/composables/useNotifications";
 import { useScrollLock } from "@/composables/useLockScreen";
+import { useSettingsStore } from "./store/useSettingsStore";
 
 import { useTheme } from "@/composables/useTheme";
 
@@ -38,6 +39,7 @@ const { theme } = useTheme();
 const { lockScroll, unlockScroll } = useScrollLock();
 
 const { requestPermission } = useNotifications();
+const { getSettings } = useSettingsStore();
 
 onMounted(() => {
   requestPermission();
@@ -89,6 +91,7 @@ watch(
 
 onMounted(async () => {
   await fetchUserInfo();
+  await getSettings();
   // if (route.path != "/login") {
   // }
 });

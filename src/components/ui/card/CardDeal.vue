@@ -29,18 +29,33 @@
     <div class="flex items-center justify-between mb-1">
       <div class="text-xs">27.05.2021</div>
       <n-dropdown trigger="hover" :options="options">
-        <Icons icon="solar:menu-dots-bold" :size="14" />
+        <Icons icon="solar:menu-dots-bold" :size="14" color="inherit" />
       </n-dropdown>
     </div>
     <div class="text-xs mb-4">{{ card.acf.name }}</div>
     <div class="flex items-center gap-1 mt-1 flex-wrap">
-      <n-tag :bordered="false" type="success" size="small" style="font-size: 10px">
+      <n-tag
+        :bordered="false"
+        type="success"
+        size="small"
+        style="font-size: 10px"
+      >
         Контекстная реклама
       </n-tag>
-      <n-tag :bordered="false" type="success" size="small" style="font-size: 10px">
+      <n-tag
+        :bordered="false"
+        type="success"
+        size="small"
+        style="font-size: 10px"
+      >
         150 000
       </n-tag>
-      <n-tag :bordered="false" type="success" size="small" style="font-size: 10px">
+      <n-tag
+        :bordered="false"
+        type="success"
+        size="small"
+        style="font-size: 10px"
+      >
         +7 (961) 531-13-86 - Виктор
       </n-tag>
     </div>

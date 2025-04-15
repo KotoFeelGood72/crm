@@ -15,22 +15,6 @@ export const useDealStore = defineStore("deals", {
       { name: "Успех", id: "Успех" },
       { name: "Провал", id: "Провал" },
     ],
-    cities: [
-      { name: "Тверь", id: "Тверь" },
-      { name: "Краснодар", id: "Краснодар" },
-      { name: "Москва", id: "Москва" },
-      { name: "Ростов на Дону", id: "Ростов на Дону" },
-      { name: "Пермь", id: "Пермь" },
-      { name: "Казань", id: "Казань" },
-    ],
-    perPageOptions: [
-      { name: "10", id: "10" },
-      { name: "20", id: "20" },
-      { name: "30", id: "30" },
-      { name: "40", id: "40" },
-      { name: "50", id: "50" },
-      { name: "100", id: "100" },
-    ],
     page: 1,
     perPage: "10" as any,
     totalPages: 1 as any,
@@ -40,7 +24,6 @@ export const useDealStore = defineStore("deals", {
     searchQuery: "",
     selectedDate: null,
     isLoading: false,
-    currentView: "list",
   }),
   actions: {
     async getDeals() {
@@ -78,24 +61,6 @@ export const useDealStore = defineStore("deals", {
       return `${year}-${month}-${day}`;
     },
 
-    getStatusClass(status: string) {
-      switch (status) {
-        case "КП":
-          return "status-new";
-        case "Отработка возражений":
-          return "status-working";
-        case "Подготовка документов":
-          return "status-not-relevant";
-        case "Ожидание оплаты":
-          return "status-pay";
-        case "Успех":
-          return "status-closed";
-        case "Провал":
-          return "status-cancelled";
-        default:
-          return "";
-      }
-    },
 
     async getCategories() {
       try {
@@ -114,8 +79,9 @@ export const useDealStore = defineStore("deals", {
           `/wp-json/custom/v1/update-deal/${id}`,
           fields
         );
-
-        const index = this.deals.findIndex((deal) => deal.id === id);
+    
+        // 1. Обновляем список сделок (this.deals)
+        const index = this.deals.findIndex((item) => item.id === id);
         if (index !== -1) {
           this.deals[index] = {
             ...this.deals[index],
@@ -125,7 +91,18 @@ export const useDealStore = defineStore("deals", {
             },
           };
         }
-
+    
+        // 2. Если текущая сделка (this.deal) совпадает по ID — обновляем и её
+        if (this.deal?.id === id) {
+          this.deal = {
+            ...this.deal,
+            acf: {
+              ...this.deal.acf,
+              ...fields,
+            },
+          };
+        }
+    
         return response.data;
       } catch (error) {
         console.error(`Failed to update deal ${id}:`, error);
@@ -142,97 +119,16 @@ export const useDealStore = defineStore("deals", {
       }
     },
 
-    setCurrentView(view: string) {
-      this.currentView = view;
-    },
-
-    updateCategory(category: string) {
-      this.selectedCategory = category;
-      this.page = 1;
-      this.getDeals();
-    },
-
-    updateStatus(status: string) {
-      this.selectedStatus = status;
-      this.page = 1;
-      this.getDeals();
-    },
-
-    updateCity(city: string) {
-      this.selectedCity = city;
-      this.page = 1;
-      this.getDeals();
-    },
-
-    updateSearchQuery(query: string) {
-      this.searchQuery = query;
-      this.page = 1;
-      this.getDeals();
-    },
-
-    updatePerPage(perPage: any) {
-      this.perPage = perPage;
-      this.page = 1;
-      this.getDeals();
-    },
-
-    updatePage(newPage: number) {
-      this.page = newPage;
-      this.getDeals();
-    },
-
-    updateSelectedDate(date: any) {
-      this.selectedDate = date;
-      this.page = 1;
-      this.getDeals();
-    },
-
-    clearFilters() {
-      this.selectedCategory = "";
-      this.selectedStatus = "";
-      this.selectedCity = "";
-      this.page = 1;
-      this.perPage = "10";
-      this.searchQuery = "";
-      this.getDeals();
-    },
-
-    updateDealInStore(updatedDeal: any) {
-      const index = this.deals.findIndex((deal) => deal.id === updatedDeal.id);
-      if (index !== -1) {
-        this.deals[index] = { ...this.deals[index], ...updatedDeal };
-      }
-    },
-
     async getDealById(id: any) {
       try {
         const response = await api.get(`/wp-json/custom/v1/deal/${id}`);
-        return response.data;
+        this.deal = response.data
       } catch (error) {
         console.error(`Failed to fetch deal with id ${id}:`, error);
         return null;
       }
     },
 
-    async updateDealStatus(dealId: number, newStatus: string) {
-      try {
-        const index = this.deals.findIndex((deal) => deal.id === dealId);
-        if (index === -1) return;
-
-        const updatedDeal = {
-          ...this.deals[index],
-          acf: { ...this.deals[index].acf, status: newStatus },
-        };
-
-        await api.post(`/wp-json/custom/v1/update-deal/${dealId}`, {
-          status: newStatus,
-        });
-
-        this.deals[index] = updatedDeal;
-      } catch (error) {
-        console.error(`Failed to update deal status ${dealId}:`, error);
-      }
-    },
   },
 });
 

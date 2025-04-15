@@ -19,7 +19,10 @@
         </n-gi>
       </n-grid>
       <template #title>
-        <a href="https://anyway.fm/" style="text-decoration: none; color: inherit">
+        <a
+          href="https://anyway.fm/"
+          style="text-decoration: none; color: inherit"
+        >
           Сделки
         </a>
       </template>
@@ -52,7 +55,9 @@
             class="min-w-64 max-w-64"
             :name="status.name"
             :count="groupedDeals[status.name]?.length || 0"
-            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
+            @end="
+              (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
+            "
             v-model="groupedDeals[status.name]"
           >
             <template #card="{ card }">
@@ -71,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
 import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
@@ -103,6 +108,14 @@ const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
   // Обновляем статус локально — draggable уже переместил карточку
   movedCard.acf.status = newStatus;
 };
+
+watch(
+  deals,
+  () => {
+    initGroupedDeals();
+  },
+  { deep: true }
+);
 
 const initGroupedDeals = () => {
   const result: Record<string, any[]> = {};

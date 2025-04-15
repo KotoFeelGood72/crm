@@ -14,11 +14,15 @@
         </li>
         <li class="flex items-center gap-3">
           <p>What`s App:</p>
-          <span v-for="item in lead.acf.whatsapps_list" :key="item">{{ item.item }}</span>
+          <span v-for="item in lead.acf.whatsapps_list" :key="item">{{
+            item.item
+          }}</span>
         </li>
         <li class="flex items-center gap-3">
           <p>Telegram:</p>
-          <span v-for="item in lead.acf.telegrams_list" :key="item">{{ item.item }}</span>
+          <span v-for="item in lead.acf.telegrams_list" :key="item">{{
+            item.item
+          }}</span>
         </li>
       </ul>
       <div class="flex items-center justify-between">
@@ -56,7 +60,10 @@
               <n-button ghost @click="showModalComment = true">
                 <n-tooltip trigger="hover">
                   <template #trigger>
-                    <Icons icon="material-symbols-light:history" color="inherit" />
+                    <Icons
+                      icon="material-symbols-light:history"
+                      color="inherit"
+                    />
                   </template>
                   Просмотреть комментарии
                 </n-tooltip>
@@ -87,7 +94,11 @@
                 </n-tooltip>
               </n-button>
             </n-button-group>
-            <n-drawer v-model:show="showModalComment" :width="502" :placement="'right'">
+            <n-drawer
+              v-model:show="showModalComment"
+              :width="502"
+              :placement="'right'"
+            >
               <n-drawer-content title="Комментарии">
                 <!-- @load="handleLoad" -->
                 <n-infinite-scroll :distance="10">
@@ -108,11 +119,12 @@
               <template #header>
                 <div>Оставить коментарий</div>
               </template>
-              <div class="py-4">
+              <div class="pt-4">
                 <n-input
                   v-model:value="newComment"
                   placeholder="Введите коментарий"
                   type="textarea"
+                  @keydown:enter="applyComment"
                   :autosize="{
                     minRows: 3,
                     maxRows: 5,
@@ -121,16 +133,14 @@
               </div>
 
               <template #action>
-                <div style="display: flex; justify-content: flex-end">
-                  <n-button
-                    round
-                    type="primary"
-                    @click="applyComment"
-                    :loading="isSending"
-                  >
-                    Отправить
-                  </n-button>
-                </div>
+                <n-button
+                  class="w-full"
+                  tertiary
+                  @click="applyComment"
+                  :loading="isSending"
+                >
+                  Отправить
+                </n-button>
               </template>
             </n-modal>
           </div>
@@ -193,7 +203,10 @@ const { openModal } = useModalStore();
 const applyComment = async () => {
   if (!props.lead?.id) return;
 
-  const success = await sendLeadComment(props.lead.id, props.lead.acf?.history || []);
+  const success = await sendLeadComment(
+    props.lead.id,
+    props.lead.acf?.history || []
+  );
 
   if (success) {
     newComment.value = "";
