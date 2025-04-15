@@ -72,7 +72,6 @@
         </n-button>
       </div>
 
-      <!-- Список задач за выбранный день, отображаем в виде карточек -->
       <div class="space-y-2">
         <n-infinite-scroll style="height: 60dvh" :distance="10">
           <div class="flex flex-col gap-2 pr-6">
@@ -126,7 +125,6 @@
     </n-drawer-content>
   </n-drawer>
 
-  <!-- Модальное окно для редактирования задачи -->
   <n-modal v-model:show="editModalVisible" mask-closable class="max-w-96">
     <n-card title="Редактирование задачи" size="small">
       <div class="flex flex-col gap-2">

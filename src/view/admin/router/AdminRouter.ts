@@ -47,6 +47,15 @@ const routes = [
     },
   },
   {
+    path: "/works/",
+    name: "works",
+    component: () => import("../works/WorksPage.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/managment/",
     name: "Календарь",
     component: () => import("../managment/ManagmentPage.vue"),

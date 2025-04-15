@@ -74,6 +74,21 @@ const nav = ref<MenuOption[]>([
     key: "/managment",
     icon: () => h(Icon, { icon: "clarity:date-line" }),
   },
+  {
+    label: "Задачи",
+    key: "/works",
+    icon: () => h(Icon, { icon: "material-symbols-light:task-outline" }),
+    children: [
+      {
+        label: "Мои задачи",
+        key: "/works/my",
+      },
+      {
+        label: "Все задачи",
+        key: "/works",
+      },
+    ],
+  },
   // {
   //   label: "Настройки",
   //   key: "/settings",
