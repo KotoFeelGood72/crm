@@ -1,210 +1,174 @@
 <template>
-  <n-card>
-    <n-tabs type="segment" animated>
-      <!-- Вкладка настроек аккаунта -->
-      <n-tab-pane name="oasis" tab="Oasis">
-        <!-- Оборачиваем настройки аккаунта в форму -->
-        <n-form ref="formRef" inline :model="formValue" :rules="rules">
-          <n-card title="Настройки аккаунта">
-            <!-- Блок аватара и загрузки -->
-            <n-card :bordered="false">
-              <div>
-                <!-- Используем реактивное значение avatarUrl -->
-                <img
-                  :src="avatarUrl"
-                  alt="Avatar"
-                  style="width: 150px; height: 150px; object-fit: cover"
-                />
-              </div>
-              <div>
+  <div class="py-7 rounded-lg">
+    <n-card class="relative flex items-start justify-start mb-4 py-9">
+      <n-row class="flex items-center gap-4">
+        <avatar v-model="profile.acf.avatar" class="" />
+        <div>
+          <n-button strong secondary type="info">
+            {{ profile.slug }}
+          </n-button>
+          <n-h1 class="mt-0"
+            >{{ profile.acf.name }} {{ profile.acf.lastname }}</n-h1
+          >
+        </div>
+      </n-row>
+    </n-card>
+    <n-card>
+      <n-tabs type="line" animated>
+        <!-- Вкладка настроек аккаунта -->
+        <n-tab-pane name="Профиль" tab="Профиль">
+          <n-form
+            ref="formRef"
+            inline
+            :model="profile"
+            :rules="rules"
+            v-if="profile && profile.acf"
+          >
+            <n-card title="Настройки аккаунта" content-style="padding: 0;">
+              <n-card :bordered="false">
                 <n-row>
-                  <n-upload
-                    action="#"
-                    :show-file-list="false"
-                    :change="handleUploadSuccess"
+                  <n-form-item
+                    label="Имя"
+                    path="firstName"
+                    class="w-full flex-grow"
                   >
-                    <n-button>Upload File</n-button>
-                  </n-upload>
-
-                  <n-button tertiary type="error" @click="clearAvatar">
-                    Очистить
+                    <n-input
+                      v-model:value="profile.acf.name"
+                      placeholder="Введите имя"
+                    />
+                  </n-form-item>
+                  <n-form-item
+                    label="Фамилия"
+                    path="lastName"
+                    class="w-full flex-grow"
+                  >
+                    <n-input
+                      v-model:value="profile.acf.lastname"
+                      placeholder="Введите фамилию"
+                    />
+                  </n-form-item>
+                </n-row>
+                <n-row>
+                  <n-form-item
+                    label="E-mail"
+                    path="e-mail"
+                    class="w-full flex-grow"
+                  >
+                    <n-input
+                      v-model:value="profile.acf['e-mail']"
+                      placeholder="Введите e-mail"
+                    />
+                  </n-form-item>
+                  <!-- Другие поля можно добавить при необходимости -->
+                </n-row>
+                <n-row>
+                  <n-form-item
+                    label="Адрес"
+                    path="address"
+                    class="w-full flex-grow"
+                  >
+                    <n-input
+                      v-model:value="profile.acf.address"
+                      placeholder="Введите адрес"
+                    />
+                  </n-form-item>
+                </n-row>
+                <n-row class="mt-4">
+                  <n-button type="success" tertiary @click="handleAccountSave">
+                    Сохранить
                   </n-button>
                 </n-row>
-              </div>
+              </n-card>
             </n-card>
-            <n-divider />
-            <!-- Основные поля -->
-            <n-card :bordered="false">
-              <n-row>
-                <n-form-item label="Имя" path="firstName">
-                  <n-input
-                    v-model:value="formValue.firstName"
-                    placeholder="Введите имя"
-                  />
-                </n-form-item>
-                <n-form-item label="Фамилия" path="lastName">
-                  <n-input
-                    v-model:value="formValue.lastName"
-                    placeholder="Введите фамилию"
-                  />
-                </n-form-item>
-              </n-row>
-              <n-row>
-                <n-form-item label="E-mail" path="email">
-                  <n-auto-complete
-                    v-model:value="formValue.email"
-                    :options="autoCompleteOptions"
-                    placeholder="Введите e-mail"
-                  />
-                </n-form-item>
-                <n-form-item label="Должность" path="position">
-                  <n-input
-                    v-model:value="formValue.position"
-                    placeholder="Введите должность"
-                  />
-                </n-form-item>
-              </n-row>
-              <n-row>
-                <n-form-item label="Адрес" path="address">
-                  <n-input
-                    v-model:value="formValue.address"
-                    placeholder="Введите адрес"
-                  />
-                </n-form-item>
-                <n-form-item label="Часовой пояс" path="timezone">
-                  <n-select
-                    v-model:value="formValue.timezone"
-                    :options="timezoneOptions"
-                    placeholder="Выберите часовой пояс"
-                  />
-                </n-form-item>
-              </n-row>
-              <n-row class="mt-4">
-                <n-button type="success" tertiary @click="handleAccountSave">
+          </n-form>
+          <!-- Блок деактивации аккаунта -->
+          <n-card title="Деактивация аккаунта" class="mt-6">
+            <n-button tertiary type="error" @click="deactivateAccount">
+              Деактивировать
+            </n-button>
+          </n-card>
+        </n-tab-pane>
+        <!-- Вкладка смены пароля -->
+        <n-tab-pane name="Безопасность" tab="Безопасность">
+          <n-card title="Сменить пароль">
+            <n-form
+              ref="passwordFormRef"
+              :model="passwordForm"
+              :rules="passwordRules"
+            >
+              <n-form-item label="Новый пароль" path="newPassword">
+                <n-input
+                  type="password"
+                  show-password-on="mousedown"
+                  v-model:value="passwordForm.newPassword"
+                  placeholder="Введите новый пароль"
+                  :maxlength="8"
+                />
+              </n-form-item>
+              <n-form-item label="Повторите пароль" path="confirmPassword">
+                <n-input
+                  type="password"
+                  show-password-on="mousedown"
+                  v-model:value="passwordForm.confirmPassword"
+                  placeholder="Повторите пароль"
+                  :maxlength="8"
+                />
+              </n-form-item>
+              <n-form-item>
+                <n-button type="success" tertiary @click="handlePasswordChange">
                   Сохранить
                 </n-button>
-                <n-button type="error" tertiary @click="resetAccountForm">
-                  Очистить
-                </n-button>
-              </n-row>
-            </n-card>
+              </n-form-item>
+            </n-form>
           </n-card>
-        </n-form>
-
-        <!-- Блок деактивации аккаунта -->
-        <n-card title="Деактивировать аккаунт" class="mt-6">
-          <n-checkbox
-            v-model:value="deactivateAgreed"
-            value="deactivate"
-            label="Я согласен на деактивацию своего аккаунта"
-          />
-          <n-button tertiary type="error" @click="deactivateAccount">
-            Деактивировать
-          </n-button>
-        </n-card>
-      </n-tab-pane>
-
-      <!-- Вкладка смены пароля -->
-      <n-tab-pane name="Безопасность" tab="Безопасность">
-        <n-card title="Сменить пароль">
-          <n-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules">
-            <n-form-item label="Новый пароль" path="newPassword">
-              <n-input
-                type="password"
-                show-password-on="mousedown"
-                v-model:value="passwordForm.newPassword"
-                placeholder="Введите новый пароль"
-                :maxlength="8"
-              />
-            </n-form-item>
-            <n-form-item label="Повторите пароль" path="confirmPassword">
-              <n-input
-                type="password"
-                show-password-on="mousedown"
-                v-model:value="passwordForm.confirmPassword"
-                placeholder="Повторите пароль"
-                :maxlength="8"
-              />
-            </n-form-item>
-            <n-form-item>
-              <n-button type="success" tertiary @click="handlePasswordChange">
-                Сохранить
-              </n-button>
-            </n-form-item>
-          </n-form>
-        </n-card>
-      </n-tab-pane>
-
-      <!-- Дополнительная вкладка (например, "Уведомления") -->
-      <n-tab-pane name="Уведомления" tab="Уведомления"> Qilixiang </n-tab-pane>
-    </n-tabs>
-  </n-card>
+        </n-tab-pane>
+        <!-- Дополнительная вкладка -->
+        <n-tab-pane name="Уведомления" tab="Уведомления">
+          Qilixiang
+        </n-tab-pane>
+      </n-tabs>
+    </n-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
+import avatar from "@/components/ui/people/avatar.vue"; // Компонент аватара должен эмитить update:avatar с объектом File
 import {
   NForm,
   NFormItem,
   NInput,
   NSelect,
   NButton,
-  NDivider,
   NRow,
-  NUpload,
   NAutoComplete,
+  NCheckbox,
+  NTabs,
+  NTabPane,
+  NCard,
 } from "naive-ui";
 import { useProfileStore, useProfileStoreRefs } from "@/store/useProfileStore";
 
-const formRef = ref(null);
-const passwordFormRef = ref(null);
-
-const profileStore = useProfileStore();
+// Из стора импортируем методы. Переименовываем updateAvatar из стора для избежания конфликта имен.
+const { getProfile, updateProfile, updatePassword, updateAvatar } =
+  useProfileStore();
 const { profile } = useProfileStoreRefs();
 
-// Задаем дефолтное изображение аватара
-const avatarUrl = ref("https://via.placeholder.com/150");
-
-const formValue = ref({
-  firstName: "",
-  lastName: "",
-  email: "",
-  position: "",
-  address: "",
-  timezone: "",
-});
-
-// Если ACF поля профиля нужны, можно их сохранить в formValue.acf
-// Например, если у вас есть поле "phone", "company", итд.
-
 const rules = ref({
-  firstName: {
-    required: true,
-    message: "Имя обязательно",
-    trigger: "blur",
-  },
+  firstName: { required: false, message: "Имя обязательно", trigger: "blur" },
   lastName: {
-    required: true,
+    required: false,
     message: "Фамилия обязательна",
     trigger: "blur",
   },
-  email: {
-    required: true,
-    message: "E-mail обязателен",
-    trigger: "blur",
-  },
   position: {
-    required: true,
+    required: false,
     message: "Должность обязательна",
     trigger: "blur",
   },
-  address: {
-    required: true,
-    message: "Адрес обязателен",
-    trigger: "blur",
-  },
+  address: { required: false, message: "Адрес обязателен", trigger: "blur" },
   timezone: {
-    required: true,
+    required: false,
     message: "Часовой пояс обязателен",
     trigger: "change",
   },
@@ -222,7 +186,6 @@ const timezoneOptions = ref([
   { label: "UTC+3", value: "UTC+3" },
 ]);
 
-// Форма смены пароля:
 const passwordForm = ref({
   newPassword: "",
   confirmPassword: "",
@@ -246,29 +209,16 @@ const passwordRules = ref({
   },
 });
 
-// Для деактивации аккаунта:
 const deactivateAgreed = ref(false);
 
 function handleAccountSave() {
-  formRef.value.validate((errors: any) => {
-    if (errors) {
-      console.error("Валидация не прошла:", errors);
-    } else {
-      // Вызываем метод обновления профиля из ProfileStore
-      profileStore
-        .updateProfile(formValue.value)
-        .then(() => {
-          console.log("Данные аккаунта сохранены:", formValue.value);
-        })
-        .catch((err) => {
-          console.error("Ошибка сохранения профиля:", err);
-        });
-    }
-  });
-}
-
-function resetAccountForm() {
-  formRef.value.resetFields();
+  updateProfile()
+    .then((updatedData) => {
+      console.log("Профиль обновлен:", updatedData);
+    })
+    .catch((err) => {
+      console.error("Ошибка обновления профиля:", err);
+    });
 }
 
 function handlePasswordChange() {
@@ -276,8 +226,7 @@ function handlePasswordChange() {
     if (errors) {
       console.error("Валидация пароля не прошла:", errors);
     } else {
-      profileStore
-        .updateProfile({ password: passwordForm.value.newPassword })
+      updateProfile({ password: passwordForm.value.newPassword })
         .then(() => {
           console.log("Пароль изменен:", passwordForm.value.newPassword);
         })
@@ -288,47 +237,32 @@ function handlePasswordChange() {
   });
 }
 
-function clearAvatar() {
-  avatarUrl.value = "https://via.placeholder.com/150";
-  console.log("Аватар очищен");
-}
-
 function deactivateAccount() {
   if (!deactivateAgreed.value) {
     console.warn("Пользователь не согласился на деактивацию");
     return;
   }
-  // Здесь можно вызвать метод деактивации профиля, если он реализован
   console.log("Аккаунт деактивирован");
 }
 
-// Допустим, при успешной загрузке файла сервер возвращает URL изображения в поле res.url
-function handleUploadSuccess(res: any, file: any) {
-  if (res?.url) {
-    avatarUrl.value = res.url;
-    
-  } else if (file.url) {
-    avatarUrl.value = file.url;
-  } else {
-    console.warn("Не удалось определить URL аватара");
+// Используем watchEffect для отслеживания изменения значения v-model аватара.
+// Если profile.acf.avatar изменился и является объектом File, вызываем метод для загрузки аватара.
+watchEffect(() => {
+  const avatarValue = profile.value?.acf?.avatar;
+  if (avatarValue && avatarValue instanceof File) {
+    updateAvatar(avatarValue)
+      .then((updatedData) => {
+        console.log("Аватар обновлен", updatedData);
+      })
+      .catch((error) => {
+        console.error("Ошибка обновления аватара", error);
+      });
   }
-}
+});
 
 // При монтировании получаем профиль
 onMounted(() => {
-  profileStore.getProfile().then(() => {
-    if (profile.value) {
-      // Заполняем поля формы данными профиля
-      formValue.value.firstName = profile.value.first_name || "";
-      formValue.value.lastName = profile.value.last_name || "";
-      formValue.value.email = profile.value.user_email || "";
-      formValue.value.position = profile.value.acf?.position || "";
-      formValue.value.address = profile.value.acf?.address || "";
-      formValue.value.timezone = profile.value.acf?.timezone || "";
-      // Если аватар передается в ACF, например, profile.value.acf.avatar
-      avatarUrl.value = profile.value.acf?.avatar || avatarUrl.value;
-    }
-  });
+  getProfile();
 });
 </script>
 

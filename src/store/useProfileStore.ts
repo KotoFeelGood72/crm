@@ -25,61 +25,29 @@ export const useProfileStore = defineStore("profile", {
 
     // Обновление профиля пользователя:
     // data может содержать стандартные поля (e.g. email, display_name) и поле acf с ACF данными.
-    async updateProfile(data: any) {
+    async updateProfile() {
       try {
-        // Обновляем стандартные поля пользователя через WP REST API
-        const response = await api.post("/wp-json/wp/v2/users/me", data);
-        let updatedProfile = response.data;
-
-        // Если переданы ACF данные – обновляем их
-        if (data.acf) {
-          const acfResponse = await api.post(
-            `/wp-json/acf/v2/users/${updatedProfile.id}`,
-            { acf: data.acf }
-          );
-          updatedProfile.acf = acfResponse.data.acf || {};
-        }
-
-        this.profile = updatedProfile;
-        return updatedProfile;
+        const response = await api.patch(
+          `/wp-json/profile/v1/users/${this.profile.id}`,
+          this.profile
+        );
+        // this.profile = response.data;
+        return response.data;
       } catch (error) {
         console.error("Failed to update profile:", error);
         throw error;
       }
     },
 
-    // Отдельное обновление ACF полей пользователя
-    async updateACF(acfData: any) {
-      try {
-        if (!this.profile || !this.profile.id) {
-          throw new Error("Профиль не найден");
-        }
-        const response = await api.post(
-          `/wp-json/acf/v2/users/${this.profile.id}`,
-          { acf: acfData }
-        );
-        // Обновляем объект профиля с новыми ACF значениями
-        this.profile.acf = response.data.acf || {};
-        return this.profile.acf;
-      } catch (error) {
-        console.error("Failed to update ACF fields:", error);
-        throw error;
-      }
-    },
-
     // Обновление пароля пользователя.
-    // Обратите внимание: обновление пароля через REST API может требовать дополнительных настроек или использования кастомных эндпоинтов.
     async updatePassword(newPassword: string) {
       try {
         if (!this.profile || !this.profile.id) {
           throw new Error("Профиль не найден");
         }
-        // Обычно для смены пароля используется запись в поле user_pass.
-        // Здесь используется POST-запрос к эндпоинту текущего пользователя.
         const response = await api.post("/wp-json/wp/v2/users/me", {
           password: newPassword,
         });
-        // Если запрос успешен, можно вернуть сообщение или обновлённый профиль
         this.profile = { ...this.profile, ...response.data };
         return response.data;
       } catch (error) {
@@ -88,18 +56,43 @@ export const useProfileStore = defineStore("profile", {
       }
     },
 
-    // Дополнительный метод для удаления профиля можно добавить, если требуется.
-    // Например, если админ может удалить пользователя через REST API.
+    // Удаление пользователя
     async deleteProfile(userId: number) {
       try {
         const response = await api.delete(`/wp-json/wp/v2/users/${userId}`);
-        // После успешного удаления можно очистить профиль из стора
         if (this.profile && this.profile.id === userId) {
           this.profile = null;
         }
         return response.data;
       } catch (error) {
         console.error("Failed to delete profile:", error);
+        throw error;
+      }
+    },
+
+    // Новый метод для загрузки или смены аватара пользователя.
+    // Он принимает объект File, формирует FormData и отправляет запрос на сервер.
+    async updateAvatar(file: File) {
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await api.post(
+          `/wp-json/profile/v1/users/${this.profile.id}/avatar`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        // Обновляем ACF-поле в профиле, если сервер вернул обновлённые данные
+        // Например, предполагается, что сервер возвращает acf с обновлённым полем avatar
+        if (response.data && response.data.acf) {
+          this.profile.acf = response.data.acf;
+        }
+        return response.data;
+      } catch (error) {
+        console.error("Failed to update avatar:", error);
         throw error;
       }
     },
