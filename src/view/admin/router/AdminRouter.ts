@@ -27,6 +27,18 @@ const routes = [
       layout: "owner",
       requiresAuth: true,
     },
+    children: [
+      {
+        name: 'my-leads',
+        path: 'my',
+        component: () => import('../leads/LeadsPageMy.vue')
+      },
+      {
+        name: 'all-leads',
+        path: 'all',
+        component: () => import('../leads/LeadsPageAll.vue')
+      }
+    ],
   },
   {
     path: "/profile/:id",
@@ -68,6 +80,18 @@ const routes = [
     path: "/history/",
     name: "history",
     component: () => import("../history/HistoryPage.vue"),
+    children: [
+      {
+        name: 'my-history',
+        path: 'my',
+        component: () => import('../history/HistoryPageMy.vue')
+      },
+      {
+        name: 'all-history',
+        path: 'all',
+        component: () => import('../history/HistoryPageAll.vue')
+      }
+    ],
     meta: {
       layout: "owner",
       requiresAuth: true,

@@ -115,9 +115,9 @@
                 />
               </n-form-item>
               <n-form-item>
-                <n-button type="success" tertiary @click="handlePasswordChange">
+                <!-- <n-button type="success" tertiary @click="handlePasswordChange">
                   Сохранить
-                </n-button>
+                </n-button> -->
               </n-form-item>
             </n-form>
           </n-card>
@@ -221,21 +221,21 @@ function handleAccountSave() {
     });
 }
 
-function handlePasswordChange() {
-  passwordFormRef.value.validate((errors: any) => {
-    if (errors) {
-      console.error("Валидация пароля не прошла:", errors);
-    } else {
-      updateProfile({ password: passwordForm.value.newPassword })
-        .then(() => {
-          console.log("Пароль изменен:", passwordForm.value.newPassword);
-        })
-        .catch((err) => {
-          console.error("Ошибка изменения пароля:", err);
-        });
-    }
-  });
-}
+// function handlePasswordChange() {
+//   passwordFormRef.value.validate((errors: any) => {
+//     if (errors) {
+//       console.error("Валидация пароля не прошла:", errors);
+//     } else {
+//       updateProfile({ password: passwordForm.value.newPassword })
+//         .then(() => {
+//           console.log("Пароль изменен:", passwordForm.value.newPassword);
+//         })
+//         .catch((err) => {
+//           console.error("Ошибка изменения пароля:", err);
+//         });
+//     }
+//   });
+// }
 
 function deactivateAccount() {
   if (!deactivateAgreed.value) {

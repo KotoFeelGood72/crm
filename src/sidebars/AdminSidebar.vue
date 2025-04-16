@@ -53,17 +53,27 @@ const nav = ref<MenuOption[]>([
     label: "Лиды",
     key: "/leads",
     icon: () => h(Icon, { icon: "simple-icons:googleads" }),
+    children: [
+      {
+        label: "Мои лиды",
+        key: "/leads/my",
+      },
+      {
+        label: "Все лиды",
+        key: "/leads/all",
+      },
+    ],
   },
   {
     label: "Сделки",
     key: "/deals",
     icon: () => h(Icon, { icon: "mdi:deal" }),
   },
-  // {
-  //   label: "Статистика",
-  //   key: "/analytics",
-  //   icon: () => h(Icon, { icon: "mdi:analytics" }),
-  // },
+  {
+    label: "Статистика",
+    key: "/analytics",
+    icon: () => h(Icon, { icon: "mdi:analytics" }),
+  },
   // {
   //   label: "Сотрудники",
   //   key: "/works",
@@ -89,15 +99,47 @@ const nav = ref<MenuOption[]>([
       },
     ],
   },
-  // {
-  //   label: "Настройки",
-  //   key: "/settings",
-  //   icon: () => h(Icon, { icon: "material-symbols:settings-rounded" }),
-  // },
+  {
+    label: "Настройки",
+    key: "/settings",
+    icon: () => h(Icon, { icon: "material-symbols:settings-rounded" }),
+    children: [
+      {
+        label: "Профиль",
+        key: "/works/my",
+      },
+      {
+        label: "Внешний вид",
+        key: "/works",
+      },
+      {
+        label: "Лиды",
+        key: "/works",
+      },
+      {
+        label: "Сделки",
+        key: "/works",
+      },
+      {
+        label: "Роли и права",
+        key: "/works",
+      },
+    ],
+  },
   {
     label: "История",
     key: "/history",
     icon: () => h(Icon, { icon: "solar:history-bold" }),
+    children: [
+      {
+        label: "Мое",
+        key: "/history/my",
+      },
+      {
+        label: "Все",
+        key: "/history/all",
+      },
+    ],
   },
 ]);
 
