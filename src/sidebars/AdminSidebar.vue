@@ -74,6 +74,21 @@ const nav = ref<MenuOption[]>([
     key: "/analytics",
     icon: () => h(Icon, { icon: "mdi:analytics" }),
   },
+  {
+    label: "Чат",
+    key: "/chats",
+    icon: () => h(Icon, { icon: "mdi:analytics" }),
+    children: [
+      {
+        label: "Мои лиды",
+        key: "/chats/my",
+      },
+      {
+        label: "Чаты",
+        key: "/chats/all",
+      },
+    ],
+  },
   // {
   //   label: "Сотрудники",
   //   key: "/works",
@@ -95,7 +110,7 @@ const nav = ref<MenuOption[]>([
       },
       {
         label: "Все задачи",
-        key: "/works",
+        key: "/works/all",
       },
     ],
   },

@@ -3,7 +3,6 @@
     <n-global-style />
     <n-message-provider>
       <component :is="layoutComponent">
-        <!-- <p>GOOOOOOOOOOOOOOOD {{ theme }}</p> -->
         <router-view />
         <Modal :positionX="modalPositionX" />
         <Transition name="fade-bg">
@@ -29,7 +28,7 @@ import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
 import "vue-skeletor/dist/vue-skeletor.css";
-import { useNotifications } from "@/composables/useNotifications";
+// import { useNotifications } from "@/composables/useNotifications";
 import { useScrollLock } from "@/composables/useLockScreen";
 import { useSettingsStore } from "./store/useSettingsStore";
 
@@ -38,11 +37,11 @@ import { useTheme } from "@/composables/useTheme";
 const { theme } = useTheme();
 const { lockScroll, unlockScroll } = useScrollLock();
 
-const { requestPermission } = useNotifications();
+// const { requestPermission } = useNotifications();
 const { getSettings } = useSettingsStore();
 
 onMounted(() => {
-  requestPermission();
+  // requestPermission();
 });
 
 const { modals } = useModalStoreRefs();

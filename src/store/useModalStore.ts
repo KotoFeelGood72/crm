@@ -14,6 +14,7 @@ interface ModalsState {
   commentary: boolean;
   nDeal: boolean
   nLead: boolean
+  WorkCreate: boolean
 }
 
 export const useModalStore = defineStore("modal", {
@@ -36,6 +37,7 @@ export const useModalStore = defineStore("modal", {
       commentary: false,
       nDeal: false,
       nLead: false,
+      WorkCreate: false,
     },
     queryCache: {},
     current: null,

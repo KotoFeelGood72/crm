@@ -11,30 +11,15 @@ import Icons from "./components/ui/Icons.vue";
 import { Skeletor } from "vue-skeletor";
 import "vuetify/styles";
 import naive from 'naive-ui'
-// import { createVuetify } from "vuetify";
-// import * as components from "vuetify/components";
-// import * as directives from "vuetify/directives";
+// import { firebaseConfig } from '@/utils/FirebaseData'
+
 import "@/assets/css/input.css";
 
-// const vuetify = createVuetify({
-//   components,
-//   directives,
-//   ssr: true,
-// });
 
 import Tooltip from "@programic/vue3-tooltip";
 import "@programic/vue3-tooltip/dist/index.css";
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/firebase-messaging-sw.js")
-    .then((registration) => {
-      console.log("✅ Firebase SW registered:", registration);
-    })
-    .catch((err) => {
-      console.error("❌ Firebase SW registration error:", err);
-    });
-}
+
 
 const pinia = createPinia();
 const app = createApp(App);

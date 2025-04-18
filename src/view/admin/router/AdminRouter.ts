@@ -20,6 +20,27 @@ const routes = [
     },
   },
   {
+    path: "/chats",
+    name: "Чат",
+    component: () => import("../chats/Chats.vue"),
+    meta: {
+      layout: "owner",
+      requiresAuth: true,
+    },
+    children: [
+      {
+        name: 'chats-id',
+        path: ':id',
+        component: () => import('../chats/ChatsId.vue'),
+      },
+      {
+        name: 'all-chats',
+        path: 'all',
+        component: () => import('../chats/AllChats.vue'),
+      }
+    ],
+  },
+  {
     path: "/leads/",
     name: "leads",
     component: () => import("../leads/LeadsPage.vue"),
@@ -66,6 +87,18 @@ const routes = [
       layout: "owner",
       requiresAuth: true,
     },
+    children: [
+      {
+        name: 'my-work',
+        path: 'my',
+        component: () => import('../works/WorksPageMy.vue')
+      },
+      {
+        name: 'all-work',
+        path: 'all',
+        component: () => import('../works/WorksPageAll.vue')
+      }
+    ],
   },
   {
     path: "/managment/",

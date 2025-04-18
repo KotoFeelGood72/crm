@@ -1,14 +1,15 @@
 importScripts("https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js");
 
+
 firebase.initializeApp({
-  apiKey: "AIzaSyBENIHoTr0j4eIB_dZea1WnR_PSAqVWqTU",
-  authDomain: "crm-system-835c7.firebaseapp.com",
-  projectId: "crm-system-835c7",
-  storageBucket: "crm-system-835c7.firebasestorage.app",
-  messagingSenderId: "752010941649",
-  appId: "1:752010941649:web:7019085568b3112164a1f0",
-  measurementId: "G-VW1B74L5WV"
+  apiKey: "AIzaSyDsQhHXm7Shm9n1pBGPeTpfeK8QBOfNmt0",
+  authDomain: "app-crm-web.firebaseapp.com",
+  projectId: "app-crm-web",
+  storageBucket: "app-crm-web.firebasestorage.app",
+  messagingSenderId: "976953129573",
+  appId: "1:976953129573:web:0a5a946e5f6f226585e48c",
+  measurementId: "G-3DJ1YEBGHQ"
 });
 
 const messaging = firebase.messaging();

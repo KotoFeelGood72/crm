@@ -4,18 +4,18 @@ import { ProfileRouter } from "../view/profile/router/ProfileRouter";
 import { AdminRouter } from "../view/admin/router/AdminRouter";
 
 const routes = [
-  ...CompaniesRouter.options.routes,
-  ...ProfileRouter.options.routes,
+  // ...CompaniesRouter.options.routes,
+  // ...ProfileRouter.options.routes,
   ...AdminRouter.options.routes,
-  {
-    path: "/",
-    name: "Home",
-    redirect: "/dashboard",
-    meta: {
-      layout: "Admin",
-      // requiresAuth: true,
-    },
-  },
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   redirect: "/dashboard",
+  //   meta: {
+  //     layout: "Admin",
+  //     // requiresAuth: true,
+  //   },
+  // },
   {
     path: "/login",
     name: "Login",
@@ -30,47 +30,6 @@ const routes = [
     component: () => import("../modules/auth/SignPages.vue"),
     meta: {
       layout: "Empty",
-    },
-  },
-  // {
-  //   path: "/dashboard",
-  //   name: "Dashboard",
-  //   component: () => import("../view/Dashboard.vue"),
-  //   meta: {
-  //     layout: "Admin",
-  //     // requiresAuth: true,
-  //     title: "Dashboard",
-  //   },
-  // },
-  // {
-  //   path: "/deals",
-  //   name: "Deals",
-  //   component: () => import("../view/deals/index.vue"),
-  //   meta: {
-  //     layout: "Admin",
-  //     // requiresAuth: true,
-  //     title: "Сделки",
-  //   },
-  // },
-  {
-    path: "/leads",
-    name: "Лиды",
-    component: () => import("../view/deals/index.vue"),
-    meta: {
-      layout: "Admin",
-      // requiresAuth: true,
-      title: "Лиды",
-    },
-  },
-  {
-    path: "/staff",
-    name: "Staff",
-    component: () => import("../view/staff/index.vue"),
-    meta: {
-      layout: "Admin",
-      // requiresAuth: true,
-      title: "Dashboard",
-      role: "admin",
     },
   },
 ];
