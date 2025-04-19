@@ -1,5 +1,13 @@
-importScripts("https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js");
-importScripts("https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js");
+// Give the service worker access to Firebase Messaging.
+// Note that you can only use Firebase Messaging here. Other Firebase libraries
+// are not available in the service worker.
+// Replace 10.13.2 with latest version of the Firebase JS SDK.
+importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js');
+
+// Initialize the Firebase app in the service worker by passing in
+// your app's Firebase config object.
+// https://firebase.google.com/docs/web/setup#config-object
 
 
 firebase.initializeApp({
@@ -12,28 +20,21 @@ firebase.initializeApp({
   measurementId: "G-3DJ1YEBGHQ"
 });
 
+// Retrieve an instance of Firebase Messaging so that it can handle background
+// messages.
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  console.log("[firebase-messaging-sw.js] Received background message:", payload);
-
-  const title = payload.notification?.title || "Новое уведомление";
-  const body = payload.notification?.body || "";
-  const icon = "/firebase-logo.png";
-
+  console.log(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload
+  );
+  // Customize notification here
+  const notificationTitle = 'Background Message Title';
   const notificationOptions = {
-    body,
-    icon,
+    body: 'Background Message body.',
+    icon: '/firebase-logo.png'
   };
 
-  // Показываем уведомление
-  self.registration.showNotification(title, notificationOptions);
-
-  // ⬇️ Вот это добавь:
-  self.clients.matchAll({ includeUncontrolled: true, type: "window" }).then((clients) => {
-    clients.forEach((client) => {
-      console.log("[SW] Sending PLAY_SOUND to client");
-      client.postMessage({ type: "PLAY_SOUND" });
-    });
-  });
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });

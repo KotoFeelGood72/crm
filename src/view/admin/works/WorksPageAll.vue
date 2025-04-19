@@ -26,10 +26,17 @@
       <template #extra>
         <n-space>
           <n-button @click="fetchAll">Обновить</n-button>
-          <n-button @click="openModal('WorkCreate')">Создать задачу</n-button>
-          <n-button @click="toggleViewMode">{{
-            isKanban ? "Список" : "Kanban"
-          }}</n-button>
+          <n-button @click="openModal('WorkCreate')">Создать задачу </n-button>
+          <n-button
+            @click="isKanban = true"
+            :type="isKanban ? 'primary' : 'default'"
+            ><Icons icon="tabler:layout-filled" color="inherit"
+          /></n-button>
+          <n-button
+            @click="isKanban = false"
+            :type="!isKanban ? 'primary' : 'default'"
+            ><Icons icon="material-symbols:event-list" color="inherit"
+          /></n-button>
         </n-space>
       </template>
       <template #footer>
@@ -45,30 +52,35 @@
         <div v-for="status in statuses" :key="status.id">
           <KanbanCard
             class="min-w-64 max-w-64"
-            :name="status.name"
-            :count="groupedTasks[status.name]?.length || 0"
+            :name="status.label"
+            :count="groupedTasks[status.value]?.length || 0"
             @end="
-              (e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)
+              (e, newStatus, oldStatus) =>
+                onCardDrop(e, status.value, oldStatus)
             "
-            v-model="groupedTasks[status.name]"
+            v-model="groupedTasks[status.value]"
           >
             <template #card="{ card }">
-              <CardDeal
-                :card="card"
-                class="cursor-pointer"
-                @click="openModal('nDeal', '', { deal: card.id }, router)"
+              <CardWork
+                :work="card"
+                @click="openModal('nWork', '', { work: card.id }, router)"
               />
             </template>
           </KanbanCard>
         </div>
       </div>
 
-      <div v-else class="p-4 space-y-4">
-        <n-card v-for="task in works" :key="task.id" :title="task.title">
-          <p><b>Статус:</b> {{ task.meta.status }}</p>
-          <p><b>Дата:</b> {{ task.meta.start_date }}</p>
-          <p><b>Описание:</b> {{ task.meta.description }}</p>
-        </n-card>
+      <div v-else>
+        <n-scrollbar style="max-height: 80dvh">
+          <div class="flex flex-col gap-4">
+            <CardWorkList
+              v-for="(card, i) in works"
+              :work="card"
+              :key="'card-item-work-' + i"
+              @click.stop="openModal('nWork', '', { work: card.id }, router)"
+            />
+          </div>
+        </n-scrollbar>
       </div>
     </div>
 
@@ -79,21 +91,21 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
 import { useWorkStore, useWorkStoreRefs } from "@/store/useWorkStore";
-import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
 import { useModalStore } from "@/store/useModalStore";
 import ModalCreateWork from "@/components/nModal/ModalCreate/ModalCreateWork.vue";
+import CardWork from "@/components/ui/card/CardWork.vue";
+import CardWorkList from "@/components/ui/card/CardWorkList.vue";
 import { useRouter } from "vue-router";
 
 const groupedTasks = ref<Record<string, any[]>>({});
-const statuses = ref([
-  { id: 1, name: "todo" },
-  { id: 2, name: "in_progress" },
-  { id: 3, name: "paused" },
-  { id: 4, name: "done" },
+const statuses = ref<any>([
+  { id: 1, value: "todo", label: "Новые" },
+  { id: 2, value: "in_progress", label: "В работе" },
+  { id: 3, value: "paused", label: "Пауза" },
+  { id: 4, value: "done", label: "Завершено" },
 ]);
-const isKanban = ref(true);
-const toggleViewMode = () => (isKanban.value = !isKanban.value);
+const isKanban = ref(false);
 
 const { openModal } = useModalStore();
 const router = useRouter();
@@ -118,7 +130,7 @@ watch(
 
 const initGroupedTasks = () => {
   const result: Record<string, any[]> = {};
-  statuses.value.forEach((status) => {
+  statuses.value.forEach((status: any) => {
     result[status.name] = [];
   });
 

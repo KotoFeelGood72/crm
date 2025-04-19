@@ -9,7 +9,15 @@ export const useWorkStore = defineStore("work", {
   actions: {
     async fetchAll() {
       try {
-        const { data } = await api.get("/wp-json/work/v1/list");
+        const { data } = await api.get("/wp-json/work/v1/all");
+        this.works = data;
+      } catch (error) {
+        console.error("Ошибка при получении задач:", error);
+      }
+    },
+    async fetchMyTasks() {
+      try {
+        const { data } = await api.get("/wp-json/work/v1/my");
         this.works = data;
       } catch (error) {
         console.error("Ошибка при получении задач:", error);
@@ -22,6 +30,20 @@ export const useWorkStore = defineStore("work", {
         this.work = data;
       } catch (error) {
         console.error("Ошибка при получении задачи:", error);
+      }
+    },
+
+    async toggleChecklistItem(workId: number, index: number, value: boolean) {
+      try {
+        await api.post("/wp-json/work/v1/toggle-checklist", {
+          id: workId,
+          index,
+          val: value,
+        });
+    
+        await this.fetchOne(workId);
+      } catch (error) {
+        console.error("Ошибка при обновлении чеклиста:", error);
       }
     },
 

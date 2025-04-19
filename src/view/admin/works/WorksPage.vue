@@ -1,14 +1,14 @@
 <template>
   <div class="deals min-h-screen">
     <router-view />
-    <ModalDeal />
+    <ModalWork />
   </div>
 </template>
 
 <script setup lang="ts">
+import ModalWork from "@/components/nModal/ModalWork.vue";
 import { onMounted, ref, watch } from "vue";
 import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
-import ModalDeal from "@/components/nModal/ModalDeal.vue";
 import { useModalStore } from "@/store/useModalStore";
 import { useRouter } from "vue-router";
 // @ts-ignore

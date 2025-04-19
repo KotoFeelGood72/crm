@@ -12,7 +12,77 @@
       </div>
       <div id="search"></div>
       <div id="owner-action" class="flex items-center gap-5">
-        <IconBtn icon="f7:bell-fill" :iconSize="20" />
+        <n-badge :count="unreadCount" :dot="unreadCount > 0">
+          <!-- поповер, открываем по клику, в slot=trigger помещаем иконку -->
+          <n-popover trigger="click" placement="bottom-end" show-arrow>
+            <template #trigger>
+              <IconBtn icon="f7:bell-fill" :iconSize="20" />
+            </template>
+
+            <!-- Содержимое поповера -->
+            <div>
+              <template v-if="notifications.length">
+                <div>
+                  <div class="flex items-center justify-between pt-4">
+                    <n-h3 style="margin-bottom: 0">Уведомления</n-h3>
+                    <n-button
+                      tertiary
+                      type="success"
+                      size="small"
+                      @click="markAllAsRead"
+                      >Прочитать все</n-button
+                    >
+                  </div>
+                  <n-divider style="margin: 20px 0"></n-divider>
+                  <n-scrollbar class="max-h-[70dvh] max-w-80">
+                    <div class="flex flex-col gap-2">
+                      <n-card
+                        v-for="note in notifications"
+                        :key="note.id"
+                        size="small"
+                        class="relative"
+                        :hoverable="true"
+                        header-style="padding-bottom: 5px;"
+                      >
+                        <template #header>
+                          <div class="text-xs">{{ note.title }}</div>
+                          <n-badge
+                            v-if="!note.meta?.is_read"
+                            dot
+                            class="absolute top-3 right-3"
+                          ></n-badge>
+                        </template>
+                        <div class="text-[10px]">{{ note.content }}</div>
+                        <template #footer>
+                          <div class="flex items-center justify-between">
+                            <div class="text-xs">
+                              <n-tag size="small" class="text-[10px]">{{
+                                note.date
+                              }}</n-tag>
+                            </div>
+                            <div>
+                              <n-button
+                                v-if="!note.meta?.is_read"
+                                size="small"
+                                class="text-[10px]"
+                                style="padding: 4px 6px; height: 20px"
+                                @click="readNotification(note)"
+                                >Прочитать</n-button
+                              >
+                            </div>
+                          </div>
+                        </template>
+                      </n-card>
+                    </div>
+                  </n-scrollbar>
+                </div>
+              </template>
+              <template v-else>
+                <n-empty description="Нет уведомлений" />
+              </template>
+            </div>
+          </n-popover>
+        </n-badge>
         <IconBtn
           @click="toggleTheme"
           :icon="isDark ? 'solar:sun-bold' : 'solar:moon-bold'"
@@ -34,16 +104,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import IconBtn from "../buttons/IconBtn.vue";
 import avatar from "../user/avatar.vue";
 import { useUsersStore } from "@/store/useUserStore";
 import { useRouter } from "vue-router";
 import { useTheme } from "@/composables/useTheme";
+import {
+  useNotificationStore,
+  useNotificationStoreRefs,
+} from "@/store/useNotificationStore";
 
 const { isDark, toggleTheme } = useTheme();
 const router = useRouter();
 const { users } = useUsersStore();
+const { fetchNotifications, markAsRead, markAllAsRead } =
+  useNotificationStore();
+const { notifications } = useNotificationStoreRefs();
+
+const unreadCount = computed(
+  () => notifications.value.filter((n) => !n.meta?.is_read).length
+);
+
+async function readNotification(note: any) {
+  await markAsRead(note.id);
+  note.meta = { ...note.meta, is_read: true };
+}
 
 const userMenu = ref<any>([
   {
@@ -80,4 +166,8 @@ function handleUserMenu(key: string) {
     // и т.д.
   }
 }
+
+onMounted(() => {
+  fetchNotifications();
+});
 </script>

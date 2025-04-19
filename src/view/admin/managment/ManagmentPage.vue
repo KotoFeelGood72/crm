@@ -1,22 +1,26 @@
 <template>
   <!-- Календарь -->
+  <!-- :is-date-disabled="disabledPastDates" -->
   <n-calendar
     v-model:value="selectedDate"
     :first-day-of-week="1"
     @update:value="onDayClick"
-    :is-date-disabled="disabledPastDates"
   >
     <template #="{ year, month, date }">
       <div class="p-1">
         <ul class="text-[10px] mt-1">
           <li
-            v-for="(event, index) in eventsGrouped[getDateKey(year, month, date)]?.slice(
-              0,
-              2
-            )"
+            v-for="(event, index) in eventsGrouped[
+              getDateKey(year, month, date)
+            ]?.slice(0, 2)"
             :key="index"
+            @click.stop.prevent="onEventClick(event)"
             class="flex items-center gap-1 truncate"
-            style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
+            style="
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            "
           >
             <!-- Цветная точка со статусом с tooltip -->
             <n-tooltip placement="top">
@@ -29,9 +33,18 @@
               <span>Срочность: {{ event.status }}</span>
             </n-tooltip>
             <!-- Текст задачи -->
-            <span class="truncate flex-1">{{ event.title }}</span>
+            <div
+              class="text-[10px] relative z-30 hover:bg-red-600 transition-all duration-300 px-2 rounded-md"
+            >
+              {{ event.title }}
+            </div>
+            <!-- <span class="truncate flex-1 hover:bg-red relative z-10">{{
+              event.title
+            }}</span> -->
           </li>
-          <li v-if="eventsGrouped[getDateKey(year, month, date)]?.length > 2">+ ещё</li>
+          <li v-if="eventsGrouped[getDateKey(year, month, date)]?.length > 2">
+            + ещё
+          </li>
         </ul>
       </div>
     </template>
@@ -96,7 +109,11 @@
                     :loading="isEditing === task.id"
                     @click="startEditEvent(task)"
                   >
-                    <Icons icon="mingcute:edit-line" size="18" color="inherit" />
+                    <Icons
+                      icon="mingcute:edit-line"
+                      size="18"
+                      color="inherit"
+                    />
                   </n-button>
                   <n-popconfirm
                     title="Удалить задачу?"
@@ -105,8 +122,16 @@
                     @positive-click="() => deleteEvent(task)"
                   >
                     <template #trigger>
-                      <n-button text type="error" :loading="isDeleting === task.id">
-                        <Icons icon="bytesize:trash" size="18" color="inherit" />
+                      <n-button
+                        text
+                        type="error"
+                        :loading="isDeleting === task.id"
+                      >
+                        <Icons
+                          icon="bytesize:trash"
+                          size="18"
+                          color="inherit"
+                        />
                       </n-button>
                     </template>
                   </n-popconfirm>
@@ -117,7 +142,9 @@
                   {{ task.title }}
                 </span>
               </div>
-              <div class="mt-1 text-xs text-gray-500">Автор: {{ task.authorName }}</div>
+              <div class="mt-1 text-xs text-gray-500">
+                Автор: {{ task.authorName }}
+              </div>
             </n-card>
           </div>
         </n-infinite-scroll>
@@ -164,7 +191,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, h } from "vue";
+import { ref, computed, onMounted, h, nextTick } from "vue";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import {
@@ -181,7 +208,10 @@ import {
   NPopconfirm,
 } from "naive-ui";
 import Icons from "@/components/ui/Icons.vue";
-import { useCalendarStore, useCalendarStoreRefs } from "@/store/useCalendarStore";
+import {
+  useCalendarStore,
+  useCalendarStoreRefs,
+} from "@/store/useCalendarStore";
 
 const calendarStore = useCalendarStore();
 const { tasks } = useCalendarStoreRefs();
@@ -189,6 +219,7 @@ const { tasks } = useCalendarStoreRefs();
 const selectedDate = ref<number>(Date.now());
 const showDrawer = ref(false);
 const newEvent = ref("");
+const skipNextDayClick = ref(false);
 // Новое время для добавления задачи (формат "HH:mm")
 const newTaskTime = ref<string>("00:00");
 // Новая срочность для добавления задачи
@@ -263,7 +294,9 @@ const eventsGrouped = computed(() => {
 const tasksForDay = computed(() => {
   const dayKey = normalizeDate(selectedDate.value);
   return tasks.value
-    .filter((task) => task.start_date && task.start_date.split(" ")[0] === dayKey)
+    .filter(
+      (task) => task.start_date && task.start_date.split(" ")[0] === dayKey
+    )
     .map((task) => {
       const [_, timePart] = task.start_date.split(" ");
       return {
@@ -279,9 +312,26 @@ const tasksForDay = computed(() => {
 
 // Обработчик клика по дню календаря
 const onDayClick = (timestamp: number) => {
+  // если флаг поднят — сбрасываем флаг и выходим
+  if (skipNextDayClick.value) {
+    skipNextDayClick.value = false;
+    return;
+  }
+  // иначе — обычный клик по дню
   selectedDate.value = timestamp;
   showDrawer.value = true;
 };
+
+function onEventClick(event: any) {
+  // флаг — пропускаем обработку клика по дню
+  skipNextDayClick.value = true;
+
+  // установим дату (чтобы в модалке были правильные данные, если нужно)
+  selectedDate.value = new Date(event.start_date).getTime();
+
+  // Открываем сразу модалку редактирования
+  startEditEvent(event);
+}
 
 // Функция добавления новой задачи
 const addEvent = async () => {
@@ -305,14 +355,26 @@ const addEvent = async () => {
   }
 };
 
-// Начало редактирования задачи
-const startEditEvent = (eventObj: any) => {
-  editingTask.value = { ...eventObj };
-  const parts = eventObj.start_date.split(" ");
-  editingTime.value = parts[1] ? parts[1].slice(0, 5) : "";
+// // Начало редактирования задачи
+// const startEditEvent = (eventObj: any) => {
+//   editingTask.value = { ...eventObj };
+//   const parts = eventObj.start_date.split(" ");
+//   editingTime.value = parts[1] ? parts[1].slice(0, 5) : "";
+//   editingStatus.value = eventObj.status || "low";
+//   editModalVisible.value = true;
+// };
+
+function startEditEvent(eventObj: any) {
+  // дополняем время «00:00:00» если его нет
+  const fullStart = eventObj.start_date.includes(" ")
+    ? eventObj.start_date
+    : `${eventObj.start_date} 00:00:00`;
+  editingTask.value = { ...eventObj, start_date: fullStart };
+  const [, timePart] = fullStart.split(" ");
+  editingTime.value = timePart.slice(0, 5);
   editingStatus.value = eventObj.status || "low";
   editModalVisible.value = true;
-};
+}
 
 // Функция удаления задачи (вызывается через n-popconfirm)
 const deleteEvent = async (rowData: any) => {

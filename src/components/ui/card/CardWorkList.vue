@@ -1,25 +1,21 @@
 <template>
-  <n-card size="small" :hoverable="true">
-    <template #header>
-      <div class="flex items-center justify-between gap-2">
-        <n-ellipsis style="max-width: 240px">
-          {{ work.title }}
-        </n-ellipsis>
-        <n-button
-          quaternary
-          size="tiny"
-          :style="{
-            color: currentPriority.color,
-            border: `1px solid ${currentPriority.color}`,
-          }"
-          class="px-1 py-[4px] text-[8px]"
-        >
-          {{ currentPriority.label }}
-        </n-button>
-      </div>
-    </template>
-    <n-row>
-      <n-col :span="24" class="my-3">
+  <n-card size="small" content-class="justify-content flex ">
+    <n-row class="flex-grow flex items-center gap-6">
+      <n-tag
+        quaternary
+        size="tiny"
+        :style="{
+          color: currentPriority.color,
+          border: `1px solid ${currentPriority.color}`,
+        }"
+        class="px-1 py-[4px] text-[8px]"
+      >
+        {{ currentPriority.label }}
+      </n-tag>
+      <n-ellipsis line-clamp="1" class="w-40">
+        {{ work.title }}
+      </n-ellipsis>
+      <n-col class="w-44 min-w-44">
         <n-progress
           type="line"
           :percentage="progressValue"
@@ -27,31 +23,34 @@
           :show-indicator="false"
         />
       </n-col>
-      <n-col :span="24">
-        <n-ellipsis expand-trigger="click" line-clamp="2" :tooltip="false">
+      <n-col class="flex-grow flex items-center">
+        <n-ellipsis line-clamp="1" class="max-w-96">
           {{ work.meta.description }}
         </n-ellipsis>
       </n-col>
-    </n-row>
-    <n-row>
-      <n-avatar-group :options="userOptions" :size="26" :max="3">
-        <template #avatar="{ option: { name, src } }">
-          <n-tooltip>
-            <template #trigger>
-              <n-avatar :src="src" />
-            </template>
-            {{ name }}
-          </n-tooltip>
-        </template>
-        <template #rest="{ options: restOptions, rest }">
-          <n-dropdown
-            :options="createDropdownOptions(restOptions)"
-            placement="top"
-          >
-            <n-avatar class="text-[10px]">+{{ rest }}</n-avatar>
-          </n-dropdown>
-        </template>
-      </n-avatar-group>
+      <n-col class="flex items-center justify-center gap-4">
+        <n-avatar-group :options="userOptions" :size="26" :max="3">
+          <template #avatar="{ option: { name, src } }">
+            <n-tooltip>
+              <template #trigger>
+                <n-avatar :src="src" />
+              </template>
+              {{ name }}
+            </n-tooltip>
+          </template>
+          <template #rest="{ options: restOptions, rest }">
+            <n-dropdown
+              :options="createDropdownOptions(restOptions)"
+              placement="top"
+            >
+              <n-avatar class="text-[10px]">+{{ rest }}</n-avatar>
+            </n-dropdown>
+          </template>
+        </n-avatar-group>
+        <div class="cursor-pointer">
+          <Icons icon="humbleicons:dots-vertical" color="inherit" :size="20" />
+        </div>
+      </n-col>
     </n-row>
   </n-card>
 </template>

@@ -1,15 +1,17 @@
 <template>
   <n-config-provider :theme="theme" :locale="ruRU" :date-locale="dateRu">
     <n-global-style />
-    <n-message-provider>
-      <component :is="layoutComponent">
-        <router-view />
-        <Modal :positionX="modalPositionX" />
-        <Transition name="fade-bg">
-          <div v-if="isAnyModalActive" class="bg"></div>
-        </Transition>
-      </component>
-    </n-message-provider>
+    <n-notification-provider>
+      <n-message-provider>
+        <component :is="layoutComponent">
+          <router-view />
+          <Modal :positionX="modalPositionX" />
+          <Transition name="fade-bg">
+            <div v-if="isAnyModalActive" class="bg"></div>
+          </Transition>
+        </component>
+      </n-message-provider>
+    </n-notification-provider>
   </n-config-provider>
 </template>
 
@@ -28,21 +30,19 @@ import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
 import "vue-skeletor/dist/vue-skeletor.css";
-// import { useNotifications } from "@/composables/useNotifications";
+// import { useFirebaseNotifications } from "@/composables/useNotifications";
+import { useNotifications } from "@/composables/useNotifications";
 import { useScrollLock } from "@/composables/useLockScreen";
 import { useSettingsStore } from "./store/useSettingsStore";
-
 import { useTheme } from "@/composables/useTheme";
 
 const { theme } = useTheme();
 const { lockScroll, unlockScroll } = useScrollLock();
 
-// const { requestPermission } = useNotifications();
-const { getSettings } = useSettingsStore();
+const { currentToken, incomingPayload } = useNotifications();
 
-onMounted(() => {
-  // requestPermission();
-});
+// const { requestPermission } = useFirebaseNotifications();
+const { getSettings } = useSettingsStore();
 
 const { modals } = useModalStoreRefs();
 const { fetchUserInfo } = useUsersStore();
@@ -91,8 +91,14 @@ watch(
 onMounted(async () => {
   await fetchUserInfo();
   await getSettings();
-  // if (route.path != "/login") {
-  // }
+});
+
+watch(incomingPayload, (payload) => {
+  if (payload) {
+    // toast.info(payload.notification?.title || "Уведомление", {
+    //   description: payload.notification?.body,
+    // });
+  }
 });
 </script>
 

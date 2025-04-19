@@ -56,6 +56,28 @@ export const useProfileStore = defineStore("profile", {
       }
     },
 
+    async fetchProfileById(id: number) {
+      try {
+        const response = await api.get(`/wp-json/profile/v1/users/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error(`Failed to fetch user profile by ID (${id}):`, error);
+        return null;
+      }
+    },
+
+    async fetchAllProfiles() {
+      try {
+        const response = await api.get("/wp-json/profile/v1/users");
+        return response.data;
+      } catch (error) {
+        console.error("Failed to fetch user list:", error);
+        return [];
+      }
+    },
+
+    
+
     // Удаление пользователя
     async deleteProfile(userId: number) {
       try {

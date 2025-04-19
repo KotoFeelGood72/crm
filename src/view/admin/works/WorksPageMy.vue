@@ -1,32 +1,21 @@
 <template>
-  <div class="deals min-h-screen">
+  <div class="tasks min-h-screen">
     <n-page-header subtitle="Текущие задачи" class="mb-6">
       <n-grid :cols="5">
-        <n-gi>
-          <n-statistic label="Кол-во" value="125" />
-        </n-gi>
-        <n-gi>
-          <n-statistic label="Удалений" value="22" />
-        </n-gi>
-        <n-gi>
-          <n-statistic label="Количество" value="36" />
-        </n-gi>
-        <n-gi>
-          <n-statistic label="Topics" value="83" />
-        </n-gi>
-        <n-gi>
-          <n-statistic label="Reference Links" value="2,346" />
-        </n-gi>
+        <n-gi><n-statistic label="Всего" :value="works.length" /></n-gi>
+        <n-gi><n-statistic label="Выполнено" :value="doneCount" /></n-gi>
+        <n-gi><n-statistic label="Просрочено" :value="overdueCount" /></n-gi>
+        <n-gi><n-statistic label="В работе" :value="inProgressCount" /></n-gi>
+        <n-gi><n-statistic label="Пауза" :value="pausedCount" /></n-gi>
       </n-grid>
+
       <template #title>
-        <a href="https://anyway.fm/" style="text-decoration: none; color: inherit">
-          Задачи
-        </a>
+        <span>Задачи</span>
       </template>
       <template #header>
         <n-breadcrumb>
           <n-breadcrumb-item>Рабочий стол</n-breadcrumb-item>
-          <n-breadcrumb-item>История</n-breadcrumb-item>
+          <n-breadcrumb-item>Задачи</n-breadcrumb-item>
         </n-breadcrumb>
       </template>
       <template #avatar>
@@ -36,96 +25,140 @@
       </template>
       <template #extra>
         <n-space>
-          <n-button>Refresh</n-button>
+          <n-button @click="fetchMyTasks">Обновить</n-button>
+          <n-button @click="openModal('WorkCreate')">Создать задачу </n-button>
+          <n-button
+            @click="isKanban = true"
+            :type="isKanban ? 'primary' : 'default'"
+            ><Icons icon="tabler:layout-filled" color="inherit"
+          /></n-button>
+          <n-button
+            @click="isKanban = false"
+            :type="!isKanban ? 'primary' : 'default'"
+            ><Icons icon="material-symbols:event-list" color="inherit"
+          /></n-button>
         </n-space>
       </template>
-      <template #footer> As of April 3, 2021 </template>
+      <template #footer>
+        Актуально на {{ new Date().toLocaleDateString() }}
+      </template>
     </n-page-header>
 
     <div class="overflow-hidden">
-      <div class="flex overflow-x-auto touch-pan-x scroll-smooth gap-2">
+      <div
+        v-if="isKanban"
+        class="flex overflow-x-auto touch-pan-x scroll-smooth gap-2"
+      >
         <div v-for="status in statuses" :key="status.id">
           <KanbanCard
             class="min-w-64 max-w-64"
-            :name="status.name"
-            :count="groupedDeals[status.name]?.length || 0"
-            @end="(e, newStatus, oldStatus) => onCardDrop(e, newStatus, oldStatus)"
-            v-model="groupedDeals[status.name]"
+            :name="status.label"
+            :count="groupedTasks[status.value]?.length || 0"
+            @end="
+              (e, newStatus, oldStatus) =>
+                onCardDrop(e, status.value, oldStatus)
+            "
+            v-model="groupedTasks[status.value]"
           >
             <template #card="{ card }">
-              <CardDeal
-                :card="card"
-                class="cursor-pointer"
-                @click="openModal('nDeal', '', { deal: card.id }, router)"
-              ></CardDeal>
+              <CardWork
+                :work="card"
+                @click="openModal('nWork', '', { work: card.id }, router)"
+              />
             </template>
           </KanbanCard>
         </div>
       </div>
+
+      <div v-else>
+        <n-scrollbar style="max-height: 80dvh">
+          <div class="flex flex-col gap-4">
+            <CardWorkList
+              v-for="(card, i) in works"
+              :work="card"
+              :key="'card-item-work-' + i"
+              @click.stop="openModal('nWork', '', { work: card.id }, router)"
+            />
+          </div>
+        </n-scrollbar>
+      </div>
     </div>
-    <ModalDeal />
+
+    <ModalCreateWork />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { useDealStore, useDealStoreRefs } from "@/store/useDealStore";
+import { onMounted, ref, watch, computed } from "vue";
+import { useWorkStore, useWorkStoreRefs } from "@/store/useWorkStore";
 import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
-import ModalDeal from "@/components/nModal/ModalDeal.vue";
 import { useModalStore } from "@/store/useModalStore";
+import ModalCreateWork from "@/components/nModal/ModalCreate/ModalCreateWork.vue";
+import CardWork from "@/components/ui/card/CardWork.vue";
+import CardWorkList from "@/components/ui/card/CardWorkList.vue";
 import { useRouter } from "vue-router";
-// @ts-ignore
-import draggable from "vuedraggable";
-import "@vuepic/vue-datepicker/dist/main.css";
 
-const groupedDeals = ref<Record<string, any[]>>({});
+const groupedTasks = ref<Record<string, any[]>>({});
+const statuses = ref<any>([
+  { id: 1, value: "todo", label: "Новые" },
+  { id: 2, value: "in_progress", label: "В работе" },
+  { id: 3, value: "paused", label: "Пауза" },
+  { id: 4, value: "done", label: "Завершено" },
+]);
+const isKanban = ref(false);
 
 const { openModal } = useModalStore();
 const router = useRouter();
-const { updateDeal, getDeals } = useDealStore();
-const { deals, statuses } = useDealStoreRefs();
+const { update, fetchMyTasks } = useWorkStore();
+const { works } = useWorkStoreRefs();
 
 const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
   const movedCard = event.item.__draggable_context.element;
+  if (!newStatus || !movedCard || oldStatus === newStatus) return;
 
-  if (!newStatus || !movedCard) return;
-
-  // Если статус не поменялся — просто сортировка
-  if (oldStatus === newStatus) return;
-
-  // Обновляем статус на сервере
-  await updateDeal(movedCard.id, { status: newStatus });
-
-  // Обновляем статус локально — draggable уже переместил карточку
-  movedCard.acf.status = newStatus;
+  await update(movedCard.id, { status: newStatus });
+  movedCard.meta.status = newStatus;
 };
 
 watch(
-  deals,
+  works,
   () => {
-    initGroupedDeals();
+    initGroupedTasks();
   },
   { deep: true }
 );
 
-const initGroupedDeals = () => {
+const initGroupedTasks = () => {
   const result: Record<string, any[]> = {};
-  statuses.value.forEach((status) => {
+  statuses.value.forEach((status: any) => {
     result[status.name] = [];
   });
 
-  deals.value.forEach((deal) => {
-    const status = deal.acf.status || "Без статуса";
+  works.value.forEach((task) => {
+    const status = task.meta.status || "Без статуса";
     if (!result[status]) result[status] = [];
-    result[status].push(deal);
+    result[status].push(task);
   });
 
-  groupedDeals.value = result;
+  groupedTasks.value = result;
 };
 
+const doneCount = computed(
+  () => works.value.filter((w) => w.meta.status === "done").length
+);
+const overdueCount = computed(
+  () => works.value.filter((w) => w.meta.status === "overdue").length
+);
+const inProgressCount = computed(
+  () => works.value.filter((w) => w.meta.status === "in_progress").length
+);
+const pausedCount = computed(
+  () => works.value.filter((w) => w.meta.status === "paused").length
+);
+
 onMounted(async () => {
-  await getDeals();
-  initGroupedDeals();
+  await fetchMyTasks();
+  initGroupedTasks();
 });
 </script>

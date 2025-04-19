@@ -30,6 +30,42 @@
               placeholder="Выберите приоритет"
             />
           </n-card>
+          <n-card size="small" title="Срок задачи (дата)">
+            <n-date-picker
+              v-model:formatted-value="newTaskDueDate"
+              format="yyyy-MM-dd HH:mm"
+              value-format="yyyy-MM-dd HH:mm"
+              type="datetime"
+              clearable
+              :time-picker-props="{
+                precision: 'minute',
+                format: 'HH:mm',
+                valueFormat: 'HH:mm',
+              }"
+              class="w-full"
+            />
+          </n-card>
+
+          <n-card size="small" title="Исполнители">
+            <n-select
+              v-model:value="newTaskUsers"
+              multiple
+              placeholder="Выберите исполнителей"
+              :options="userOptions"
+            />
+          </n-card>
+          <n-card size="small" title="Чеклист">
+            <n-dynamic-input
+              v-model:value="checklist"
+              placeholder="Добавьте пункт"
+              :max="10"
+              item-style="margin-bottom: 6px"
+            >
+              <template #default="{ index }">
+                <n-input v-model:value="checklist[index]" />
+              </template>
+            </n-dynamic-input>
+          </n-card>
           <n-card size="small" title="Описание">
             <n-input
               v-model:value="newTaskDescription"
@@ -65,16 +101,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useModalStoreRefs, useModalStore } from "@/store/useModalStore";
+import { useProfileStore, useProfileStoreRefs } from "@/store/useProfileStore";
+import { useUsersStore, useUsersStoreRefs } from "@/store/useUserStore";
 import { useWorkStore } from "@/store/useWorkStore";
 
 const { modals } = useModalStoreRefs();
 const { closeAllModals } = useModalStore();
 const { create, fetchAll } = useWorkStore();
-
+const { fetchAllUsers } = useUsersStore();
+const { fetchAllProfiles, fetchProfileById } = useProfileStore();
+const checklist = ref<string[]>([""]);
 const newTaskTitle = ref("");
 const newTaskDateTime = ref<any>(null);
+const allUsers = ref<any>(null);
 const newTaskDescription = ref("");
 const newTaskPriority = ref("medium");
 const isSaving = ref(false);
@@ -84,6 +125,17 @@ const priorities = [
   { label: "Средний", value: "medium" },
   { label: "Высокий", value: "high" },
 ];
+
+const newTaskDueDate = ref<any>(null);
+const newTaskUsers = ref<number[]>([]);
+
+const userOptions = computed(() => {
+  if (!allUsers.value || !Array.isArray(allUsers.value)) return [];
+  return allUsers.value.map((user: any) => ({
+    label: `${user.acf.name} ${user.acf.lastname}`,
+    value: user.ID,
+  }));
+});
 
 const handleCreate = async () => {
   if (!newTaskTitle.value || !newTaskDateTime.value) return;
@@ -95,10 +147,13 @@ const handleCreate = async () => {
       title: newTaskTitle.value,
       start_date: date,
       time_estimate: time,
+      due_date: newTaskDueDate.value,
       description: newTaskDescription.value,
       priority: newTaskPriority.value,
       status: "todo",
-      responsible: "",
+      responsible: "", // можно будет выбрать позже
+      users: newTaskUsers.value,
+      checklist: checklist.value,
       progress: 0,
     });
     await fetchAll();
@@ -113,8 +168,17 @@ const handleCreate = async () => {
 const closeModal = () => {
   closeAllModals();
   newTaskTitle.value = "";
-  newTaskDateTime.value = null;
+  newTaskDateTime.value = new Date()
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
   newTaskDescription.value = "";
   newTaskPriority.value = "medium";
+  checklist.value = [""];
 };
+
+onMounted(async () => {
+  allUsers.value = await fetchAllProfiles();
+  console.log("👥 Все пользователи:", allUsers);
+});
 </script>

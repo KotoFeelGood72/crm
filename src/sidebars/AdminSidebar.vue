@@ -1,5 +1,6 @@
 <template>
   <n-layout-sider
+    :native-scrollbar="false"
     bordered
     collapse-mode="width"
     :collapsed-width="64"
@@ -9,16 +10,20 @@
     @collapse="collapsed = true"
     @expand="collapsed = false"
   >
-    <n-space vertical>
-      <n-menu
-        @update:value="handleMenuSelect"
-        :collapsed="collapsed"
-        :collapsed-width="64"
-        :collapsed-icon-size="22"
-        :options="nav"
-        :render-icon="renderMenuIcon"
-        :expand-icon="expandIcon"
-      />
+    <n-space vertical style="height: 100%">
+      <!-- Заменили стандартный скролл на авто-скролл контейнера -->
+      <n-scrollbar style="height: 100%">
+        <n-menu
+          v-model:value="activeKey"
+          @update:value="handleMenuSelect"
+          :collapsed="collapsed"
+          :collapsed-width="64"
+          :collapsed-icon-size="22"
+          :options="nav"
+          :render-icon="renderMenuIcon"
+          :expand-icon="expandIcon"
+        />
+      </n-scrollbar>
     </n-space>
   </n-layout-sider>
 </template>
@@ -26,13 +31,20 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
 import type { MenuOption } from "naive-ui";
-import { h, ref } from "vue";
-import { useRouter } from "vue-router";
+import { h, ref, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
+
+// Текущее активное значение меню (путь)
+const activeKey = computed({
+  get: () => route.path,
+  set: (val: string) => router.push(val),
+});
 
 const handleMenuSelect = (key: string) => {
-  router.push(key);
+  // router.push уже вызывается в setter activeKey
 };
 
 const expandIcon = () =>
@@ -42,26 +54,15 @@ const expandIcon = () =>
     height: 16,
   });
 
-const collapsed = ref<any>(false);
+const collapsed = ref(false);
 const nav = ref<MenuOption[]>([
-  // {
-  //   label: "Dashboard",
-  //   key: "/dashboard",
-  //   icon: () => h(Icon, { icon: "ion:home" }),
-  // },
   {
     label: "Лиды",
     key: "/leads",
     icon: () => h(Icon, { icon: "simple-icons:googleads" }),
     children: [
-      {
-        label: "Мои лиды",
-        key: "/leads/my",
-      },
-      {
-        label: "Все лиды",
-        key: "/leads/all",
-      },
+      { label: "Мои лиды", key: "/leads/my" },
+      { label: "Все лиды", key: "/leads/all" },
     ],
   },
   {
@@ -77,23 +78,12 @@ const nav = ref<MenuOption[]>([
   {
     label: "Чат",
     key: "/chats",
-    icon: () => h(Icon, { icon: "mdi:analytics" }),
+    icon: () => h(Icon, { icon: "mdi:chat" }),
     children: [
-      {
-        label: "Мои лиды",
-        key: "/chats/my",
-      },
-      {
-        label: "Чаты",
-        key: "/chats/all",
-      },
+      { label: "Мои лиды", key: "/chats/my" },
+      { label: "Чаты", key: "/chats/all" },
     ],
   },
-  // {
-  //   label: "Сотрудники",
-  //   key: "/works",
-  //   icon: () => h(Icon, { icon: "raphael:people" }),
-  // },
   {
     label: "Календарь",
     key: "/managment",
@@ -104,14 +94,8 @@ const nav = ref<MenuOption[]>([
     key: "/works",
     icon: () => h(Icon, { icon: "material-symbols-light:task-outline" }),
     children: [
-      {
-        label: "Мои задачи",
-        key: "/works/my",
-      },
-      {
-        label: "Все задачи",
-        key: "/works/all",
-      },
+      { label: "Мои задачи", key: "/works/my" },
+      { label: "Все задачи", key: "/works/all" },
     ],
   },
   {
@@ -119,26 +103,11 @@ const nav = ref<MenuOption[]>([
     key: "/settings",
     icon: () => h(Icon, { icon: "material-symbols:settings-rounded" }),
     children: [
-      {
-        label: "Профиль",
-        key: "/works/my",
-      },
-      {
-        label: "Внешний вид",
-        key: "/works",
-      },
-      {
-        label: "Лиды",
-        key: "/works",
-      },
-      {
-        label: "Сделки",
-        key: "/works",
-      },
-      {
-        label: "Роли и права",
-        key: "/works",
-      },
+      { label: "Профиль", key: "/settings/profile" },
+      { label: "Внешний вид", key: "/settings/theme" },
+      { label: "Лиды", key: "/settings/leads" },
+      { label: "Сделки", key: "/settings/deals" },
+      { label: "Роли и права", key: "/settings/roles" },
     ],
   },
   {
@@ -146,14 +115,8 @@ const nav = ref<MenuOption[]>([
     key: "/history",
     icon: () => h(Icon, { icon: "solar:history-bold" }),
     children: [
-      {
-        label: "Мое",
-        key: "/history/my",
-      },
-      {
-        label: "Все",
-        key: "/history/all",
-      },
+      { label: "Моя история", key: "/history/my" },
+      { label: "Все истории", key: "/history/all" },
     ],
   },
 ]);
