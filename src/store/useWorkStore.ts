@@ -60,6 +60,9 @@ export const useWorkStore = defineStore("work", {
     async update(id: number, payload: any) {
       try {
         const { data } = await api.put(`/wp-json/work/v1/update/${id}`, payload);
+        if (this.work?.id === id) {
+          await this.fetchOne(id);
+        }
         await this.fetchAll();
         return data;
       } catch (error) {
@@ -80,6 +83,9 @@ export const useWorkStore = defineStore("work", {
     async complete(id: number) {
       try {
         const { data } = await api.post(`/wp-json/work/v1/complete/${id}`);
+        if (this.work?.id === id) {
+          await this.fetchOne(id);
+        }
         await this.fetchAll();
         return data;
       } catch (error) {
@@ -90,12 +96,31 @@ export const useWorkStore = defineStore("work", {
     async pause(id: number) {
       try {
         const { data } = await api.post(`/wp-json/work/v1/pause/${id}`);
+        if (this.work?.id === id) {
+          await this.fetchOne(id);
+        }
         await this.fetchAll();
         return data;
       } catch (error) {
         console.error("Ошибка при постановке задачи на паузу:", error);
       }
     },
+
+    async start(id: number) {
+            try {
+              // можно либо вызвать отдельный API, либо:
+              await api.put(`/wp-json/work/v1/update/${id}`, {
+                ...this.work.meta,
+                status: 'in_progress'
+              });
+              await this.fetchAll();
+              if (this.work?.id === id) {
+                await this.fetchOne(id);
+              }
+            } catch (error) {
+              console.error("Ошибка при старте задачи:", error);
+            }
+        },
   },
 });
 

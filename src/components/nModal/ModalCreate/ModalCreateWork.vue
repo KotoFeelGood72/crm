@@ -139,14 +139,13 @@ const userOptions = computed(() => {
 
 const handleCreate = async () => {
   if (!newTaskTitle.value || !newTaskDateTime.value) return;
-  const [date, time] = newTaskDateTime.value.split(" ");
 
   isSaving.value = true;
   try {
     await create({
       title: newTaskTitle.value,
-      start_date: date,
-      time_estimate: time,
+      start_date: newTaskDateTime.value, // <-- полная дата + время
+      time_estimate: newTaskDateTime.value.split(" ")[1], // <-- только время
       due_date: newTaskDueDate.value,
       description: newTaskDescription.value,
       priority: newTaskPriority.value,

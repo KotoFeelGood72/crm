@@ -6,17 +6,17 @@ const routes = [
   {
     path: "/login",
     name: "Login",
-    component: () => import("../modules/auth/LoginPages.vue"),
+    component: () => import("../view/auth/LoginPages.vue"),
     meta: {
-      layout: "Empty",
+      layout: "empty",
     },
   },
   {
     path: "/sign",
     name: "Sign",
-    component: () => import("../modules/auth/SignPages.vue"),
+    component: () => import("../view/auth/SignPages.vue"),
     meta: {
-      layout: "Empty",
+      layout: "empty",
     },
   },
 ];
@@ -45,7 +45,7 @@ router.beforeEach((to, _from, next) => {
   ) {
     next({ path: "/login" }); 
   } else if (to.path === "/login" && isAuthenticated) {
-    next({ path: "/" }); 
+    next({ path: "/dashboard" }); 
   } else {
     next(); 
   }

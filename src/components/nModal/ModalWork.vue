@@ -5,7 +5,72 @@
     placement="right"
     default-width="700px"
   >
-    <n-drawer-content :title="work?.title">
+    <n-drawer-content>
+      <template #header>
+        <div class="flex items-center justify-between gap-2 w-full">
+          <n-h2 class="flex-grow m-0"> {{ work?.title }}</n-h2>
+          <div class="flex items-center gap-2">
+            <!-- Приступить -->
+            <n-button
+              type="primary"
+              :loading="loadingAction === 'start'"
+              v-if="work?.meta?.status === 'todo'"
+              @click="changeStatus('in_progress', 'Приступил к задаче')"
+            >
+              <Icons
+                v-if="!loadingAction"
+                color="inherit"
+                icon="solar:play-outline"
+              />
+            </n-button>
+
+            <!-- Пауза -->
+            <n-button
+              type="warning"
+              :loading="loadingAction === 'pause'"
+              v-if="work?.meta.status === 'in_progress'"
+              @click="changeStatus('paused', 'Поставил на паузу')"
+            >
+              <Icons
+                v-if="!loadingAction"
+                color="inherit"
+                icon="solar:pause-linear"
+              />
+            </n-button>
+
+            <!-- Возобновить -->
+            <n-button
+              type="primary"
+              :loading="loadingAction === 'start'"
+              v-if="work?.meta.status === 'paused'"
+              @click="changeStatus('in_progress', 'Возобновил задачу')"
+            >
+              <Icons
+                v-if="!loadingAction"
+                color="inherit"
+                icon="solar:play-outline"
+              />
+            </n-button>
+
+            <!-- Завершить -->
+            <n-button
+              type="success"
+              :loading="loadingAction === 'complete'"
+              v-if="
+                work?.meta.status !== 'done' &&
+                work?.meta.status === 'in_progress'
+              "
+              @click="changeStatus('done', 'Завершил задачу')"
+            >
+              <Icons
+                v-if="!loadingAction"
+                color="inherit"
+                icon="fluent-mdl2:completed"
+              />
+            </n-button>
+          </div>
+        </div>
+      </template>
       <n-scrollbar>
         <div v-if="work && work.meta" class="flex flex-col gap-2">
           <n-tabs type="line" animated>
@@ -40,7 +105,7 @@
                           textDecoration: item.done ? 'line-through' : 'none',
                         }"
                       >
-                        {{ item.text }}
+                        {{ item || item.text }}
                       </span>
                     </n-checkbox>
                   </n-space>
@@ -127,7 +192,7 @@ import { useRoute, useRouter } from "vue-router";
 
 const { modals } = useModalStoreRefs();
 const { closeAllModals } = useModalStore();
-const { fetchOne, update } = useWorkStore();
+const { fetchOne, update, pause, complete } = useWorkStore();
 const { work } = useWorkStoreRefs();
 
 const { toggleChecklistItem } = useWorkStore();
@@ -141,7 +206,7 @@ const route = useRoute();
 const router = useRouter();
 const isSaving = ref(false);
 const newComment = ref("");
-
+const loadingAction = ref<"start" | "pause" | "complete" | null>(null);
 const priorities = [
   { label: "Низкий", value: "low" },
   { label: "Средний", value: "medium" },
@@ -200,6 +265,39 @@ const handleComment = async () => {
     console.error("Ошибка при сохранении комментария:", err);
   }
 };
+
+async function changeStatus(newStatus: string, historyText: string) {
+  if (!work.value) return;
+  loadingAction.value =
+    newStatus === "in_progress"
+      ? "start"
+      : newStatus === "paused"
+      ? "pause"
+      : "complete";
+  try {
+    // обновляем через универсальный update
+    await update(work.value.id, {
+      ...work.value.meta,
+      status: newStatus,
+    });
+    // сразу локально пишем в историю
+    work.value.meta.history = work.value.meta.history || [];
+    work.value.meta.history.push({
+      txt: historyText,
+      time: new Date().toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    });
+  } catch (e) {
+    console.error("Ошибка смены статуса:", e);
+  } finally {
+    loadingAction.value = null;
+  }
+}
 
 watchEffect(async () => {
   const workId = route.query.work;

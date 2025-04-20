@@ -1,0 +1,20 @@
+{
+  "name": "My CRM",
+  "short_name": "CRM",
+  "icons": [
+    {
+      "src": "/logo.jpg",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo.jpg",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#18a058",
+  "background_color": "#121212"
+}

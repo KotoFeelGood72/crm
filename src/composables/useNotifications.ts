@@ -70,6 +70,7 @@ export function useNotifications() {
         notification.info({
           title:   payload.notification?.title   || 'Новое уведомление',
           content: payload.notification?.body    || '',
+          
         })
       })
     }

@@ -29,7 +29,7 @@ import OwnerLayouts from "./layouts/OwnerLayouts.vue";
 import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
-import "vue-skeletor/dist/vue-skeletor.css";
+// import "vue-skeletor/dist/vue-skeletor.css";
 // import { useFirebaseNotifications } from "@/composables/useNotifications";
 import { useNotifications } from "@/composables/useNotifications";
 import { useScrollLock } from "@/composables/useLockScreen";
@@ -74,7 +74,7 @@ const layoutComponent = computed(() => {
       return AdminLayout;
     case "owner":
       return OwnerLayouts;
-    case "Empty":
+    case "empty":
       return EmptyLayout;
     default:
       return DefaultLayout;
