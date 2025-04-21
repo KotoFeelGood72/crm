@@ -91,7 +91,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from "vue";
 import { useWorkStore, useWorkStoreRefs } from "@/store/useWorkStore";
-import CardDeal from "@/components/ui/card/CardDeal.vue";
 import KanbanCard from "@/components/ui/card/KanbanCard.vue";
 import { useModalStore } from "@/store/useModalStore";
 import ModalCreateWork from "@/components/nModal/ModalCreate/ModalCreateWork.vue";
@@ -99,63 +98,78 @@ import CardWork from "@/components/ui/card/CardWork.vue";
 import CardWorkList from "@/components/ui/card/CardWorkList.vue";
 import { useRouter } from "vue-router";
 
+// Reactive maps for grouped tasks
 const groupedTasks = ref<Record<string, any[]>>({});
-const statuses = ref<any>([
+
+// Status definitions
+const statuses = ref([
   { id: 1, value: "todo", label: "Новые" },
   { id: 2, value: "in_progress", label: "В работе" },
   { id: 3, value: "paused", label: "Пауза" },
   { id: 4, value: "done", label: "Завершено" },
 ]);
-const isKanban = ref(false);
 
+const isKanban = ref(false);
 const { openModal } = useModalStore();
 const router = useRouter();
-const { update, fetchMyTasks } = useWorkStore();
+const { fetchMyTasks, update } = useWorkStore();
 const { works } = useWorkStoreRefs();
 
-const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
-  const movedCard = event.item.__draggable_context.element;
-  if (!newStatus || !movedCard || oldStatus === newStatus) return;
+// Convert works ref to array safely
+const worksArray = computed(() => {
+  if (Array.isArray(works.value)) {
+    return works.value;
+  }
+  // if works.value is object, take its values
+  return Object.values(works.value || {});
+});
 
-  await update(movedCard.id, { status: newStatus });
-  movedCard.meta.status = newStatus;
+// Group tasks by status
+const initGroupedTasks = () => {
+  const result: Record<string, any[]> = {};
+  // Initialize empty arrays for each defined status
+  statuses.value.forEach((status) => {
+    result[status.value] = [];
+  });
+  // Iterate through worksArray
+  worksArray.value.forEach((task) => {
+    const st = task.meta.status || "todo";
+    if (!result[st]) {
+      result[st] = [];
+    }
+    result[st].push(task);
+  });
+  groupedTasks.value = result;
 };
 
 watch(
-  works,
+  worksArray,
   () => {
     initGroupedTasks();
   },
   { deep: true }
 );
 
-const initGroupedTasks = () => {
-  const result: Record<string, any[]> = {};
-  statuses.value.forEach((status: any) => {
-    result[status.name] = [];
-  });
-
-  works.value.forEach((task) => {
-    const status = task.meta.status || "Без статуса";
-    if (!result[status]) result[status] = [];
-    result[status].push(task);
-  });
-
-  groupedTasks.value = result;
-};
-
+// Counts
 const doneCount = computed(
-  () => works.value.filter((w) => w.meta.status === "done").length
+  () => worksArray.value.filter((w) => w.meta.status === "done").length
 );
 const overdueCount = computed(
-  () => works.value.filter((w) => w.meta.status === "overdue").length
+  () => worksArray.value.filter((w) => w.meta.status === "overdue").length
 );
 const inProgressCount = computed(
-  () => works.value.filter((w) => w.meta.status === "in_progress").length
+  () => worksArray.value.filter((w) => w.meta.status === "in_progress").length
 );
 const pausedCount = computed(
-  () => works.value.filter((w) => w.meta.status === "paused").length
+  () => worksArray.value.filter((w) => w.meta.status === "paused").length
 );
+
+const onCardDrop = async (event: any, newStatus: string, oldStatus: string) => {
+  const movedCard = event.item.__draggable_context.element;
+  if (!movedCard || oldStatus === newStatus) return;
+  await update(movedCard.id, { status: newStatus });
+  movedCard.meta.status = newStatus;
+};
 
 onMounted(async () => {
   await fetchMyTasks();

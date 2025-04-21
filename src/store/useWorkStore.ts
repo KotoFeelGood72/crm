@@ -9,16 +9,16 @@ export const useWorkStore = defineStore("work", {
   actions: {
     async fetchAll() {
       try {
-        const { data } = await api.get("/wp-json/work/v1/all");
-        this.works = data;
+        const response = await api.get("/wp-json/work/v1/all");
+        this.works = response.data;
       } catch (error) {
         console.error("Ошибка при получении задач:", error);
       }
     },
     async fetchMyTasks() {
       try {
-        const { data } = await api.get("/wp-json/work/v1/my");
-        this.works = data;
+        const response = await api.get("/wp-json/work/v1/my");
+        this.works = response.data;
       } catch (error) {
         console.error("Ошибка при получении задач:", error);
       }
