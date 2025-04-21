@@ -5,7 +5,7 @@
       <n-message-provider>
         <component :is="layoutComponent">
           <router-view />
-          <Modal :positionX="modalPositionX" />
+          <!-- <Modal :positionX="modalPositionX" /> -->
           <Transition name="fade-bg">
             <div v-if="isAnyModalActive" class="bg"></div>
           </Transition>
@@ -22,11 +22,11 @@ import { ru as dateRu } from "date-fns/locale";
 import "vue3-toastify/dist/index.css";
 import { computed, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import AdminLayout from "@/layouts/AdminLayout.vue";
-import DefaultLayout from "@/layouts/DefaultLayout.vue";
+// import AdminLayout from "@/layouts/AdminLayout.vue";
+// import DefaultLayout from "@/layouts/DefaultLayout.vue";
 import EmptyLayout from "@/layouts/EmptyLayout.vue";
 import OwnerLayouts from "./layouts/OwnerLayouts.vue";
-import Modal from "./components/modal/Modal.vue";
+// import Modal from "./components/modal/Modal.vue";
 import { useModalStoreRefs } from "./store/useModalStore";
 import { useUsersStore } from "./store/useUserStore";
 // import "vue-skeletor/dist/vue-skeletor.css";
@@ -70,14 +70,12 @@ const route = useRoute();
 
 const layoutComponent = computed(() => {
   switch (route.meta.layout) {
-    case "Admin":
-      return AdminLayout;
     case "owner":
       return OwnerLayouts;
     case "empty":
       return EmptyLayout;
     default:
-      return DefaultLayout;
+      return OwnerLayouts;
   }
 });
 

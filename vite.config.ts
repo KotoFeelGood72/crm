@@ -29,13 +29,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "src"),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@/assets/scss/style.scss";`,
-      },
-    },
-  },
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `@import "@/assets/scss/style.scss";`,
+  //     },
+  //   },
+  // },
   server: {
     port: 5123,
     host: true,

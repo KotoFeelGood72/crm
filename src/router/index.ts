@@ -11,14 +11,6 @@ const routes = [
       layout: "empty",
     },
   },
-  {
-    path: "/sign",
-    name: "Sign",
-    component: () => import("../view/auth/SignPages.vue"),
-    meta: {
-      layout: "empty",
-    },
-  },
 ];
 
 export const router = createRouter({

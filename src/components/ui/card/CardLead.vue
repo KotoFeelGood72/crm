@@ -80,12 +80,16 @@
                       <template #trigger>
                         <!-- <n-button>Quote</n-button> -->
 
-                        <IconBtn
-                          icon="material-symbols-light:delete-outline"
+                        <n-button
                           class="dark:text-red-600 w-7 h-7 flex items-center justify-center"
                           iconSize="30"
                           @click="emit('deleteLead', lead.id)"
-                        />
+                        >
+                          <Icons
+                            icon="material-symbols-light:delete-outline"
+                            color="inherit"
+                          />
+                        </n-button>
                       </template>
                       Подтвердить удаление?
                     </n-popconfirm></template
@@ -151,19 +155,12 @@
 </template>
 
 <script setup lang="ts">
-import IconBtn from "../buttons/IconBtn.vue";
-// import btn from "../buttons/btn.vue";
-// import StatusChip from "../other/StatusChip.vue";
 import { statusList } from "@/api/data";
 import { useModalStore } from "@/store/useModalStore";
 import { useLeadsStore } from "@/store/useLeadsStore";
 import { useRouter } from "vue-router";
 import { defineEmits, ref } from "vue";
 import { useLeadComment } from "@/composables/useLeadComment";
-// import { useUsersStoreRefs } from "@/store/useUserStore";
-
-// const { users } = useUsersStoreRefs();
-// const active = ref<any>(false);
 const showModal = ref<any>(false);
 const showModalComment = ref<any>(false);
 // const comment = ref<any>("");
